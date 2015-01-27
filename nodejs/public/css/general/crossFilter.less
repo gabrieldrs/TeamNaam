@@ -1,0 +1,120 @@
+@chart-left-Spacing-high: 45px;
+@chart-left-Spacing-med: 35px;
+@chart-left-Spacing-low: 28px;
+
+@chart-right-Spacing-high: 15px;
+@chart-right-Spacing-med: 10px;
+@chart-right-Spacing-low: 5px;
+
+
+
+
+
+
+.pageStyle-crossFilter{
+    #sidebarViewRight svg {
+      fill: rgb(118, 118, 118);
+    }
+    text.x-axis-label {
+      letter-spacing: .8px;
+      text-transform: uppercase;
+    }
+    text.y-axis-label.y-label {
+      text-transform: uppercase;
+      letter-spacing: .8px;
+    }
+    .dc-chart .axis path, .axis line {
+      stroke: #B4B3B3;
+      fill:none;
+      shape-rendering: crispEdges;
+    }
+    
+    #wrap{
+      padding-right: 20px;
+    }
+    
+    .dc-chart{ 
+        display: inline-block;
+    }
+    
+    #wrap > .title{
+        text-align: center;
+        font-size: 50px;
+        font-weight: bold;
+    }
+
+
+    .data-count.number-chart{
+      width: 100%;
+      text-align: center;
+    }
+    .full{
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .oneThird{
+            display: inline-block;
+            padding: 5px;
+    }
+    @media only screen and ( max-width: 675px) {
+            .oneThird{width: 100%;}
+    }
+    @media only screen and (min-width: 675px) and (max-width: 1120px) {
+            .oneThird{width: 50%;}
+    }
+     
+    @media only screen and (min-width: 1120px) and (max-width: 1480px) {
+            .oneThird{width: 33.33%;}
+    }
+    @media only screen and (min-width: 1480px) {
+            .oneThird{width: 25%;}
+    }
+                
+      
+    
+    .chart_box{
+            font-family: Arial, Helvetica, sans-serif;
+            border: 1px solid rgb(214, 214, 214);
+            border-radius: 0px;
+            background: rgb(248, 247, 247);
+            box-shadow: 0px 2px 0px 0px rgb(196, 194, 194);
+            display: inline-block;
+            padding: 10px;  
+            vertical-align: middle;
+            width: 100%;          
+    }
+    .chart_container {
+            position: relative;
+            display: block;
+            overflow: hidden;
+    }
+    .chart_padding {
+            display: inline-block;
+                        
+            @media only screen and (max-width: 500px) {
+                padding-right: @chart-right-Spacing-low;
+                padding-left: @chart-left-Spacing-low;
+            }
+            @media only screen and (min-width: 500px) and (max-width: 900px) {
+               padding-right: @chart-right-Spacing-med;
+               padding-left: @chart-left-Spacing-med;
+            }
+            @media only screen and (min-width: 900px) {
+                padding-right: @chart-right-Spacing-high;
+                padding-left: @chart-left-Spacing-high;
+            }
+
+            width: 100%;
+            .chart {
+                    display: inline-block;
+                    width: 100%;
+                    overflow:hidden;
+            }
+    }
+}
+
+
+
+
+
+

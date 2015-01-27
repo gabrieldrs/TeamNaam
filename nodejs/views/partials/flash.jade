@@ -1,0 +1,40 @@
+#flash
+  //- FADEOUTDOWN also moves the Alerts so that an invisible box does not cover all functionality.
+  if messages.errors
+    .animated.fadeOutDown.longDelayAnimation
+      for error in messages.errors
+        .alert.alert-danger.alert-dismissable.animated.flipInX
+          button.close(data-dismiss='alert') &times;
+          div= error.msg
+  if messages.warnings
+    .animated.fadeOutDown.mediumDelayAnimation
+      for warning in messages.warnings
+        .alert.alert-warning.alert-dismissable.animated.flipInX
+          button.close(data-dismiss='alert') &times;
+          div= warning.msg
+  if messages.info
+    .animated.fadeOutDown.mediumDelayAnimation
+      for info in messages.info
+        .alert.alert-info.alert-dismissable.animated.flipInX
+          button.close(data-dismiss='alert') &times;
+          div= info.msg
+  if messages.success
+    .animated.fadeOutDown.mediumDelayAnimation
+      for success in messages.success
+        .alert.alert-success.alert-dismissable.animated.flipInX
+          button.close(data-dismiss='alert') &times;
+          div= success.msg     
+           
+  if messages.login
+    .animated.fadeOutDown.shortDelayAnimation
+      .alert.alert-success.alert-dismissable.animated.flipInX
+        button.close(data-dismiss='alert') &times;
+        i.fa.fa-check
+        strong Success!
+        |  You are now logged in.
+  if messages.logout
+    .animated.fadeOutDown.shortDelayAnimation
+      .alert.alert-warning.alert-dismissable.animated.flipInX
+        button.close(data-dismiss='alert') &times;
+        strong Goodbye!
+        |  You are now logged out.

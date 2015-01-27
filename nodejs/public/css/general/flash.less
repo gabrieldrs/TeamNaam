@@ -1,0 +1,45 @@
+.delayAnimation(@delay){
+  animation-delay: @delay;
+  -webkit-animation-delay: @delay;
+}
+
+
+.shortDelayAnimation{ .delayAnimation(2s)  }
+.mediumDelayAnimation{ .delayAnimation(5s) }
+.longDelayAnimation{ .delayAnimation(10s)  }
+
+
+#flash > div{
+	width: 100%;
+	position: fixed;
+	left: 0px;
+	z-index:999;
+}
+
+
+#flash .alert{
+	position: relative;
+	text-align: center;
+	top: 10px;
+	margin: auto;
+	z-index: 9999;
+	margin-bottom: 10px;
+	z-index:999;
+}
+
+@media only screen and (max-width : 600px) { 
+  #flash .alert{
+    	width: 80%;
+    	min-width: 320px;
+  }
+}
+@media only screen and (min-width : 600px) and (max-width : 900px) { 
+  #flash .alert{
+    	width: 60%;
+  }
+}
+@media only screen and (min-width : 900px) { 
+  #flash .alert{
+    	width: 40%;
+  }
+}

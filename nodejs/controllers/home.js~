@@ -1,0 +1,15 @@
+/**
+ * GET /
+ * Home page.
+ */
+exports.one = function(req, res) {
+  res.render('pages/explorer', {
+    title: 'Home'
+  });
+};
+
+exports.two = function(req, res) {
+  res.render('pages/explorer2', {
+    title: 'Home'
+  });
+};
