@@ -130,7 +130,13 @@ html
           a(href='/Cohorts')
             i.fa.fa-star
             strong Cohorts
-  
+
+      ul#lg-menu.nav.hidden-xs(style='bottom:0px;position: absolute;width: 100%;')
+        li(class=title=='Sign up'?'active':undefined)
+          a(href='/Signup')
+            i.fa.fa-plus
+            strong Create New Account   
+              
       ul#xs-menu.nav.visible-xs
         li(class=title=='Emails'?'active':undefined)
           a.text-center(href='/Emails')
@@ -154,6 +160,10 @@ html
           a.text-center(href='/Cohorts')
             i.fa.fa-star
 
+        ul#xs-menu.nav.visible-xs(style='bottom:0px;position: absolute;width: 100%;')
+          li(class=title=='Sign up'?'active':undefined)
+            a.text-center(href='/Signup')
+              i.fa.fa-plus
     
     #sidebarViewRight.column.col-sm-10.col-xs-11.col-sm-offset-2.col-xs-offset-1
       #wrap

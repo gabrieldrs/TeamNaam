@@ -15,12 +15,12 @@ block content
     .form-group
       label.col-sm-2.control-label(for='email') Questionnaire Template
       .col-sm-4
-        select
-          option(value='form1') form 1
-          option(value='form2') form 2
-          option(value='form3') form 3
-          option(value='form4') form 4
-          option(value='form5') form 5
+        select.form-control
+          option(value='form1') Form 1
+          option(value='form2') Form 2
+          option(value='form3') Form 3
+          option(value='form4') Form 4
+          option(value='form5') Form 5
      
      
     
@@ -39,7 +39,7 @@ block content
   .page-header
     h3 Delete This Cohort
   .col-sm-offset-2
-    p You can delete your account, but keep in mind this action is irreversible.
+    p You can delete this cohort, but keep in mind this action is irreversible.
     form(action='', method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
       button.btn.btn-danger(type='submit')

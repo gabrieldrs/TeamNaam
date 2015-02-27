@@ -60,7 +60,6 @@ exports.logout = function(req, res) {
  * Signup page.
  */
 exports.getSignup = function(req, res) {
-  if (req.user) return res.redirect('/');
   res.render('account/signup', {
     title: 'Create Account'
   });
@@ -94,9 +93,10 @@ exports.postSignup = function(req, res, next) {
     }
     user.save(function(err) {
       if (err) return next(err);
+      req.flash('info', { msg: 'Your new account has been created.' });
       req.logIn(user, function(err) {
         if (err) return next(err);
-        res.redirect('/');
+        res.redirect('/account');
       });
     });
   });

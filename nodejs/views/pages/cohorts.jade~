@@ -10,12 +10,12 @@ block content
     .form-group
       label.col-sm-2.control-label(for='email') Form Accessibility
       .col-sm-4
-        input(type="checkbox", checked, data-toggle="toggle", data-on="OPEN", data-off="CLOSED", data-onstyle="success", data-offstyle="danger")
+        input(type="checkbox", checked, data-size='large', data-toggle="toggle", data-on-text="OPEN", data-off-text="CLOSED", data-on-color="success", data-off-color="danger")
     
     .form-group
       label.col-sm-2.control-label(for='email') Questionnaire Template
       .col-sm-4
-        select
+        select.form-control
           option(value='form1') form 1
           option(value='form2') form 2
           option(value='form3') form 3
@@ -39,7 +39,7 @@ block content
   .page-header
     h3 Delete This Cohort
   .col-sm-offset-2
-    p You can delete your account, but keep in mind this action is irreversible.
+    p You can delete this cohort, but keep in mind this action is irreversible.
     form(action='', method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
       button.btn.btn-danger(type='submit')

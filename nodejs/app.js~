@@ -21,6 +21,9 @@ var passport = require('passport');
 var expressValidator = require('express-validator');
 var connectAssets = require('connect-assets');
 
+
+var User = require('./models/User');
+
 /**
  * Controllers (route handlers).
  */
@@ -87,6 +90,12 @@ app.use(function(req, res, next) {
   if (/api/i.test(req.path)) req.session.returnTo = req.path;
   next();
 });
+app.use(function(req, res, next) {
+  User.count({}).limit(1).count(function( err, count){
+    res.locals.userCount = !!count;
+    next();
+  });
+});
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 
 /**
@@ -97,7 +106,7 @@ app.get('/2', passportConf.isAuthenticated, homeController.two);
 
 app.get('/Emails', passportConf.isAuthenticated, homeController.emails);
 app.get('/Directory', passportConf.isAuthenticated, homeController.directory);
-app.get('/Explorer', passportConf.isAuthenticated, homeControllerexplorer.);
+app.get('/Explorer', passportConf.isAuthenticated, homeController.explorer);
 app.get('/Matching', passportConf.isAuthenticated, homeController.matching);
 app.get('/Staging', passportConf.isAuthenticated, homeController.staging);
 app.get('/Cohorts', passportConf.isAuthenticated, homeController.cohorts);
@@ -121,8 +130,34 @@ app.get('/forgot', userController.getForgot);
 app.post('/forgot', userController.postForgot);
 app.get('/reset/:token', userController.getReset);
 app.post('/reset/:token', userController.postReset);
-app.get('/signup', userController.getSignup);
-app.post('/signup', userController.postSignup);
+
+app.get('/signup', function(req, res, next){
+  if (req.isAuthenticated()) return next();
+  else
+    User.count({}).limit(1).count(function( err, count){
+      console.log( "Number of users:", count );
+      if (count === 0) next();
+      else res.redirect('/login');
+    });
+}, userController.getSignup);
+
+app.post('/signup', function(req, res, next){
+  if (req.isAuthenticated()) return next();
+  else
+    User.count({}).limit(1).count(function( err, count){
+      console.log( "Number of users:", count );
+      if (count === 0) next();
+      else res.redirect('/login');
+    });
+}, userController.postSignup);
+
+
+app.get('/form', function(req, res) {
+  req.flash('errors', { msg: 'Invalid student number' });
+  req.flash('errors', { msg: 'Please provide an email address.' });
+  req.flash('errors', { msg: 'Please provide 2 more hobbies.' });
+  res.render('pages/form', { title: 'CS Tri-Mentoring Application Form' });
+});
 
 app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);
