@@ -1,9 +1,9 @@
-{
-  "name": "hackathon-starter",
-  "version": "3.0.0",
+nt {
+  "name": "Trics",
+  "version": "1.0.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sahat/hackathon-starter.git"
+    "url": "https://github.com/gabrieldrs/TeamNaam.git"
   },
   "scripts": {
     "start": "node app.js",
