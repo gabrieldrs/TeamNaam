@@ -179,11 +179,14 @@ app.post('/form/mentor/:cid/:secret', applicationController.postMentorForm);
 app.get('/form/student/:cid/:secret', applicationController.getStudentForm);
 app.post('/form/student/:cid/:secret', applicationController.postStudentForm);
 
-app.get('/Cohort', passportConf.isAuthenticated, cohortController.cohort);
-app.get('/set_cohort/:cid', cohortController.setCohort);
-app.get('/new_cohort', cohortController.getNewCohort);
-app.post('/update_cohort/:cid', cohortController.updateCohort);
-app.post('/delete_cohort/:cid', cohortController.deleteCohort);
+app.get('/Cohort', passportConf.isAuthenticated, passportConf.isAuthenticated, cohortController.cohort);
+app.get('/set_cohort/:cid', passportConf.isAuthenticated, cohortController.setCohort);
+app.get('/new_cohort', passportConf.isAuthenticated, cohortController.getNewCohort);
+app.post('/update_cohort/:cid', passportConf.isAuthenticated, cohortController.updateCohort);
+app.post('/delete_cohort/:cid', passportConf.isAuthenticated, cohortController.deleteCohort);
+
+app.get('/staging/set_status/:aid/:status', passportConf.isAuthenticated, tricsController.setStagingStatus);
+app.get('/staging/set_tier/:aid/:tier', passportConf.isAuthenticated, tricsController.setStagingTier);
 
 app.get('/account', passportConf.isAuthenticated, userController.getAccount);
 app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);

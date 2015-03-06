@@ -112,14 +112,14 @@ block content
           
           
             for data in applications
-              tr
+              tr(id='aid-'+data._id.toString())
                 td=data.name
                 td=data.age
                 td=data.Faculty
                 td=data.submissionMoment
                 td: input.form-control.input-sm
-                td: input.seniorSwitch(name=data.senior,id=data.senior, data-aid=data._id, checked=data.senior || false, type="checkbox", data-size='small', data-toggle="toggle",  data-handle-width="100", data-on-text="Junior", data-off-text="Senior", data-on-color="info", data-off-color="warning")
-                td: input.acceptedSwitch(name=data.accepted,id=data.accepted, data-aid=data._id, checked=data.accepted || false, type="checkbox", data-size='small', data-toggle="toggle",  data-handle-width="100", data-on-text="Accepted", data-off-text="Pending", data-on-color="default", data-off-color="danger")
+                td.seniorSwitch: input.seniorSwitch( data-aid=data._id.toString(), checked=data.senior || false, type="checkbox", data-size='small', data-toggle="toggle",  data-handle-width="100", data-off-text="Junior", data-on-text="Senior", data-on-color="info", data-off-color="warning")
+                td.acceptedSwitch: input.acceptedSwitch( data-aid=data._id.toString(), checked=data.accepted || false, type="checkbox", data-size='small', data-toggle="toggle",  data-handle-width="100", data-on-text="Accepted", data-off-text="Pending", data-on-color="default", data-off-color="danger")
                       
               
 
@@ -129,12 +129,38 @@ block content
       $('input[type="checkbox"]').bootstrapSwitch();
       $('#example').dataTable();
       
-      $('.seniorSwitch').on('switchChange.bootstrapSwitch', function(event, state) {
-          console.log(this.getAttribute('data-aid'),state);
+      $('.acceptedSwitch').on('switchChange.bootstrapSwitch', function(event, state) {
+      
+          var aid=this.getAttribute('data-aid');
+          console.log(aid,state);
+          
+          $.get('/staging/set_status/'+aid+'/'+state )
+          .done(function(data) {
+              $('tr#aid-'+aid+' td.acceptedSwitch > div').css('border-color','green');
+          })
+          .fail(function(data) {
+              $('tr#aid-'+aid+' td.acceptedSwitch > div').css('border-color','red');
+          })
+          .done(function(data) {
+              $('input.acceptedSwitch[data-aid="'+aid+'"]').bootstrapSwitch('state', data.state, true);
+          });         
       });
       
-      $('.acceptedSwitch').on('switchChange.bootstrapSwitch', function(event, state) {
+      $('.seniorSwitch').on('switchChange.bootstrapSwitch', function(event, state) {
+          
+          var aid=this.getAttribute('data-aid');
           console.log(this.getAttribute('data-aid'),state);
+          
+          $.get('/staging/set_tier/'+aid+'/'+state)
+          .done(function(data) {
+              $('tr#aid-'+aid+' td.seniorSwitch > div').css('border-color','green');
+          })
+          .fail(function(data) {
+              $('tr#aid-'+aid+' td.seniorSwitch > div').css('border-color','red');
+          })
+          .done(function(data) {
+              $('input.seniorSwitch[data-aid="'+aid+'"]').bootstrapSwitch('state', data.state, true);
+          });
       });
       
     });
