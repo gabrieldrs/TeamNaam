@@ -46,8 +46,19 @@ exports.matching = function(req, res) {
 };
 
 exports.juniorMatching = function(req, res) {
+  Application.find({ cohort: res.locals.activeCohort }).lean().exec( function(err, applications){
+    if (err){ 
+      console.error(err);
+      req.flash('errors', { msg: 'Failed to retrieve applications.' });
+      // TODO add in HTTP 500 error code page.
+    }
+    var apps= _.groupBy(applications,seniors);    // Splits applications into subgroups by the senior Boolean (false means junior).
+  });
+    
   res.render('pages/juniorMatching', {
-    title: 'Home'
+    title: 'Home',
+    seniors: apps.seniors,
+    juniors: apps.juniors
   });
 };
 
