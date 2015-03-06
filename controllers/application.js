@@ -7,6 +7,21 @@ var _ = require('lodash');
 
 
 // Temporary local JSON to hold form data.    // This form holds BOTH student and mentor data.
+
+/*
+Possible RESERVED shortNames:
+  comment,
+  status
+  student
+
+  birthdate
+  submissionDate  <-- or make relative time object?
+
+
+NOTE:
+  CASE SENSITIVE
+
+*/
 var formData=[
   {
     instruction: '',

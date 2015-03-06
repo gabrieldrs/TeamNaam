@@ -185,8 +185,9 @@ app.get('/new_cohort', passportConf.isAuthenticated, cohortController.getNewCoho
 app.post('/update_cohort/:cid', passportConf.isAuthenticated, cohortController.updateCohort);
 app.post('/delete_cohort/:cid', passportConf.isAuthenticated, cohortController.deleteCohort);
 
-app.get('/staging/set_status/:aid/:status', passportConf.isAuthenticated, tricsController.setStagingStatus);
+app.get('/staging/set_comment/:aid/:comment', passportConf.isAuthenticated, tricsController.setStagingComment);
 app.get('/staging/set_tier/:aid/:tier', passportConf.isAuthenticated, tricsController.setStagingTier);
+app.get('/staging/set_status/:aid/:status', passportConf.isAuthenticated, tricsController.setStagingStatus);
 
 app.get('/account', passportConf.isAuthenticated, userController.getAccount);
 app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);

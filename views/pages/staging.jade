@@ -117,7 +117,7 @@ block content
                 td=data.age
                 td=data.Faculty
                 td=data.submissionMoment
-                td: input.form-control.input-sm
+                td: input.form-control.input-sm.comment(data-aid=data._id.toString(), value=data.adminComment)
                 td.seniorSwitch: input.seniorSwitch( data-aid=data._id.toString(), checked=data.senior || false, type="checkbox", data-size='small', data-toggle="toggle",  data-handle-width="100", data-off-text="Junior", data-on-text="Senior", data-on-color="info", data-off-color="warning")
                 td.acceptedSwitch: input.acceptedSwitch( data-aid=data._id.toString(), checked=data.accepted || false, type="checkbox", data-size='small', data-toggle="toggle",  data-handle-width="100", data-on-text="Accepted", data-off-text="Pending", data-on-color="default", data-off-color="danger")
                       
@@ -129,12 +129,27 @@ block content
       $('input[type="checkbox"]').bootstrapSwitch();
       $('#example').dataTable();
       
+      $('.comment').on('blur', function() {
+      
+          var aid=this.getAttribute('data-aid');
+          var msg=$(this).val();
+          console.log(aid,msg);
+          
+          $.get('/staging/set_comment/'+aid+'/ '+msg+'/' )
+          .done(function(data) {
+              $('tr#aid-'+aid+' input.comment').css('border-color','green');
+          })
+          .fail(function(data) {
+              $('tr#aid-'+aid+' input.comment').css('border-color','red');
+          });
+      });
+      
       $('.acceptedSwitch').on('switchChange.bootstrapSwitch', function(event, state) {
       
           var aid=this.getAttribute('data-aid');
           console.log(aid,state);
           
-          $.get('/staging/set_status/'+aid+'/'+state )
+          $.get('/staging/set_status/'+aid+'/'+state+'/' )
           .done(function(data) {
               $('tr#aid-'+aid+' td.acceptedSwitch > div').css('border-color','green');
           })
@@ -151,7 +166,7 @@ block content
           var aid=this.getAttribute('data-aid');
           console.log(this.getAttribute('data-aid'),state);
           
-          $.get('/staging/set_tier/'+aid+'/'+state)
+          $.get('/staging/set_tier/'+aid+'/'+state+'/')
           .done(function(data) {
               $('tr#aid-'+aid+' td.seniorSwitch > div').css('border-color','green');
           })
