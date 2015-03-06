@@ -126,12 +126,16 @@ html
             i.fa.fa-star
             strong Staging
             
-        li(class=title=='Cohorts'?'active':undefined)
-          a(href='/Cohorts')
+        li(class=title=='Cohort'?'active':undefined)
+          a(href='/Cohort')
             i.fa.fa-star
-            strong Cohorts
+            strong Cohort
 
       ul#lg-menu.nav.hidden-xs(style='bottom:0px;position: absolute;width: 100%;')
+        li
+          a(href='/new_Cohort')
+            i.fa.fa-plus
+            strong Create New Cohort 
         li(class=title=='Sign up'?'active':undefined)
           a(href='/Signup')
             i.fa.fa-plus
@@ -156,11 +160,14 @@ html
         li(class=title=='Staging'?'active':undefined)
           a.text-center(href='/Staging')
             i.fa.fa-star
-        li(class=title=='Cohorts'?'active':undefined)
-          a.text-center(href='/Cohorts')
+        li(class=title=='Cohort'?'active':undefined)
+          a.text-center(href='/Cohort')
             i.fa.fa-star
 
         ul#xs-menu.nav.visible-xs(style='bottom:0px;position: absolute;width: 100%;')
+          li
+            a.text-center(href='/new_Cohort')
+              i.fa.fa-plus
           li(class=title=='Sign up'?'active':undefined)
             a.text-center(href='/Signup')
               i.fa.fa-plus

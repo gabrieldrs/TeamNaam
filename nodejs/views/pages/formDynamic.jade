@@ -1,0 +1,60 @@
+extends ../formLayout
+
+mixin formInput(form)
+  if form.type=='string'
+    .form-group
+      label.col-sm-3.control-label(for=form.shortName)=form.shortName
+      .col-sm-5
+        input.form-control(type='text', name=form.shortName, id=form.shortName, required=form.required || false)
+        
+  if form.type=='number'
+    .form-group
+      label.col-sm-3.control-label(for=form.shortName)=form.shortName
+      .col-sm-5
+        input.form-control(type='number', name=form.shortName, id=form.shortName, required=form.required || false)
+
+  if form.type=='range'
+    .form-group
+      label.col-sm-3.control-label(for=form.shortName)=form.shortName
+      .col-sm-5
+        input.form-control(type='number', name=form.shortName, id=form.shortName, min=form.min, step=form.step, max=form.max, required=form.required || false)
+
+  if form.type=='date'
+    .form-group
+      label.col-sm-3.control-label(for=form.shortName)=form.shortName
+      .col-sm-5
+        input.form-control(type='date', name=form.shortName, id=form.shortName, required=form.required || false)
+
+  if form.type=='radioGroup'
+    .form-group
+      label.col-sm-3.control-label(for=form.shortName)=form.shortName
+      .col-sm-5
+        for val in form.values
+          input(type='radio',name=form.shortName, value=val)
+          span=val
+          br
+        
+  if form.type=='checkboxGroup'
+    .form-group
+      label.col-sm-3.control-label(for=form.shortName)=form.shortName
+      .col-sm-5
+        for val in form.values
+          input(type='checkbox',name=form.shortName, value=val)
+          span=val
+          br
+
+block content
+  form.form-horizontal(action='/form/'+cohort._id+'/'+cohort.secret, method='POST')
+    .page-header(style="margin-top:250px;")
+      h3 Student Information
+    div
+      input(type='hidden', name='_csrf', value=_csrf)
+      for input in form
+        +formInput(input)
+      
+    
+      button.btn.btn.btn-primary.col-sm-6.col-sm-offset-2.col-xs-12(type='submit')
+        span.ion-android-hand
+        | Submit!
+
+

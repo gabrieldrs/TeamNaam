@@ -23,6 +23,7 @@ var connectAssets = require('connect-assets');
 
 
 var User = require('./models/User');
+var Cohort = require('./models/Cohort');
 
 /**
  * Controllers (route handlers).
@@ -31,6 +32,7 @@ var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
 var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
+var tricsController = require('./controllers/trics');
 
 /**
  * API keys and Passport configuration.
@@ -90,26 +92,47 @@ app.use(function(req, res, next) {
   if (/api/i.test(req.path)) req.session.returnTo = req.path;
   next();
 });
-app.use(function(req, res, next) {
-  User.count({}).limit(1).count(function( err, count){
+app.use(function(req, res, next) {  // This lets us signup users when no users are signed up.
+  User.count({}).limit(1).count(function( err, count ){
     res.locals.userCount = !!count;
     next();
   });
 });
+
+app.use(function(req, res, next) {  // This lets us display the active COHORT,
+  res.locals.activeCohort=req.session.activeCohort;
+  //console.log('res.locals.COHORT:',res.locals.activeCohort);
+  next();
+});
+app.use(function(req, res, next) {  // This lets us display the available cohorts, and the activeCohort document
+  Cohort.find(function( err, cohorts){
+    res.locals.cohorts=cohorts;
+    var cohort=_.where(cohorts, {id: res.locals.activeCohort})[0]
+    res.locals.cohort=cohort? cohort : {};
+    
+    //console.log('cohorts docs:',cohorts);
+    //console.log('cohort:',res.locals.cohort);
+    next();
+  });
+});
+
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 
 /**
  * Primary app routes.
  */
+ 
+
 app.get('/', passportConf.isAuthenticated, homeController.explorer);  // REDIRECT TO LAST COHORT
 app.get('/2', passportConf.isAuthenticated, homeController.two);
+
 
 app.get('/Emails', passportConf.isAuthenticated, homeController.emails);
 app.get('/Directory', passportConf.isAuthenticated, homeController.directory);
 app.get('/Explorer', passportConf.isAuthenticated, homeController.explorer);
 app.get('/Matching', passportConf.isAuthenticated, homeController.matching);
 app.get('/Staging', passportConf.isAuthenticated, homeController.staging);
-app.get('/Cohorts', passportConf.isAuthenticated, homeController.cohorts);
+app.get('/Cohort', passportConf.isAuthenticated, homeController.cohort);
 
 
 
@@ -155,17 +178,31 @@ app.post('/signup', function(req, res, next){
 app.get('/form', function(req, res) {
   req.flash('errors', { msg: 'Invalid student number' });
   req.flash('errors', { msg: 'Please provide an email address.' });
-  req.flash('errors', { msg: 'Please provide 2 more hobbies.' });
+  req.flash('errors', { msg: 'Please provide your hobbies.' });
   res.render('pages/form', { title: 'CS Tri-Mentoring Application Form' });
 });
+app.get('/form/:cid/:secret', tricsController.getForm);
+app.post('/form/:cid/:secret', tricsController.postForm);
 
-app.get('/contact', contactController.getContact);
-app.post('/contact', contactController.postContact);
+app.get('/set_cohort/:cid', tricsController.setCohort);
+app.get('/new_cohort', tricsController.getNewCohort);
+app.post('/update_cohort', tricsController.updateCohort);
+app.post('/delete_cohort', tricsController.deleteCohort);
 
 app.get('/account', passportConf.isAuthenticated, userController.getAccount);
 app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
+
+
+
+
+
+/* ##############  DEPRECIATED BELOW  ################ */
+
+app.get('/contact', contactController.getContact);
+app.post('/contact', contactController.postContact);
+
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
 
 /**

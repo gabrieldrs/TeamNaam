@@ -1,6 +1,6 @@
 .navbar.navbar-default.navbar-fixed-top
   div
-    .navbar-header.col-sm-2(style='background:#1A242E; margin-right:5px;padding:0px;')
+    .navbar-header.col-sm-2(style='background:#1A242E; margin-right:5px;padding:0px;padding-left:5px;')
       button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
         span.sr-only Toggle navigation
         span.icon-bar
@@ -10,44 +10,30 @@
         span.ion-cube
         | CS Tri-Mentoring
     .collapse.navbar-collapse
-      ul.nav.navbar-nav
+      ul.nav.navbar-nav 
+        style.
+          h4.nav a{ padding-left: 5px;padding-right: 5px;  }
         h4.nav.navbar-nav
-          style.
-            h4.nav a{ padding-left: 5px;padding-right: 5px;  }
         
-          li
-            a(href='/')
-              span.label.label-info cohort 1
-          
-          li
-            a(href='/')
-              span.label.label-success cohort 2
-          li
-            a(href='/')
-              span.label.label-warning cohort 3
-          
-          li
-            a(href='/')
-              span.label.label-danger cohort 4
+            mixin cohortButton(i,msg,id)
+              - var labelClass = 'label-info'
+              if (i%5==0) 
+                - labelClass='label-info'
+              if (i%5==1)
+                - labelClass='label-success'
+              if (i%5==2)
+                - labelClass='label-warning'
+              if (i%5==3)
+                - labelClass='label-danger'
+              if (i%5==4)
+                - labelClass='label-default'
+                
+              li(class=activeCohort==id?'active':undefined)
+                a(href='/set_cohort/'+id)
+                  span.label(class=labelClass)=msg
             
-          li(class=title=='API Examples'?'active':undefined)
-            a(href='/') 
-              span.label.label-default cohort 5
-           
-          li
-            a(href='/')
-              span.active.label.label-info cohort 6
-          
-            li
-              a(href='/')
-                span.label.label-success cohort 7
-            li
-              a(href='/')
-                span.label.label-warning cohort 8
-
-            li.active
-              a(href='/')
-                span.label.label-danger cohort 9
+            each cohort, index in cohorts
+              +cohortButton(index,cohort.title,cohort._id)
               
             
       ul.nav.navbar-nav.navbar-right(style='margin-right:25px;')
