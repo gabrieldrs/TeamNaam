@@ -46,7 +46,7 @@ exports.matching = function(req, res) {
 };
 
 exports.juniorMatching = function(req, res) {
-  Application.find({ cohort: res.locals.activeCohort }).lean().exec( function(err, applications){
+  Application.find({ cohort: res.locals.activeCohort, student: true }).lean().exec( function(err, applications){
     if (err){ 
       console.error(err);
       req.flash('errors', { msg: 'Failed to retrieve applications.' });
@@ -64,7 +64,7 @@ exports.juniorMatching = function(req, res) {
 
 
 exports.staging = function(req, res) {
-  Application.find({ cohort: res.locals.activeCohort }).lean().exec( function(err, applications){
+  Application.find({ cohort: res.locals.activeCohort , student: true }).lean().exec( function(err, applications){
     if (err){ 
       console.error(err);
       req.flash('errors', { msg: 'Failed to retrieve applications.' });
@@ -88,13 +88,6 @@ exports.staging = function(req, res) {
   });
 };
 
-
-
-exports.cohort = function(req, res) {
-  res.render('pages/cohort', {
-    title: 'Home'
-  });
-};
 
 
 

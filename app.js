@@ -32,6 +32,9 @@ var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
 var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
+
+var cohortController = require('./controllers/cohort');
+var applicationController = require('./controllers/application');
 var tricsController = require('./controllers/trics');
 
 /**
@@ -132,19 +135,8 @@ app.get('/Directory', passportConf.isAuthenticated, homeController.directory);
 app.get('/Explorer', passportConf.isAuthenticated, homeController.explorer);
 app.get('/Matching', passportConf.isAuthenticated, homeController.matching);
 app.get('/Staging', passportConf.isAuthenticated, homeController.staging);
-app.get('/Cohort', passportConf.isAuthenticated, homeController.cohort);
 
 
-
-// REDIRECT each action to its proper cohort. This redirect approach should make things easier to keep track of.
-/*
-  /Emails
-  /Directory
-  /Data Explorer
-  /Matching
-  /Staging
-  /Cohorts
-*/
 
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
@@ -181,13 +173,17 @@ app.get('/form', function(req, res) {
   req.flash('errors', { msg: 'Please provide your hobbies.' });
   res.render('pages/form', { title: 'CS Tri-Mentoring Application Form' });
 });
-app.get('/form/:cid/:secret', tricsController.getForm);
-app.post('/form/:cid/:secret', tricsController.postForm);
 
-app.get('/set_cohort/:cid', tricsController.setCohort);
-app.get('/new_cohort', tricsController.getNewCohort);
-app.post('/update_cohort/:cid', tricsController.updateCohort);
-app.post('/delete_cohort/:cid', tricsController.deleteCohort);
+app.get('/form/mentor/:cid/:secret', applicationController.getMentorForm);
+app.post('/form/mentor/:cid/:secret', applicationController.postMentorForm);
+app.get('/form/student/:cid/:secret', applicationController.getStudentForm);
+app.post('/form/student/:cid/:secret', applicationController.postStudentForm);
+
+app.get('/Cohort', passportConf.isAuthenticated, cohortController.cohort);
+app.get('/set_cohort/:cid', cohortController.setCohort);
+app.get('/new_cohort', cohortController.getNewCohort);
+app.post('/update_cohort/:cid', cohortController.updateCohort);
+app.post('/delete_cohort/:cid', cohortController.deleteCohort);
 
 app.get('/account', passportConf.isAuthenticated, userController.getAccount);
 app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);

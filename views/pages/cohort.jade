@@ -40,10 +40,15 @@ block content
         input.form-control(type='text', style='display: inline;width: 320px;height: 35px;', value=cohort.secret, id='secret', name='secret')
     
     .form-group
-      label.col-sm-2.control-label Form Link
+      label.col-sm-2.control-label Mentor Form Link
       .col-sm-10
-        a(href='https://DOMAIN.COM/form/'+cohort._id+'/'+ cohort.secret)='https://DOMAIN.COM/form/'+cohort._id+'/'+ cohort.secret
-    
+        a(href='https://DOMAIN.COM/form/mentor/'+cohort._id+'/'+ cohort.secret)='https://DOMAIN.COM/form/mentor/'+cohort._id+'/'+ cohort.secret
+
+    .form-group
+      label.col-sm-2.control-label Student Form Link
+      .col-sm-10
+        a(href='https://DOMAIN.COM/form/student/'+cohort._id+'/'+ cohort.secret)='https://DOMAIN.COM/form/student/'+cohort._id+'/'+ cohort.secret
+            
     .form-group
       .col-sm-offset-2.col-sm-4
         button.btn.btn.btn-primary(type='submit')
