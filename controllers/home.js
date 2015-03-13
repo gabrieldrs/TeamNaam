@@ -1,6 +1,8 @@
 var moment = require('moment');
 var Application = require('../models/Application');
+var Cohort = require('../models/Cohort');
 var _ = require('lodash');
+var formLoader = require('./forms');
 
 
 /**
@@ -91,5 +93,45 @@ exports.staging = function(req, res) {
 };
 
 
+/*
+ TODO:  This controller for the "explorer" page is temporarily here because of the form Variable.  IT should be moved back to the homeController later, when the formObject Variable is globally accissible as a file, global variable, or through mongoDB.  Presently it is a local variable, so this controller must be here.
+ */
 
-
+exports.explorer = function(req, res) {
+    var cid=res.locals.cohort;
+    console.log(cid);
+    Cohort.findById(cid).lean().exec(function( err, cohort){
+        var formData = formLoader.getForm(cohort.form);
+        var factors = formData.map(function(el) {
+            return {
+                shortName: el.shortName,
+                weight: el.weight
+            };
+        });
+        console.log(factors);
+        res.render('pages/explorer', {
+            title: 'Home',
+            factors: factors
+        });
+    });
+};
+/*
+ TODO:  This controller for the "explorer" page is temporarily here because of the form Variable.  IT should be moved back to the homeController later, when the formObject Variable is globally accissible as a file, global variable, or through mongoDB.  Presently it is a local variable, so this controller must be here.
+ */
+exports.two = function(req, res) {
+    var cid=res.locals.cohort;
+    Cohort.findById(cid).lean().exec(function( err, cohort){
+        var formData = formLoader.getForm(cohort.form);
+        var factors = formData.map(function(el) {
+            return {
+                shortName: el.shortName,
+                weight: el.weight
+            };
+        });
+        console.log(factors);
+        res.render('pages/explorer2', {
+            title: 'Home',
+            factors: factors
+        });
+    });
+};

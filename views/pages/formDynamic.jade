@@ -45,7 +45,7 @@ mixin formInput(form)
 
 block content
   form.form-horizontal(action='/form/'+  (student?'student/':'mentor/')  +cohort._id+'/'+cohort.secret, method='POST')
-    .page-header(style="margin-top:250px;")
+    .page-header(style="margin-top:10%;")
       if student
         h3 Student Application Form
       else

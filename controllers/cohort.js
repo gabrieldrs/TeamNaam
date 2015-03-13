@@ -1,6 +1,7 @@
 var Cohort = require('../models/Cohort');
 var Application = require('../models/Application');
 var _ = require('lodash');
+var formLoader = require('./forms');
 
 
 
@@ -36,8 +37,10 @@ exports.getNewCohort = function(req, res) {
 
 ///  GET /cohort/
 exports.cohort = function(req, res) {
+  var formNames = formLoader.getAllFormNames();
   res.render('pages/cohort', {
-    title: 'Home'
+    title: 'Home',
+    forms: formNames
   });
 };
 

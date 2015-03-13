@@ -1,132 +1,21 @@
 var Cohort = require('../models/Cohort');
 var Application = require('../models/Application');
 var _ = require('lodash');
+var formLoader = require('./forms');
 
-
-
-
-
-// Temporary local JSON to hold form data.    // This form holds BOTH student and mentor data.
-
-/*
-Possible RESERVED shortNames:
-  comment,
-  status
-  student
-
-  birthdate
-  submissionDate  <-- or make relative time object?
-
-
-NOTE:
-  CASE SENSITIVE
-
-*/
-var formData=[
-  {
-    instruction: '',
-    weight: 75,
-    shortName: 'Student Number',
-    help: 'You can do it!',
-    type: 'string',
-    required: true,
-    analyze: false,   // DO NOT SEND DATA TO DASHBOARD
-    mentor: false
-  },
-  {
-    instruction: '',
-    weight: 75,
-    shortName: 'Company',
-    help: 'You can do it!',
-    type: 'string',
-    required: true,
-    analyze: true,   // WILL SEND DATA TO DASHBOARD
-    student: false
-  },
-
-  {
-    instruction: '',
-    weight: 75,
-    shortName: 'First Name',
-    help: 'You can do it!',
-    type: 'string',
-    required: true,
-    analyze: false
-  },
-
-  {
-    instruction: '',
-    weight: 75,
-    shortName: 'Last Name',
-    help: 'You can do it!',
-    type: 'string',
-    required: false,
-    analyze: false
-  },
-
-  {
-    instruction: '',
-    weight: 75,
-    shortName: 'Faculty',
-    help: 'You can do it!',
-    type: 'radioGroup',
-    values: ['Arts','Engineering','Sciences','Sauder'],
-    mentor: false
-  },
-
-  {
-    instruction: 'Choose all that apply.',
-    weight: 75,
-    shortName: 'Availability',
-    help: 'You can do it!',
-    type: 'checkboxGroup',
-    values: ['Monday','Tuesday','Wednesday','Thrusday','Friday']
-  },
-
-  {
-    instruction: '',
-    weight: 75,
-    shortName: 'Ability to Code',
-    help: 'You can do it!',
-    type: 'range',
-    min:0,
-    step:1,
-    max:10,
-    required: true
-  },
-
-  {
-    instruction: '',
-    weight: 75,
-    shortName: 'Birth Date',
-    help: 'You can do it!',
-    type: 'date'
-  },
-
-  {
-    instruction: '',
-    weight: 75,
-    shortName: 'Academic Standing (Year)',
-    help: 'You can do it!',
-    type: 'integer',
-    mentor: false
-  }
-];
 
 ///  GET /form/student/:cid/:secret
 exports.getStudentForm = function(req, res) {
 var secret=req.params.secret;
 var cid=req.params.cid;
 
-  Cohort.findById(cid).lean().exec(function( err, form){
-    
-    
-    if ( form && form.status == false)      // the form is closed.
+  Cohort.findById(cid).lean().exec(function( err, cohort){
+    if ( cohort && cohort.status == false)      // the form is closed.
       res.redirect('/formClosed');
-    else if ( form && form.secret==secret ){  
-    
-      var studentForms = _.filter( formData, function(formField){ return formField.student!==false; });  // only display the form fields relevant to students
-      res.render('pages/formDynamic', { student: true, form: studentForms, title: 'CS Tri-Mentoring Application Form' });    
+    else if ( cohort && cohort.secret==secret ){
+      var formData = formLoader.getForm(cohort.form);
+      var formData = _.filter( formData, function(formField){ return formField.student!==false; });  // only display the form fields relevant to students
+      res.render('pages/formDynamic', { student: true, form: formData, title: 'CS Tri-Mentoring Application Form' });
     }  
     else{
       req.flash('errors', { msg: 'Invalid form URL' });
@@ -224,13 +113,11 @@ exports.getMentorForm = function(req, res) {
 var secret=req.params.secret;
 var cid=req.params.cid;
 
-  Cohort.findById(cid).lean().exec(function( err, form){
-    
-    
-    if ( form && form.status == false)      // the form is closed.
+  Cohort.findById(cid).lean().exec(function( err, cohort){
+    if ( cohort && cohort.status == false)      // the form is closed.
       res.redirect('/formClosed');
-    else if ( form && form.secret==secret ){    
-    
+    else if ( cohort && cohort.secret==secret ){
+      var formData = formLoader.getForm(cohort.form);
       var mentorForms = _.filter( formData, function(formField){ return formField.mentor!==false; });    // Shows only fields relevant to mentors
       res.render('pages/formDynamic', { student: false, form: mentorForms, title: 'CS Tri-Mentoring Application Form' });    
     }  
@@ -325,38 +212,11 @@ exports.getThankYouPage = function(req,res){
     res.render('pages/thankYou', {title: 'Thank you for your submission!' });
 };
 
+exports.get404 = function(req,res){
+    res.render('404', {title: '404: File Not Found'});
+}
+exports.get500 = function(req,res){
+    res.render('500', {title:'500: Internal Server Error', error: error});
+}
 
 
-/*
-  TODO:  This controller for the "explorer" page is temporarily here because of the form Variable.  IT should be moved back to the homeController later, when the formObject Variable is globally accissible as a file, global variable, or through mongoDB.  Presently it is a local variable, so this controller must be here.
-*/
-
-exports.explorer = function(req, res) {
-  var factors = formData.map(function(el) {
-    return { 
-      shortName: el.shortName,
-      weight: el.weight
-      };
-  });
-  console.log(factors);
-  res.render('pages/explorer', {
-    title: 'Home',
-    factors: factors
-  });
-};
-/*
-  TODO:  This controller for the "explorer" page is temporarily here because of the form Variable.  IT should be moved back to the homeController later, when the formObject Variable is globally accissible as a file, global variable, or through mongoDB.  Presently it is a local variable, so this controller must be here.
-*/
-exports.two = function(req, res) {
-  var factors = formData.map(function(el) {
-    return { 
-      shortName: el.shortName,
-      weight: el.weight
-      };
-  });
-  console.log(factors);
-  res.render('pages/explorer2', {
-    title: 'Home',
-    factors: factors
-  });
-};
