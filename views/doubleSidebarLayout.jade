@@ -170,39 +170,18 @@ html
         .factorsBar.col-xs-2
           form(method='POST')
             input(type='hidden', name='_csrf', value=_csrf)
-            .form-group
-              label.control-label(for='email') Personality
-              input.form-control(type='number', value='10')
-            .form-group
-              label.control-label(for='password') Availability
-              input.form-control(type='number', value='50')
-            .form-group
-              label.control-label(for='password') CS Stream
-              input.form-control(type='number', value='60')
-            .form-group
-              label.control-label(for='password') Faculty
-              input.form-control(type='number', value='40')
-            .form-group
-              label.control-label(for='password') Year
-              input.form-control(type='number', value='90')
-            .form-group
-              label.control-label(for='password') Courses
-              input.form-control(type='number', value='70')
-            .form-group
-              label.control-label(for='password') Interests
-              input.form-control(type='number', value='30')
-            .form-group
-              label.control-label(for='password') Hobbies
-              input.form-control(type='number', value='20')
+            for factor in factors
+              .form-group
+                label.control-label(for=factor.shortName)=factor.shortName
+                input.form-control(type='number', name=factor.shortName, value=factor.weight)
+
           script.
             $('input[type="number"]').ionRangeSlider({
                 min: 0,
                 max: 100,
-                from: 50,
                 hide_min_max: true,
                 type: 'single',
                 grid: false,
-                grid_num: 50
             });    
         .col-xs-10.col-xs-offset-2
           block content

@@ -25,6 +25,7 @@ NOTE:
 var formData=[
   {
     instruction: '',
+    weight: 75,
     shortName: 'Student Number',
     help: 'You can do it!',
     type: 'string',
@@ -34,6 +35,7 @@ var formData=[
   },
   {
     instruction: '',
+    weight: 75,
     shortName: 'Company',
     help: 'You can do it!',
     type: 'string',
@@ -44,6 +46,7 @@ var formData=[
 
   {
     instruction: '',
+    weight: 75,
     shortName: 'First Name',
     help: 'You can do it!',
     type: 'string',
@@ -53,6 +56,7 @@ var formData=[
 
   {
     instruction: '',
+    weight: 75,
     shortName: 'Last Name',
     help: 'You can do it!',
     type: 'string',
@@ -62,6 +66,7 @@ var formData=[
 
   {
     instruction: '',
+    weight: 75,
     shortName: 'Faculty',
     help: 'You can do it!',
     type: 'radioGroup',
@@ -71,6 +76,7 @@ var formData=[
 
   {
     instruction: 'Choose all that apply.',
+    weight: 75,
     shortName: 'Availability',
     help: 'You can do it!',
     type: 'checkboxGroup',
@@ -79,6 +85,7 @@ var formData=[
 
   {
     instruction: '',
+    weight: 75,
     shortName: 'Ability to Code',
     help: 'You can do it!',
     type: 'range',
@@ -90,6 +97,7 @@ var formData=[
 
   {
     instruction: '',
+    weight: 75,
     shortName: 'Birth Date',
     help: 'You can do it!',
     type: 'date',
@@ -97,6 +105,7 @@ var formData=[
 
   {
     instruction: '',
+    weight: 75,
     shortName: 'Academic Standing (Year)',
     help: 'You can do it!',
     type: 'integer',
@@ -312,4 +321,20 @@ delete req.body._csrf; //delete the CSRF token now because it gets in the way, a
 
 
 
+/*
+  TODO:  This controller for the "explorer" page is temporarily here because of the form Variable.  IT should be moved back to the homeController later, when the formObject Variable is globally accissible as a file, global variable, or through mongoDB.  Presently it is a local variable, so this controller must be here.
+*/
 
+exports.explorer = function(req, res) {
+  var factors = formData.map(function(el) {
+    return { 
+      shortName: el.shortName,
+      weight: el.weight
+      };
+  });
+  console.log(factors);
+  res.render('pages/explorer', {
+    title: 'Home',
+    factors: factors
+  });
+};

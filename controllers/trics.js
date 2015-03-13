@@ -72,3 +72,21 @@ var status=req.params.status;
     });
   });
 };
+
+
+
+
+
+/* ============================================= */
+
+
+
+exports.setWeights = function(req, res) {
+  
+  console.log(req.body);
+  Application.find({}, function(err, applications) {
+    res.status(200).json({})
+  });
+
+};
+

@@ -27,11 +27,7 @@ exports.directory = function(req, res) {
   });
 };
 
-exports.explorer = function(req, res) {
-  res.render('pages/explorer', {
-    title: 'Home'
-  });
-};
+
 
 exports.seniorMatching = function(req, res) {
   Application.find({ cohort: res.locals.activeCohort, $or: [{student: false},{senior: true}] }).lean().exec( function(err, applications){

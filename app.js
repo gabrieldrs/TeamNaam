@@ -126,16 +126,17 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
  */
  
 
-app.get('/', passportConf.isAuthenticated, homeController.explorer);  // REDIRECT TO LAST COHORT
+app.get('/', passportConf.isAuthenticated, applicationController.explorer);  // REDIRECT TO LAST COHORT
 app.get('/2', passportConf.isAuthenticated, homeController.two);
 
 
 app.get('/Emails', passportConf.isAuthenticated, homeController.emails);
 app.get('/Directory', passportConf.isAuthenticated, homeController.directory);
-app.get('/Explorer', passportConf.isAuthenticated, homeController.explorer);
+app.get('/Explorer', passportConf.isAuthenticated, applicationController.explorer);
 app.get('/Matching', passportConf.isAuthenticated, homeController.matching);
 app.get('/Staging', passportConf.isAuthenticated, homeController.staging);
 
+app.post('/matrix/set-weights', passportConf.isAuthenticated, tricsController.setWeights);
 
 
 app.get('/login', userController.getLogin);
