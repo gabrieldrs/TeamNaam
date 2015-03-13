@@ -51,7 +51,7 @@ var formData=[
     help: 'You can do it!',
     type: 'string',
     required: true,
-    analyze: false,
+    analyze: false
   },
 
   {
@@ -61,7 +61,7 @@ var formData=[
     help: 'You can do it!',
     type: 'string',
     required: false,
-    analyze: false,
+    analyze: false
   },
 
   {
@@ -100,7 +100,7 @@ var formData=[
     weight: 75,
     shortName: 'Birth Date',
     help: 'You can do it!',
-    type: 'date',
+    type: 'date'
   },
 
   {
@@ -111,7 +111,7 @@ var formData=[
     type: 'integer',
     mentor: false
   }
-]
+];
 
 ///  GET /form/student/:cid/:secret
 exports.getStudentForm = function(req, res) {
@@ -145,7 +145,7 @@ var cid=req.params.cid;
 var errors=[];
 delete req.body._csrf; //delete the CSRF token now because it gets in the way, and isn't needed at the point in the controller.
   
-  // Check it too many fields were submitted
+  // Check if too many fields were submitted
   if ( Object.keys(req.body).length > formData.length )
     errors.push('You cannot submit more answers than their are questions!');  
   
@@ -158,7 +158,7 @@ delete req.body._csrf; //delete the CSRF token now because it gets in the way, a
   // Checks if all inputs are within range--if it is of type range.
   Object.keys(req.body).forEach(function(postKey) {
     var postVal = req.body[postKey];
-    var element = _.find(formData, { 'shortName': postKey })
+    var element = _.find(formData, { 'shortName': postKey });
     
     if ( element.student!==false ){
       if ( element.type == 'date')
@@ -264,7 +264,7 @@ delete req.body._csrf; //delete the CSRF token now because it gets in the way, a
   // Checks if all inputs are within range--if it is of type range.
   Object.keys(req.body).forEach(function(postKey) {
     var postVal = req.body[postKey];
-    var element = _.find(formData, { 'shortName': postKey })
+    var element = _.find(formData, { 'shortName': postKey });
     
     if ( element.mentor!==false){
       if ( element.type == 'date')
@@ -318,6 +318,12 @@ delete req.body._csrf; //delete the CSRF token now because it gets in the way, a
   });
 };
 
+exports.getFormClosedPage = function(req,res){
+    res.render('pages/formClosed', {title: 'This session is closed.' });
+};
+exports.getThankYouPage = function(req,res){
+    res.render('pages/thankYou', {title: 'Thank you for your submission!' });
+};
 
 
 

@@ -10,7 +10,7 @@ var logger = require('morgan');
 var errorHandler = require('errorhandler');
 var lusca = require('lusca');
 var methodOverride = require('method-override');
-var multer  = require('multer')
+var multer  = require('multer');
 
 var _ = require('lodash');
 var MongoStore = require('connect-mongo')(session);
@@ -110,13 +110,15 @@ app.use(function(req, res, next) {  // This lets us display the active COHORT,
 app.use(function(req, res, next) {  // This lets us display the available cohorts, and the activeCohort document
   Cohort.find(function( err, cohorts){
     res.locals.cohorts=cohorts;
-    var cohort=_.where(cohorts, {id: res.locals.activeCohort})[0]
+    var cohort=_.where(cohorts, {id: res.locals.activeCohort})[0];
     res.locals.cohort=cohort? cohort : {};
     next();
   });
 });
 
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+
+
 
 /**
  * Primary app routes.
@@ -172,6 +174,8 @@ app.get('/form', function(req, res) {
   res.render('pages/form', { title: 'CS Tri-Mentoring Application Form' });
 });
 
+app.get('/formClosed', applicationController.getFormClosedPage);
+app.get('/thankyou', applicationController.getThankYouPage);
 app.get('/form/mentor/:cid/:secret', applicationController.getMentorForm);
 app.post('/form/mentor/:cid/:secret', applicationController.postMentorForm);
 app.get('/form/student/:cid/:secret', applicationController.getStudentForm);
@@ -282,6 +286,20 @@ app.get('/auth/venmo/callback', passport.authorize('venmo', { failureRedirect: '
  * Error Handler.
  */
 app.use(errorHandler());
+
+// Handle 404
+app.get('/404',applicationController.get404);
+app.use(function(req, res) {
+    res.status(400);
+    res.render('404', {title: '404: File Not Found'});
+});
+
+// Handle 500
+app.get('/500',applicationController.get500 );
+app.use(function(error, req, res, next) {
+    res.status(500);
+    res.render('500', {title:'500: Internal Server Error', error: error});
+});
 
 /**
  * Start Express server.
