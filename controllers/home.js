@@ -8,11 +8,6 @@ var _ = require('lodash');
  * Home page.
  */
 
-exports.two = function(req, res) {
-  res.render('pages/explorer2', {
-    title: 'Home'
-  });
-};
 
 
 exports.emails = function(req, res) {

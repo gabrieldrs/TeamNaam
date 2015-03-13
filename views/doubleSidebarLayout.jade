@@ -170,10 +170,12 @@ html
         .factorsBar.col-xs-2
           form(method='POST')
             input(type='hidden', name='_csrf', value=_csrf)
-            for factor in factors
-              .form-group
-                label.control-label(for=factor.shortName)=factor.shortName
-                input.form-control(type='number', name=factor.shortName, value=factor.weight)
+            if factors
+              for factor in factors
+                if factor
+                  .form-group
+                    label.control-label(for=factor.shortName)=factor.shortName
+                    input.form-control(type='number', name=factor.shortName, data-from=factor.weight)
 
           script.
             $('input[type="number"]').ionRangeSlider({
@@ -182,7 +184,22 @@ html
                 hide_min_max: true,
                 type: 'single',
                 grid: false,
-            });    
+                onFinish: rangeChange
+            });
+            function rangeChange(){
+              var factors=[];
+              $('input[type="number"]').each(function(index, element) {
+                  factors.push(
+                    {
+                      shortName: element.name,
+                      weight: $(element).data().from
+                    }
+                  );
+              });
+              $.post('/matrix/set-weights', {_csrf: '#{_csrf}', factors: factors });
+              
+            }
+            
         .col-xs-10.col-xs-offset-2
           block content
   

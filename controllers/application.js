@@ -338,3 +338,19 @@ exports.explorer = function(req, res) {
     factors: factors
   });
 };
+/*
+  TODO:  This controller for the "explorer" page is temporarily here because of the form Variable.  IT should be moved back to the homeController later, when the formObject Variable is globally accissible as a file, global variable, or through mongoDB.  Presently it is a local variable, so this controller must be here.
+*/
+exports.two = function(req, res) {
+  var factors = formData.map(function(el) {
+    return { 
+      shortName: el.shortName,
+      weight: el.weight
+      };
+  });
+  console.log(factors);
+  res.render('pages/explorer2', {
+    title: 'Home',
+    factors: factors
+  });
+};

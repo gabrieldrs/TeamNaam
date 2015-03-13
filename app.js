@@ -36,6 +36,7 @@ var contactController = require('./controllers/contact');
 var cohortController = require('./controllers/cohort');
 var applicationController = require('./controllers/application');
 var tricsController = require('./controllers/trics');
+var algoController = require('./controllers/algorithm');
 
 /**
  * API keys and Passport configuration.
@@ -104,7 +105,6 @@ app.use(function(req, res, next) {  // This lets us signup users when no users a
 
 app.use(function(req, res, next) {  // This lets us display the active COHORT,
   res.locals.activeCohort=req.session.activeCohort;
-  //console.log('res.locals.COHORT:',res.locals.activeCohort);
   next();
 });
 app.use(function(req, res, next) {  // This lets us display the available cohorts, and the activeCohort document
@@ -112,9 +112,6 @@ app.use(function(req, res, next) {  // This lets us display the available cohort
     res.locals.cohorts=cohorts;
     var cohort=_.where(cohorts, {id: res.locals.activeCohort})[0]
     res.locals.cohort=cohort? cohort : {};
-    
-    //console.log('cohorts docs:',cohorts);
-    //console.log('cohort:',res.locals.cohort);
     next();
   });
 });
@@ -127,7 +124,7 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
  
 
 app.get('/', passportConf.isAuthenticated, applicationController.explorer);  // REDIRECT TO LAST COHORT
-app.get('/2', passportConf.isAuthenticated, homeController.two);
+app.get('/2', passportConf.isAuthenticated, applicationController.two);
 
 
 app.get('/Emails', passportConf.isAuthenticated, homeController.emails);
@@ -136,7 +133,7 @@ app.get('/Explorer', passportConf.isAuthenticated, applicationController.explore
 app.get('/Matching', passportConf.isAuthenticated, homeController.matching);
 app.get('/Staging', passportConf.isAuthenticated, homeController.staging);
 
-app.post('/matrix/set-weights', passportConf.isAuthenticated, tricsController.setWeights);
+app.post('/matrix/set-weights', passportConf.isAuthenticated, algoController.setWeights);
 
 
 app.get('/login', userController.getLogin);

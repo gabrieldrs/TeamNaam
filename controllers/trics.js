@@ -11,7 +11,7 @@ var comment=req.params.comment;
   Application.findById( aid, function(err, application) {
     if (err){ 
       console.error(err);
-      return res.status(500).json({ aid: aid, comment: application.comment, error: 'Application comment failed to be updated.' })
+      return res.status(500).json({ aid: aid, comment: application.comment, error: 'Application comment failed to be updated.' });
     }
     
     application.adminComment = comment;
@@ -20,9 +20,9 @@ var comment=req.params.comment;
     application.save(function(err) {
       if (err){
          console.error(err);
-         return res.status(500).json({ aid: aid, comment: application.comment, error: 'Application comment failed to be set.' })
+         return res.status(500).json({ aid: aid, comment: application.comment, error: 'Application comment failed to be set.' });
       }
-      return res.status(200).json({ aid: aid, comment: application.comment, msg: 'Application comment information updated.' })
+      return res.status(200).json({ aid: aid, comment: application.comment, msg: 'Application comment information updated.' });
     });
   });
 }
@@ -35,7 +35,7 @@ var tier=req.params.tier;
   Application.findById( aid, function(err, application) {
     if (err){ 
       console.error(err);
-      return res.status(500).json({ aid: aid, state: application.senior, error: 'Application tier failed to be updated.' })
+      return res.status(500).json({ aid: aid, state: application.senior, error: 'Application tier failed to be updated.' });
     }
     
     application.senior = (tier==='true');  // converts boolean string to actual boolean
@@ -43,9 +43,9 @@ var tier=req.params.tier;
     application.save(function(err) {
       if (err){
          console.error(err);
-         return res.status(500).json({ aid: aid, state: application.senior, error: 'Application tier failed to be set.' })
+         return res.status(500).json({ aid: aid, state: application.senior, error: 'Application tier failed to be set.' });
       }
-      return res.status(200).json({ aid: aid, state: application.senior, msg: 'Application tier information updated.' })
+      return res.status(200).json({ aid: aid, state: application.senior, msg: 'Application tier information updated.' });
     });
   });
 }
@@ -58,7 +58,7 @@ var status=req.params.status;
   Application.findById( aid, function(err, application) {
     if (err){ 
       console.error(err);
-      return res.status(500).json({ aid: aid, state: application.accepted, error: 'Application status failed to be updated.' })
+      return res.status(500).json({ aid: aid, state: application.accepted, error: 'Application status failed to be updated.' });
     }
     
     application.accepted = (status==='true');  // converts boolean string to actual boolean
@@ -66,27 +66,12 @@ var status=req.params.status;
     application.save(function(err) {
       if (err){
          console.error(err);
-         return res.status(500).json({ aid: aid, state: application.accepted, error: 'Application status failed to be set.' })
+         return res.status(500).json({ aid: aid, state: application.accepted, error: 'Application status failed to be set.' });
       }
-      return res.status(200).json({ aid: aid, state: application.accepted, msg: 'Application status updated.' })
+      return res.status(200).json({ aid: aid, state: application.accepted, msg: 'Application status updated.' });
     });
   });
 };
 
 
-
-
-
-/* ============================================= */
-
-
-
-exports.setWeights = function(req, res) {
-  
-  console.log(req.body);
-  Application.find({}, function(err, applications) {
-    res.status(200).json({})
-  });
-
-};
 
