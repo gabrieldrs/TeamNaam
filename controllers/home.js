@@ -101,13 +101,15 @@ exports.explorer = function(req, res) {
     var cid=res.locals.cohort;
     console.log(cid);
     Cohort.findById(cid).lean().exec(function( err, cohort){
-        var formData = formLoader.getForm(cohort.form);
-        var factors = formData.map(function(el) {
-            return {
-                shortName: el.shortName,
-                weight: el.weight
-            };
-        });
+        if (formData) {
+            var formData = formLoader.getForm(cohort.form);
+            var factors = formData.map(function (el) {
+                return {
+                    shortName: el.shortName,
+                    weight: el.weight
+                };
+            });
+        }
         console.log(factors);
         res.render('pages/explorer', {
             title: 'Home',
