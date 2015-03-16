@@ -10,14 +10,6 @@ var formLoader = require('./forms');
  * Home page.
  */
 
-
-
-exports.emails = function(req, res) {
-  res.render('pages/emails', {
-    title: 'Home'
-  });
-};
-
 exports.directory = function(req, res) {
   res.render('pages/directory', {
     title: 'Home'

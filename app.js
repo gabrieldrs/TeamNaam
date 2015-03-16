@@ -37,6 +37,7 @@ var cohortController = require('./controllers/cohort');
 var applicationController = require('./controllers/application');
 var tricsController = require('./controllers/trics');
 var algoController = require('./controllers/algorithm');
+var emailController = require('./controllers/emails');
 
 /**
  * API keys and Passport configuration.
@@ -129,7 +130,8 @@ app.get('/', passportConf.isAuthenticated, homeController.explorer);  // REDIREC
 app.get('/2', passportConf.isAuthenticated, homeController.two);
 
 
-app.get('/Emails', passportConf.isAuthenticated, homeController.emails);
+app.get('/Emails', passportConf.isAuthenticated, emailController.getEmails);
+app.post('/generateEmailsList', passportConf.isAuthenticated, emailController.postEmailsList);
 app.get('/Directory', passportConf.isAuthenticated, homeController.directory);
 app.get('/Explorer', passportConf.isAuthenticated, homeController.explorer);
 app.get('/Matching', passportConf.isAuthenticated, homeController.matching);
