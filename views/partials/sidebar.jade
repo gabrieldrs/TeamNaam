@@ -1,0 +1,81 @@
+#sidebarViewLeft.column.col-sm-2.col-xs-1.sidebarViewLeft-offcanvas
+    ul.nav
+        li
+            a.visible-xs.text-center(href='#', data-toggle='offcanvas')
+                i#sidebarViewLeftSwitch.fa.fa-chevron-right
+    ul#lg-menu.nav.hidden-xs
+        li(class=title=='Emails'?'active':undefined)
+            a(href='/Emails')
+                i.fa.fa-dashboard
+                strong Email List Generation
+
+        li(class=title=='Directory'?'active':undefined)
+            a(href='/Directory')
+                i.fa.fa-table
+                strong Directory
+
+        li(class=title=='Explorer'?'active':undefined)
+            a(href='/')
+                i.fa.fa-search
+                strong Data Explorer
+
+        li(class=title=='Matching'?'active':undefined)
+            a(href='/2')
+                i.fa.fa-bar-chart-o
+                strong Senior Matching
+
+        li(class=title=='Matching'?'active':undefined)
+            a(href='/2')
+                i.fa.fa-bar-chart-o
+                strong Junior Matching
+
+        li(class=title=='Staging'?'active':undefined)
+            a(href='/Staging')
+                i.fa.fa-star
+                strong Staging
+
+        li(class=title=='Cohort'?'active':undefined)
+            a(href='/Cohort')
+                i.fa.fa-star
+                strong Cohort Settings
+
+    ul#lg-menu.nav.hidden-xs(style='bottom:0px;position: absolute;width: 100%;')
+        li
+            a(href='/new_Cohort')
+                i.fa.fa-plus
+                strong Create New Cohort 
+        li(class=title=='Sign up'?'active':undefined)
+            a(href='/Signup')
+                i.fa.fa-plus
+                strong Create New Account   
+
+    ul#xs-menu.nav.visible-xs
+        li(class=title=='Emails'?'active':undefined)
+            a.text-center(href='/Emails')
+                i.fa.fa-dashboard
+        li(class=title=='Directory'?'active':undefined)
+            a.text-center(href='/Directory')
+                i.fa.fa-table
+        li(class=title=='Explorer'?'active':undefined)
+            a.text-center(href='/Explorer')
+                i.fa.fa-search
+        li(class=title=='Matching'?'active':undefined)
+            a.text-center(href='/Matching')
+                i.fa.fa-bar-chart-o
+        li(class=title=='Matching'?'active':undefined)
+            a.text-center(href='/Matching')
+                i.fa.fa-bar-chart-o
+        li(class=title=='Staging'?'active':undefined)
+            a.text-center(href='/Staging')
+                i.fa.fa-star
+        li(class=title=='Cohort'?'active':undefined)
+            a.text-center(href='/Cohort')
+                i.fa.fa-star
+
+        ul#xs-menu.nav.visible-xs(style='bottom:0px;position: absolute;width: 100%;')
+            li
+                a.text-center(href='/new_Cohort')
+                    i.fa.fa-plus
+            li(class=title=='Sign up'?'active':undefined)
+                a.text-center(href='/Signup')
+                    i.fa.fa-plus

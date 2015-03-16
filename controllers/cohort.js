@@ -15,7 +15,6 @@ exports.setCohort = function(req, res) {
 
 ///  GET /new_cohort/
 exports.getNewCohort = function(req, res) {
-
     Cohort.count({}).count(function( err, count){
         count++;
         var cohort = new Cohort({
@@ -59,8 +58,21 @@ exports.updateCohort = function(req, res) {
     cohort.title = req.body.title || 'cohort ?';
     cohort.description = req.body.description || '';
     cohort.status = req.body.status || false;
-    cohort.form = req.body.form || 1;
     cohort.secret = req.body.secret || '';
+    
+    if (cohort.formLock == false){
+      cohort.form = req.body.form || "form default";
+    }
+    
+    if (cohort.formLock == false){
+      if (cohort.status == false){
+        cohort.formLock = false;
+      }else{
+        cohort.formLock = true;
+      }
+    }else {
+      cohort.formLock = true;
+    }
 
     cohort.save(function(err) {
       if (err){

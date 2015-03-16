@@ -25,9 +25,15 @@ block content
     .form-group
       label.col-sm-2.control-label(for='form') Questionnaire Template
       .col-sm-4
-        select.form-control(id='form', name='form', value=cohort.form)
-          for val, i in forms
-            option(value=forms[i])=forms[i]
+        if cohort.formLock == false
+          select.form-control(id='form', name='form', value=cohort.form)
+            for val, i in forms
+              if forms[i] == cohort.form
+                option(value=forms[i] selected="selected")=forms[i]
+              else
+                option(value=forms[i])=forms[i]
+        else
+          input.form-control(type="text" readonly value=cohort.form)
      
      
     
