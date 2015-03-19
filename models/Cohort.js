@@ -6,7 +6,7 @@ var cohortSchema = new mongoose.Schema({
   description: { type: String, default: 'Give me a description.' },
   status: { type: Boolean, default: false },
   formLock: { type: Boolean, default: false },
-  form: { type: String, default: 1 },
+  form: { type: String, default: "form default" },
   secret: { type: String, default: function(){ return require('crypto').randomBytes(18).toString('base64').replace(/\//g,'_').replace(/\+/g,'-');} },
   
 });
