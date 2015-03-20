@@ -9,6 +9,16 @@
     "analyze": false,
     "mentor": false
   },
+  
+  {
+    "instruction": "",
+    "weight": 75,
+    "shortName": "Email",
+    "help": "You can do it!",
+    "type": "email",
+    "required": true,
+    "analyze": false
+  },
           
   {
     "instruction": "",
@@ -17,7 +27,7 @@
     "help": "You can do it!",
     "type": "string",
     "required": true,
-    "analyze": true,
+    "analyze": false,
     "student": false
   },
   
@@ -47,7 +57,7 @@
     "shortName": "Faculty",
     "help": "You can do it!",
     "type": "radioGroup",
-    "values": ["Arts","Engineering","Sciences","Sauder"],
+    "values": ["Arts","Engineering","Sciences"],
     "mentor": false
   },
   
@@ -87,5 +97,26 @@
     "help": "You can do it!",
     "type": "integer",
     "mentor": false
+  },
+  {
+    "instruction": "",
+    "weight": 75,
+    "shortName": "Gender",
+    "help": "You can do it!",
+    "type": "radioGroup",
+    "values": ["Male","Female"],
+    "analyze": false,
+    "required": true
+  },
+  {
+    "instruction": "",
+    "weight": 75,
+    "shortName": "Preferred Gender",
+    "help": "You can do it!",
+    "type": "radioGroup",
+    "values": ["Male","Female"],
+    "analyze": true,
+    "analyzeField": "Gender",
+    "required": true
   }
 ]
