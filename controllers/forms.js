@@ -1,7 +1,7 @@
 var fs = require("fs");
 
 exports.getForm = function(identifier){
-    if (identifier !== "undefined")
+    if (identifier != undefined)
         return require('../models/forms/'+identifier.replace(' ','-')+'.json');
     return require('../models/forms/form-default.json');
 }
