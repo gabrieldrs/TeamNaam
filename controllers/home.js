@@ -109,7 +109,6 @@ exports.explorer = function(req, res) {
             };
         });
     }
-  console.log(factors);
     res.render('pages/explorer', {
         title: 'Home',
         factors: factors

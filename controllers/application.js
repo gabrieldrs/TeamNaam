@@ -146,8 +146,11 @@ delete req.body._csrf; //delete the CSRF token now because it gets in the way, a
   
       // Check if all required fields are submitted
       formData.forEach(function(element){
-        if ( element.mentor!==false && element.required && ( req.body[element.shortName] == null || req.body[element.shortName] == '' ))
-          errors.push(postKey+' is a required field. Please fill it in.');
+        if ( element.mentor!==false && element.required && ( req.body[element.shortName] == null || req.body[element.shortName] == '' )) {
+          console.log(element);
+          errors.push(element.shortName + ' is a required field. Please fill it in.');
+          
+        }
       });
   
       // Checks if all inputs are within range--if it is of type range.

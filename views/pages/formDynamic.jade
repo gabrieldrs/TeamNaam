@@ -6,6 +6,12 @@ mixin formInput(form)
       label.col-sm-3.control-label(for=form.shortName)=form.shortName
       .col-sm-5
         input.form-control(type='text', name=form.shortName, id=form.shortName, required=form.required || false)
+    
+  if form.type=='email'
+    .form-group
+      label.col-sm-3.control-label(for=form.shortName)=form.shortName
+      .col-sm-5
+        input.form-control(type='email', name=form.shortName, id=form.shortName, required=form.required || false)
         
   if form.type=='number'
     .form-group
