@@ -101,12 +101,14 @@ exports.explorer = function(req, res) {
     var formData = formLoader.getForm(cohort.form);
     if (formData) {
         var factors = formData.map(function (el) {
+          
+          if (el.analyze == true) {
             return {
-                shortName: el.shortName,
-                weight: el.weight,
-                analyze:el.analyze,
-                field:el.analyzeField
+              shortName: el.shortName,
+              weight: el.weight,
+              field: el.analyzeField
             };
+          }
         });
     }
     res.render('pages/explorer', {

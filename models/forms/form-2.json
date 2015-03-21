@@ -18,39 +18,16 @@
     "type": "email",
     "required": true,
     "analyze": false
-  },
-          
+  },  
   {
     "instruction": "",
     "weight": 75,
-    "shortName": "Company",
-    "help": "You can do it!",
-    "type": "string",
-    "required": true,
-    "analyze": false,
-    "student": false
-  },
-  
-  {
-    "instruction": "",
-    "weight": 75,
-    "shortName": "First Name",
+    "shortName": "Name",
     "help": "You can do it!",
     "type": "string",
     "required": true,
     "analyze": false
   },
-  
-  {
-    "instruction": "",
-    "weight": 75,
-    "shortName": "Last Name",
-    "help": "You can do it!",
-    "type": "string",
-    "required": false,
-    "analyze": false
-  },
-  
   {
     "instruction": "",
     "weight": 75,
@@ -60,6 +37,18 @@
     "values": ["Arts","Engineering","Sciences"],
     "mentor": false
   },
+  {
+    "instruction": "",
+    "weight": 75,
+    "shortName": "Preferred Faculty",
+    "help": "You can do it!",
+    "type": "checkboxGroup",
+    "values": ["Arts","Engineering","Sciences"],
+    "student": false,
+    "analyze": true,
+    "analyzeField": "Faculty",
+    "required": true
+  },
   
   {
     "instruction": "Choose all that apply.",
@@ -67,36 +56,7 @@
     "shortName": "Availability",
     "help": "You can do it!",
     "type": "checkboxGroup",
-    "values": ["Monday","Tuesday","Wednesday","Thrusday","Friday"]
-  },
-  
-  {
-    "instruction": "",
-    "weight": 75,
-    "shortName": "Ability to Code",
-    "help": "You can do it!",
-    "type": "range",
-    "min":0,
-    "step":1,
-    "max":10,
-    "required": true
-  },
-  
-  {
-    "instruction": "",
-    "weight": 75,
-    "shortName": "Birth Date",
-    "help": "You can do it!",
-    "type": "date"
-  },
-  
-  {
-    "instruction": "",
-    "weight": 75,
-    "shortName": "Academic Standing (Year)",
-    "help": "You can do it!",
-    "type": "integer",
-    "mentor": false
+    "values": ["Monday","Tuesday","Wednesday","Thursday","Friday"]
   },
   {
     "instruction": "",

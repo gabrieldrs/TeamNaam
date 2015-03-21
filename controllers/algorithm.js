@@ -6,91 +6,169 @@ var _ = require('lodash');
 exports.setWeights = function(req, res) {
   
   var factors=req.body.factors;
-  var analyzeFactors = []
-  factors.forEach(function(f){
-    if (f['analyze'] && f['analyze'] == 'true'){
-      analyzeFactors.push(f);
-    }
-  });
   
   Application.find({ cohort: res.locals.activeCohort, accepted: true }).lean().exec(function(err, applications) {
-    var matrix = calcMatrix(applications,analyzeFactors);  // This is an optional helper function
-    //console.log( JSON.stringify(matrix,null,4) );
-    res.status(200).json(matrix);
+    var matchings = calcMatching(applications,factors);  // This is an optional helper function
+    //console.log( JSON.stringify(matchings,null,4) );
+    res.status(200).json(matchings);
   });
 };
 
 
-function calcMatrix(applications,factors){
-  var juniors = [];
-  var seniors = [];
-  var mentors = [];
-  applications.forEach(function(e){
-    if (e['student']){
-      if (e['senior'])
-        seniors.push(e);
-      else
-        juniors.push(e);
-    }else
-      mentors.push(e);
-  });
-  var mentorMatch = [];
-  var nomMatched = [];
+function calcMatching(applications,factors){
+  var juniors = _.where(applications, {student:true,senior:false});
+  var seniors = _.where(applications, {student:true,senior:true});
+  var mentors = _.where(applications, {student:false});
+  var mentorMatch = []; //This array will hold the final match between mentor and senior students
+  
+  var tempMentorMatch = [];
+  var tempSeniorMatch = [];
   mentors.forEach(function(mentor){
     var thisMatch = [];
     seniors.forEach(function(senior){
       
-      var mentorAvail = [].concat(mentor["Availability"]);
-      var seniorAvail = [].concat(senior['Availability']);
-      var commonAvail = [];
-      for (var i = 0;i<mentorAvail.length;i++){
-        for (var j=0;j<seniorAvail.length;j++){
-          if (mentorAvail[i] == seniorAvail[j]){
-            commonAvail.push(mentorAvail[i]);
-            break;
-          }
-        }
-      }
+      var mentorAvail = convertToArray(mentor["Availability"]);
+      var seniorAvail = convertToArray(senior['Availability']);
+      var commonAvail = _.intersection(mentorAvail,seniorAvail);
       
       if (commonAvail.length == 0)
         return;
-      
-      var quality = 0;
-      factors.forEach(function(factor){
-        if (mentor[factor['shortName']] == senior[factor['field']]){
-          quality += factor['weight'];
-        }
-      });
-      quality /= factors.length;
+      var quality = calcMatchQuality(mentor,senior,factors);
       thisMatch.push({
-        studentID : senior["_id"],
+        seniorID : senior["_id"],
         quality : quality,
-        Availability : commonAvail.toString()
+        availability : commonAvail
       });
       
     });
     if (thisMatch.length > 0){
-      mentorMatch.push({mentorID : mentor["_id"], matches: thisMatch});
-    }else {
-      nomMatched.push(mentor);
+      tempMentorMatch.push({mentorID : mentor["_id"], matches: thisMatch});
+      //console.log(thisMatch);
     }
   });
   
-  console.log(mentorMatch);
-  console.log("\n\n\n");
-  console.log(nomMatched);
-  
-  /*
-  return applications.map(function(row) {
-        return {
-          aid: row._id,   // Each row stores the applicationID (aid) for reference
-          matches: applications.map(function(col) {
-                return { aid: col._id, score: Math.random() };
-             })
-             .sort(function(a,b){ 
-                return (a.score > b.score); 
-             })
-        };          
+  tempMentorMatch.forEach(function(m){
+    var bestQuality = -1;
+    var student = null;
+    m['matches'].forEach(function(s){
+      if (s['quality']>bestQuality){
+        bestQuality = s['quality'];
+        student = s;
+      }
+    });
+    mentorMatch.push({
+      mentorID : m['mentorID'],
+      seniorID : student['seniorID'],
+      quality : student['quality'],
+      availability : student['availability']
+    });
   });
-  */
+  
+  mentorMatch.forEach(function(match){
+    var senior=_.where(seniors, {_id: match['seniorID']})[0];
+    //console.log(senior);
+    senior["Availability"] = match['availability']; // overwriting it's availability, so it matches with mentor's ones.
+    
+    var thisMatch = [];
+    juniors.forEach(function(junior){
+      var seniorAvail = [].concat(senior["Availability"]);
+      var juniorAvail = [].concat(junior['Availability']);
+      var commonAvail = [];
+      for (var i = 0;i<seniorAvail.length;i++){
+        for (var j=0;j<juniorAvail.length;j++){
+          if (seniorAvail[i] == juniorAvail[j]){
+            commonAvail.push(seniorAvail[i]);
+            break;
+          }
+        }
+      }
+      if (commonAvail.length == 0)
+        return;
+      var quality = calcMatchQuality(senior,junior,factors);
+      thisMatch.push({
+        seniorID : senior["_id"],
+        quality : quality,
+        availability : commonAvail.toString()
+      });
+    });
+    if (thisMatch.length > 0){
+      tempSeniorMatch.push({seniorID : senior["_id"], matches: thisMatch});
+      //console.log(thisMatch);
+    }
+  });
+  
+  tempSeniorMatch.forEach(function(s){
+    var bestQuality = -1;
+    var junior = null;
+    s['matches'].forEach(function(j){
+      if (j['quality']>bestQuality){
+        bestQuality = j['quality'];
+        junior = j;
+      }
+    });
+    
+    var i = _.findIndex(mentorMatch, function(mentor) {
+      return mentor['seniorID'] == s['seniorID'];
+    });
+    mentorMatch[i]['juniorID'] = junior['seniorID'];
+    mentorMatch[i]['availability'] = junior['availability'];
+    mentorMatch[i]['quality'] = (mentorMatch[i]['quality'] + junior['quality'])/2;
+    //console.log(junior['quality']);
+  });
+
+  return mentorMatch;
+}
+
+function calcMatchQuality(user1,user2,factors){
+  var quality = 0;
+  var factorCount = 0;
+  factors.forEach(function(e) {
+    var firstHalf = calcThisFactor(user1, user2, e);
+    var secondHalf = calcThisFactor(user2, user1, e);
+    if (firstHalf != -1)
+      factorCount++;
+    else
+      firstHalf = 0;
+    
+    if (secondHalf != -1)
+      factorCount++;
+    else
+      secondHalf = 0;
+    
+    quality += (firstHalf+secondHalf);
+  });
+  return quality/factorCount;
+}
+
+function calcThisFactor(user1,user2,factor){
+  var thisQuality = 0;
+  //If there are any undefined fields, return -1
+  if (!fieldExists(user1,factor['shortName']) || !fieldExists(user2,factor['field']))
+    return -1;
+  user1[factor['shortName']] = convertToArray(user1[factor['shortName']]);
+  user2[factor['field']] = convertToArray(user2[factor['field']]);
+  
+  user1[factor['shortName']].forEach(function(v1){
+    user2[factor['field']].forEach(function(v2){
+      if (v1 == v2){
+        thisQuality+=factor['weight'];
+      }
+    });
+  });
+  thisQuality = (thisQuality/(user2[factor['field']].length));
+  //console.log(factor['shortName'] + " quality = "+thisQuality);
+  return thisQuality;
+}
+
+function fieldExists(user,field) {
+  return typeof user[field] != "undefined";
+}
+
+//Convert a string or an array to array
+function convertToArray(a){
+  //console.log(a)
+  if (a instanceof Array) {
+    return a;
+  }else
+    return [a];
 }
