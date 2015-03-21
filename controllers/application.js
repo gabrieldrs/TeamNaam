@@ -114,7 +114,7 @@ var cid=req.params.cid;
     else if ( cohort && cohort.secret==secret ){
       var formData = formLoader.getForm(cohort.form);
       var mentorForms = _.filter( formData, function(formField){ return formField.mentor!==false; });    // Shows only fields relevant to mentors
-      res.render('pages/formDynamic', { student: false, form: mentorForms, title: 'CS Tri-Mentoring Application Form' });    
+      res.render('pages/formDynamic', { cohortID : cohort['_id'], secret: secret, student: false, form: mentorForms, title: 'CS Tri-Mentoring Application Form' });    
     }  
     else{
       req.flash('errors', { msg: 'Invalid form URL' });
@@ -128,14 +128,15 @@ var cid=req.params.cid;
 
 ///  POST /form/mentor/:id/:secret
 exports.postMentorForm = function(req, res) {
+  console.log(req.protocol + '://' + req.get('host') + req.originalUrl);
 var secret=req.params.secret;
 var cid=req.params.cid;
 var errors=[];
 delete req.body._csrf; //delete the CSRF token now because it gets in the way, and isn't needed at the point in the controller.
   Cohort.findById(cid).lean().exec(function( err, cohort){
-    if ( cohort && cohort.status == false)      // the form is closed.
+    if ( cohort && cohort.status == false) {     // the form is closed.
       res.redirect('/formClosed');
-    else if ( cohort && cohort.secret==secret ) {
+    }else if ( cohort && cohort.secret==secret ) {
       var formData = formLoader.getForm(cohort.form);
       
       // Check it too many fields were submitted
@@ -194,6 +195,8 @@ delete req.body._csrf; //delete the CSRF token now because it gets in the way, a
         res.redirect('/thankyou');
       });
     }else{
+      console.log(cohort);
+      console.log(cohort.secret == secret);
       req.flash('errors', { msg: 'Invalid form URL' });
       res.redirect('/404');
     }
