@@ -9,7 +9,6 @@ exports.setWeights = function(req, res) {
   
   Application.find({ cohort: res.locals.activeCohort, accepted: true }).lean().exec(function(err, applications) {
     var matchings = calcMatching(applications,factors);  // This is an optional helper function
-    //console.log( JSON.stringify(matchings,null,4) );
     res.status(200).json(matchings);
   });
 };
@@ -43,7 +42,6 @@ function calcMatching(applications,factors){
     });
     if (thisMatch.length > 0){
       tempMentorMatch.push({mentorID : mentor["_id"], matches: thisMatch});
-      //console.log(thisMatch);
     }
   });
   tempMentorMatch.forEach(function(m){
@@ -67,7 +65,6 @@ function calcMatching(applications,factors){
   
   mentorMatch.forEach(function(match){
     var senior=_.where(seniors, {_id: match['seniorID']})[0];
-    //console.log(senior);
     senior["Availability"] = match['availability']; // overwriting it's availability, so it matches with mentor's ones.
     
     var thisMatch = [];
@@ -87,7 +84,6 @@ function calcMatching(applications,factors){
       if (commonAvail.length == 0)
         return;
       var quality = calcMatchQuality(senior,junior,factors);
-      //console.log(quality);
       thisMatch.push({
         juniorID : junior["_id"],
         quality : quality,
@@ -96,7 +92,6 @@ function calcMatching(applications,factors){
     });
     if (thisMatch.length > 0){
       tempSeniorMatch.push({seniorID : senior["_id"], matches: thisMatch});
-      //console.log(thisMatch);
     }
   });
   
@@ -117,7 +112,6 @@ function calcMatching(applications,factors){
     mentorMatch[i]['juniorID'] = junior['juniorID'];
     mentorMatch[i]['availability'] = junior['availability'];
     mentorMatch[i]['quality'] = (mentorMatch[i]['quality'] + junior['quality'])/2;
-    //console.log(junior['quality']);
   });
   console.log(mentorMatch);
   return mentorMatch;
@@ -127,10 +121,8 @@ function calcMatchQuality(user1,user2,factors){
   var quality = 0;
   var factorCount = 0;
   factors.forEach(function(e) {
-    //console.log(analyzeRefExists(user1,e['name']) +" "+ analyzeRefExists(user2,e['analyzeRef']))
     var firstHalf = calcThisFactor(user1, user2, e);
     var secondHalf = calcThisFactor(user2, user1, e);
-    //console.log(secondHalf);
     if (firstHalf != -1)
       factorCount++;
     else
@@ -176,7 +168,6 @@ function analyzeRefExists(user,analyzeRef) {
 
 //Convert a string or an array to array
 function convertToArray(a){
-  //console.log(a)
   if (a instanceof Array) {
     return a;
   }else
