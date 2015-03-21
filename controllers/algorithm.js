@@ -8,114 +8,121 @@ exports.setWeights = function(req, res) {
   var factors=req.body.factors;
   
   Application.find({ cohort: res.locals.activeCohort, accepted: true }).lean().exec(function(err, applications) {
-    var matchings = calcMatching(applications,factors);  // This is an optional helper function
+    var matchings = calcTrioMatching(applications,factors);  // This is an optional helper function
     res.status(200).json(matchings);
   });
 };
 
 
-function calcMatching(applications,factors){
+function calcTrioMatching(applications,factors){
   var juniors = _.where(applications, {student:true,senior:false});
   var seniors = _.where(applications, {student:true,senior:true});
   var mentors = _.where(applications, {student:false});
-  var mentorMatch = []; //This array will hold the final match between mentor and senior students
   
-  var tempMentorMatch = [];
-  var tempSeniorMatch = [];
-  mentors.forEach(function(mentor){
-    var thisMatch = [];
-    seniors.forEach(function(senior){
-      
-      var mentorAvail = convertToArray(mentor["availability"]);
-      var seniorAvail = convertToArray(senior['availability']);
-      var commonAvail = _.intersection(mentorAvail,seniorAvail);
-      
-      if (commonAvail.length == 0)
-        return;
-      var quality = calcMatchQuality(mentor,senior,factors);
-      thisMatch.push({
-        seniorID : senior["_id"],
-        quality : quality,
-        availability : commonAvail
-      });
-      
-    });
-    if (thisMatch.length > 0){
-      tempMentorMatch.push({mentorID : mentor["_id"], matches: thisMatch});
-    }
-  });
-  tempMentorMatch.forEach(function(m){
-    var bestQuality = -1;
-    var student = null;
-    m['matches'].forEach(function(s){
-      if (s['quality']>bestQuality){
-        bestQuality = s['quality'];
-        student = s;
-      }
-    });
-    if (student == null)
-      return;
-    mentorMatch.push({
-      mentorID : m['mentorID'],
-      seniorID : student['seniorID'],
-      quality : student['quality'],
-      availability : student['availability']
-    });
-  });
+  var mentorMatch = calcDuoMatching(mentors,seniors,factors);
+  var finalMatch = calcDuoMatching(seniors,juniors,factors,mentorMatch);
   
-  mentorMatch.forEach(function(match){
-    var senior=_.where(seniors, {_id: match['seniorID']})[0];
-    senior["Availability"] = match['availability']; // overwriting it's availability, so it matches with mentor's ones.
-    
-    var thisMatch = [];
-    juniors.forEach(function(junior){
-      var seniorAvail = [].concat(senior["availability"]);
-      
-      var juniorAvail = [].concat(junior['availability']);
-      var commonAvail = [];
-      for (var i = 0;i<seniorAvail.length;i++) {
-        for (var j = 0; j < juniorAvail.length; j++) {
-          if (seniorAvail[i] == juniorAvail[j]) {
-            commonAvail.push(seniorAvail[i]);
-            break;
-          }
-        }
-      }
-      if (commonAvail.length == 0)
-        return;
-      var quality = calcMatchQuality(senior,junior,factors);
-      thisMatch.push({
-        juniorID : junior["_id"],
-        quality : quality,
-        availability : commonAvail.toString()
-      });
-    });
-    if (thisMatch.length > 0){
-      tempSeniorMatch.push({seniorID : senior["_id"], matches: thisMatch});
-    }
-  });
-  
-  tempSeniorMatch.forEach(function(s){
-    var bestQuality = -1;
-    var junior = null;
-    s['matches'].forEach(function(j){
-      if (j['quality']>bestQuality){
-        bestQuality = j['quality'];
-        junior = j;
-      }
-    });
-    if (junior == null)
-      return;
-    var i = _.findIndex(mentorMatch, function(mentor) {
-      return mentor['seniorID'] == s['seniorID'];
-    });
-    mentorMatch[i]['juniorID'] = junior['juniorID'];
-    mentorMatch[i]['availability'] = junior['availability'];
-    mentorMatch[i]['quality'] = (mentorMatch[i]['quality'] + junior['quality'])/2;
-  });
-  console.log(mentorMatch);
-  return mentorMatch;
+  console.log(finalMatch);
+  return finalMatch;
 }
+
+
+function calcDuoMatching(groupOne,groupTwo,factors,currentMatch){
+  //console.log(currentMatch);
+  if (currentMatch == undefined){
+    return calcDuoMatching2(groupOne,groupTwo,factors);
+  }
+  
+  if (groupOne.length < 1 || groupTwo.length < 1)
+    return currentMatch;
+  var groupOneName =  getGroupName(groupOne[0]);
+  var groupTwoName =  getGroupName(groupTwo[0]);
+  currentMatch.forEach(function(match){
+    var i = _.findIndex(groupOne, function(appOne){
+      return appOne['_id'] == match[groupOneName+'ID'];
+    });
+    groupOne[i]["availability"] = match['availability']; // overwriting it's availability, so it matches with the currentMatch's ones.
+  });
+  
+  var groupOneMatch = calcDuoMatching(groupOne,groupTwo,factors);
+  
+  currentMatch.forEach(function(match){
+    var i = _.findIndex(groupOneMatch, function(appOne){
+      return appOne[groupOneName+'ID'] == match[groupOneName+'ID'];
+    });
+    match[groupTwoName+'ID'] = groupOneMatch[i][groupTwoName+'ID'];
+    match['quality'] = (match['quality'] + groupOneMatch[i]['quality'])/2;
+    match["availability"] = _.intersection(match['availability'],groupOneMatch[i]['availability']);
+  });
+  
+  return currentMatch;
+  
+}
+
+function calcDuoMatching2(groupOne,groupTwo,factors){
+  if (groupOne.length < 1 || groupTwo.length < 1)
+    return {};
+  var appOneMatch = [];
+  var tempAppOneMatch = [];
+  
+  // These are used to label the JSON fields
+  var groupOneName = getGroupName(groupOne[0]);
+  var groupTwoName = getGroupName(groupTwo[0]);
+  
+  groupOne.forEach(function(appOne){
+    var thisMatch = [];
+    groupTwo.forEach(function(appTwo){
+      
+      var appOneAvail = convertToArray(appOne["availability"]);
+      var appTwoAvail = convertToArray(appTwo['availability']);
+      var commonAvail = _.intersection(appOneAvail,appTwoAvail);
+      
+      if (commonAvail.length == 0)
+        return;
+      var quality = calcMatchQuality(appOne,appTwo,factors);
+      var thisMatchEntry = JSON.parse("{"+
+      '"'+groupTwoName+'ID" : "'+appTwo['_id']+'",'+
+      '"quality" : '+quality+","+
+      '"availability" : []'+
+      "}")
+      thisMatchEntry['availability'] = commonAvail;
+      thisMatch.push(thisMatchEntry);
+      
+    });
+    if (thisMatch.length > 0){
+      //console.log(thisMatch);
+      var tempMatchEntry = JSON.parse('{"'+groupOneName+'ID" : "'+appOne['_id']+'", "matches" : []}');
+      tempMatchEntry['matches'] = thisMatch;
+      tempAppOneMatch.push(tempMatchEntry);
+    }
+  });
+  tempAppOneMatch.forEach(function(appOne){
+    var bestQuality = -1;
+    var bestMatch = null;
+    appOne['matches'].forEach(function(appTwo){
+      if (appTwo['quality']>bestQuality){
+        bestQuality = appTwo['quality'];
+        bestMatch = appTwo;
+      }
+    });
+    if (bestMatch == null)
+      return;
+    var matchEntry = JSON.parse("{"+
+    '"'+groupOneName+'ID" : "'+appOne[groupOneName+'ID']+'",'+
+    '"'+groupTwoName+'ID" : "'+bestMatch[groupTwoName+'ID']+'",'+
+    '"quality" : '+bestMatch['quality']+","+
+    '"availability" : []'+
+    "}")
+    matchEntry['availability'] = bestMatch['availability']
+    appOneMatch.push(matchEntry);
+  });
+  
+  return appOneMatch;
+}
+
+
+
+
 
 function calcMatchQuality(user1,user2,factors){
   var quality = 0;
@@ -172,4 +179,15 @@ function convertToArray(a){
     return a;
   }else
     return [a];
+}
+
+
+function getGroupName(applicant){
+  if (applicant.student)
+    if (applicant.senior)
+      return "senior";
+    else
+      return "junior";
+  else
+    return "mentor";
 }
