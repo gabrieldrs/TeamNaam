@@ -28,30 +28,29 @@ var cid=req.params.cid;
 
 ///  POST /form/student/:id/:secret
 exports.postStudentForm = function(req, res) {
-var secret=req.params.secret;
-var cid=req.params.cid;
-var errors=[];
-delete req.body._csrf; //delete the CSRF token now because it gets in the way, and isn't needed at the point in the controller.
+  var secret=req.params.secret;
+  var cid=req.params.cid;
+  var errors=[];
+  delete req.body._csrf; //delete the CSRF token now because it gets in the way, and isn't needed at the point in the controller.
   Cohort.findById(cid).lean().exec(function( err, cohort){
     if ( cohort && cohort.status == false)      // the form is closed.
       res.redirect('/formClosed');
     else if ( cohort && cohort.secret==secret ) {
       var formData = formLoader.getForm(cohort.form);
-      
       // Check if too many fields were submitted
       if ( Object.keys(req.body).length > formData.length )
-        errors.push('You cannot submit more answers than their are questions!');
-  
+        errors.push({msg: 'You cannot submit more answers than their are questions!'});
+      
       // Check if all required fields are submitted
       formData.forEach(function(element){
-        if ( element.student!==false && element.required && ( req.body[element.shortName] == null || req.body[element.shortName] == '' ))
-          errors.push(postKey+' is a required field. Please fill it in.');
+        if ( element.student!==false && element.required && ( req.body[element.name] == null || req.body[element.name] == '' ))
+          errors.push({msg: postKey+' is a required field. Please fill it in.'});
       });
   
       // Checks if all inputs are within range--if it is of type range.
       Object.keys(req.body).forEach(function(postKey) {
         var postVal = req.body[postKey];
-        var element = _.find(formData, { 'shortName': postKey });
+        var element = _.find(formData, { 'name': postKey });
     
         if ( element.student!==false ){
           if ( element.type == 'date')
@@ -67,9 +66,9 @@ delete req.body._csrf; //delete the CSRF token now because it gets in the way, a
             req.body[postKey]=parseInt(postVal);
         
             if ( postVal < element.min )
-              errors.push(postVal+' cannot be lower than '+min+'.');
+              errors.push({msg: postVal+' cannot be lower than '+min+'.'});
             if ( postVal > element.max )
-              errors.push(postVal+' cannot be larger than '+max+'.');
+              errors.push({msg: postVal+' cannot be larger than '+max+'.'});
           }
         }
       });
@@ -85,7 +84,6 @@ delete req.body._csrf; //delete the CSRF token now because it gets in the way, a
       var application = new Application(req.body);
       application.save(function(err) {
         if (err) {
-          console.log(err);
           req.flash('errors', {msg: 'Your form could not be submitted. Please try again later.'});
           res.redirect('/form/student/' + cid + '/' + secret);
         }
@@ -142,13 +140,12 @@ delete req.body._csrf; //delete the CSRF token now because it gets in the way, a
       
       // Check it too many fields were submitted
       if ( Object.keys(req.body).length > formData.length )
-        errors.push('You cannot submit more answers than their are questions!');  
+        errors.push({msg: 'You cannot submit more answers than their are questions!'});  
   
       // Check if all required fields are submitted
       formData.forEach(function(element){
-        if ( element.mentor!==false && element.required && ( req.body[element.shortName] == null || req.body[element.shortName] == '' )) {
-          console.log(element);
-          errors.push(element.shortName + ' is a required field. Please fill it in.');
+        if ( element.mentor!==false && element.required && ( req.body[element.name] == null || req.body[element.name] == '' )) {
+          errors.push({msg: element.name + ' is a required field. Please fill it in.'});
           
         }
       });
@@ -156,7 +153,7 @@ delete req.body._csrf; //delete the CSRF token now because it gets in the way, a
       // Checks if all inputs are within range--if it is of type range.
       Object.keys(req.body).forEach(function(postKey) {
         var postVal = req.body[postKey];
-        var element = _.find(formData, { 'shortName': postKey });
+        var element = _.find(formData, { 'name': postKey });
         
         if ( element.mentor!==false){
           if ( element.type == 'date')
@@ -172,14 +169,15 @@ delete req.body._csrf; //delete the CSRF token now because it gets in the way, a
             req.body[postKey]=parseInt(postVal);
             
             if ( postVal < element.min )
-              errors.push(postVal+' cannot be lower than '+min+'.');
+              errors.push({msg: postVal+' cannot be lower than '+min+'.'});
             if ( postVal > element.max )    
-              errors.push(postVal+' cannot be larger than '+max+'.');
+              errors.push({msg: postVal+' cannot be larger than '+max+'.'});
           }
         }
       });
 
       if (errors.length) {
+        console.log(errors);
         req.flash('errors', errors);
         return res.redirect('/form/mentor/'+cid+'/'+secret);
       }

@@ -1,82 +1,66 @@
 [
   {
-    "instruction": "",
-    "weight": 75,
-    "shortName": "Student Number",
-    "help": "You can do it!",
+    "name": "stdNumber",
+    "label": "Student Number",
     "type": "string",
+    "alt": "",
+    "weight": 75,
+    "student":true,
+    "mentor": false,
     "required": true,
-    "analyze": false,
-    "mentor": false
+    "analyze":false
   },
   
   {
-    "instruction": "",
-    "weight": 75,
-    "shortName": "Email",
-    "help": "You can do it!",
-    "type": "email",
-    "required": true,
-    "analyze": false
-  },  
-  {
-    "instruction": "",
-    "weight": 75,
-    "shortName": "Name",
-    "help": "You can do it!",
-    "type": "string",
-    "required": true,
-    "analyze": false
-  },
-  {
-    "instruction": "",
-    "weight": 75,
-    "shortName": "Faculty",
-    "help": "You can do it!",
+    "name": "faculty",
+    "label": "Faculty",
     "type": "radioGroup",
     "values": ["Arts","Engineering","Sciences"],
-    "mentor": false
-  },
-  {
-    "instruction": "",
+    "alt": "",
     "weight": 75,
-    "shortName": "Preferred Faculty",
-    "help": "You can do it!",
-    "type": "checkboxGroup",
-    "values": ["Arts","Engineering","Sciences"],
-    "student": false,
-    "analyze": true,
-    "analyzeField": "Faculty",
-    "required": true
+    "student":true,
+    "mentor": false,
+    "required": true,
+    "analyze":false
   },
   
   {
-    "instruction": "Choose all that apply.",
-    "weight": 75,
-    "shortName": "Availability",
-    "help": "You can do it!",
+    "name": "prefFaculty",
+    "label": "Preferred Faculty",
     "type": "checkboxGroup",
-    "values": ["Monday","Tuesday","Wednesday","Thursday","Friday"]
-  },
-  {
-    "instruction": "",
+    "values": ["Arts","Engineering","Sciences"],
+    "alt": "",
     "weight": 75,
-    "shortName": "Gender",
-    "help": "You can do it!",
+    "student":false,
+    "mentor": true,
+    "required": true,
+    "analyze":true,
+    "analyzeRef": "faculty"
+  },
+  
+  {
+    "name": "gender",
+    "label": "Gender",
     "type": "radioGroup",
     "values": ["Male","Female"],
-    "analyze": false,
-    "required": true
+    "alt": "",
+    "weight": 75,
+    "student":true,
+    "mentor": true,
+    "required": true,
+    "analyze":false
   },
   {
-    "instruction": "",
-    "weight": 75,
-    "shortName": "Preferred Gender",
-    "help": "You can do it!",
+    "name": "prefGender",
+    "label": "Preferred Gender",
     "type": "radioGroup",
     "values": ["Male","Female"],
+    "alt": "",
+    "weight": 75,
+    "student":false,
+    "mentor": true,
+    "required": true,
     "analyze": true,
-    "analyzeField": "Gender",
-    "required": true
+    "analyzeRef": "gender"
   }
 ]

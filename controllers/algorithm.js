@@ -27,8 +27,8 @@ function calcMatching(applications,factors){
     var thisMatch = [];
     seniors.forEach(function(senior){
       
-      var mentorAvail = convertToArray(mentor["Availability"]);
-      var seniorAvail = convertToArray(senior['Availability']);
+      var mentorAvail = convertToArray(mentor["availability"]);
+      var seniorAvail = convertToArray(senior['availability']);
       var commonAvail = _.intersection(mentorAvail,seniorAvail);
       
       if (commonAvail.length == 0)
@@ -46,7 +46,6 @@ function calcMatching(applications,factors){
       //console.log(thisMatch);
     }
   });
-  
   tempMentorMatch.forEach(function(m){
     var bestQuality = -1;
     var student = null;
@@ -56,6 +55,8 @@ function calcMatching(applications,factors){
         student = s;
       }
     });
+    if (student == null)
+      return;
     mentorMatch.push({
       mentorID : m['mentorID'],
       seniorID : student['seniorID'],
@@ -71,12 +72,13 @@ function calcMatching(applications,factors){
     
     var thisMatch = [];
     juniors.forEach(function(junior){
-      var seniorAvail = [].concat(senior["Availability"]);
-      var juniorAvail = [].concat(junior['Availability']);
+      var seniorAvail = [].concat(senior["availability"]);
+      
+      var juniorAvail = [].concat(junior['availability']);
       var commonAvail = [];
-      for (var i = 0;i<seniorAvail.length;i++){
-        for (var j=0;j<juniorAvail.length;j++){
-          if (seniorAvail[i] == juniorAvail[j]){
+      for (var i = 0;i<seniorAvail.length;i++) {
+        for (var j = 0; j < juniorAvail.length; j++) {
+          if (seniorAvail[i] == juniorAvail[j]) {
             commonAvail.push(seniorAvail[i]);
             break;
           }
@@ -85,8 +87,9 @@ function calcMatching(applications,factors){
       if (commonAvail.length == 0)
         return;
       var quality = calcMatchQuality(senior,junior,factors);
+      //console.log(quality);
       thisMatch.push({
-        seniorID : senior["_id"],
+        juniorID : junior["_id"],
         quality : quality,
         availability : commonAvail.toString()
       });
@@ -106,16 +109,17 @@ function calcMatching(applications,factors){
         junior = j;
       }
     });
-    
+    if (junior == null)
+      return;
     var i = _.findIndex(mentorMatch, function(mentor) {
       return mentor['seniorID'] == s['seniorID'];
     });
-    mentorMatch[i]['juniorID'] = junior['seniorID'];
+    mentorMatch[i]['juniorID'] = junior['juniorID'];
     mentorMatch[i]['availability'] = junior['availability'];
     mentorMatch[i]['quality'] = (mentorMatch[i]['quality'] + junior['quality'])/2;
     //console.log(junior['quality']);
   });
-
+  console.log(mentorMatch);
   return mentorMatch;
 }
 
@@ -123,8 +127,10 @@ function calcMatchQuality(user1,user2,factors){
   var quality = 0;
   var factorCount = 0;
   factors.forEach(function(e) {
+    //console.log(analyzeRefExists(user1,e['name']) +" "+ analyzeRefExists(user2,e['analyzeRef']))
     var firstHalf = calcThisFactor(user1, user2, e);
     var secondHalf = calcThisFactor(user2, user1, e);
+    //console.log(secondHalf);
     if (firstHalf != -1)
       factorCount++;
     else
@@ -137,31 +143,35 @@ function calcMatchQuality(user1,user2,factors){
     
     quality += (firstHalf+secondHalf);
   });
-  return quality/factorCount;
+  if (factorCount>0)
+    return quality/factorCount;
+  else
+    return 100;
 }
 
 function calcThisFactor(user1,user2,factor){
   var thisQuality = 0;
-  //If there are any undefined fields, return -1
-  if (!fieldExists(user1,factor['shortName']) || !fieldExists(user2,factor['field']))
-    return -1;
-  user1[factor['shortName']] = convertToArray(user1[factor['shortName']]);
-  user2[factor['field']] = convertToArray(user2[factor['field']]);
   
-  user1[factor['shortName']].forEach(function(v1){
-    user2[factor['field']].forEach(function(v2){
+  //If there are any undefined analyzeRefs, return -1
+  if (!analyzeRefExists(user1,factor['name']) || !analyzeRefExists(user2,factor['analyzeRef']))
+    return -1;
+  user1[factor['name']] = convertToArray(user1[factor['name']]);
+  user2[factor['analyzeRef']] = convertToArray(user2[factor['analyzeRef']]);
+  
+  user1[factor['name']].forEach(function(v1){
+    user2[factor['analyzeRef']].forEach(function(v2){
       if (v1 == v2){
         thisQuality+=factor['weight'];
       }
     });
   });
-  thisQuality = (thisQuality/(user2[factor['field']].length));
-  //console.log(factor['shortName'] + " quality = "+thisQuality);
+  thisQuality = (thisQuality/(user2[factor['analyzeRef']].length));
+  //console.log(factor['name'] + " quality = "+thisQuality);
   return thisQuality;
 }
 
-function fieldExists(user,field) {
-  return typeof user[field] != "undefined";
+function analyzeRefExists(user,analyzeRef) {
+  return typeof user[analyzeRef] != "undefined";
 }
 
 //Convert a string or an array to array

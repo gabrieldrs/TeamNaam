@@ -94,8 +94,8 @@ html
               for factor in factors
                 if factor
                   .form-group
-                    label.control-label(for=factor.shortName)=factor.shortName
-                    input.form-control(type='number', name=factor.shortName, data-from=factor.weight)&attributes(factor)
+                    label.control-label(for=factor.name)=factor.label
+                    input.form-control(type='number', name=factor.name, data-from=factor.weight)&attributes(factor)
 
           script.
             $('input[type="number"]').ionRangeSlider({
@@ -111,9 +111,9 @@ html
               $('input[type="number"]').each(function(index, element) {
                   factors.push(
                     {
-                      shortName: element.name,
+                      name: element.name,
                       weight: $(element).data().from,
-                      field: ((typeof( $(element).attr('field') ) != 'undefined')? $(element).attr('field') : 'undefined')
+                      analyzeRef: ((typeof( $(element).attr('analyzeRef') ) != 'undefined')? $(element).attr('analyzeRef') : 'undefined')
                     }
                   );
               });

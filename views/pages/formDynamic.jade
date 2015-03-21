@@ -3,49 +3,49 @@ extends ../formLayout
 mixin formInput(form)
   if form.type=='string'
     .form-group
-      label.col-sm-3.control-label(for=form.shortName)=form.shortName
+      label.col-sm-3.control-label(for=form.name)=form.label
       .col-sm-5
-        input.form-control(type='text', name=form.shortName, id=form.shortName, required=form.required || false)
+        input.form-control(type='text', name=form.name, id=form.name, required=form.required || false)
     
   if form.type=='email'
     .form-group
-      label.col-sm-3.control-label(for=form.shortName)=form.shortName
+      label.col-sm-3.control-label(for=form.name)=form.label
       .col-sm-5
-        input.form-control(type='email', name=form.shortName, id=form.shortName, required=form.required || false)
+        input.form-control(type='email', name=form.name, id=form.name, required=form.required || false)
         
   if form.type=='number'
     .form-group
-      label.col-sm-3.control-label(for=form.shortName)=form.shortName
+      label.col-sm-3.control-label(for=form.name)=form.label
       .col-sm-5
-        input.form-control(type='number', name=form.shortName, id=form.shortName, required=form.required || false)
+        input.form-control(type='number', name=form.name, id=form.name, required=form.required || false)
 
   if form.type=='range'
     .form-group
-      label.col-sm-3.control-label(for=form.shortName)=form.shortName
+      label.col-sm-3.control-label(for=form.name)=form.label
       .col-sm-5
-        input.form-control(type='number', name=form.shortName, id=form.shortName, min=form.min, step=form.step, max=form.max, required=form.required || false)
+        input.form-control(type='number', name=form.name, id=form.name, min=form.min, step=form.step, max=form.max, required=form.required || false)
 
   if form.type=='date'
     .form-group
-      label.col-sm-3.control-label(for=form.shortName)=form.shortName
+      label.col-sm-3.control-label(for=form.name)=form.label
       .col-sm-5
-        input.form-control(type='date', name=form.shortName, id=form.shortName, required=form.required || false)
+        input.form-control(type='date', name=form.name, id=form.name, required=form.required || false)
 
   if form.type=='radioGroup'
     .form-group
-      label.col-sm-3.control-label(for=form.shortName)=form.shortName
+      label.col-sm-3.control-label(for=form.name)=form.label
       .col-sm-5
         for val in form.values
-          input(type='radio',name=form.shortName, value=val)
+          input(type='radio',name=form.name, value=val)
           span=val
           br
         
   if form.type=='checkboxGroup'
     .form-group
-      label.col-sm-3.control-label(for=form.shortName)=form.shortName
+      label.col-sm-3.control-label(for=form.name)=form.label
       .col-sm-5
         for val in form.values
-          input(type='checkbox',name=form.shortName, value=val)
+          input(type='checkbox',name=form.name, value=val)
           span=val
           br
 

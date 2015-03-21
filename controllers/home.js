@@ -67,12 +67,14 @@ exports.staging = function(req, res) {
     }
     var studentList = [];
     var mentorList = [];
-    applications.forEach(function(app){    
-        var yearsDOB  = moment().diff(app['Birth Date'], 'years');  // Gets remainder of weeks, converted to decimal, truncated to one decimal place.
-        var weeksDOB  = Math.floor( moment().diff(app['Birth Date'], 'weeks') %52/5.2);
+    applications.forEach(function(app){
+        var yearsDOB  = moment().diff(app['age'], 'years');  // Gets remainder of weeks, converted to decimal, truncated to one decimal place.
+        var weeksDOB  = Math.floor( moment().diff(app['age'], 'weeks') %52/5.2);
         
-        app.name=app['First Name']+' '+ app['Last Name']
-        app.age = yearsDOB +'.'+ weeksDOB +' years old'
+        app.name=app['fName']+' '+ app['lName'];
+        app.age = yearsDOB +'.'+ weeksDOB +' years old';
+        app.faculty = "";
+        app.adminComment = "";
         app.submissionMoment =moment(app.submissionDate).fromNow();
         if (app.student){
           studentList.push(app);
@@ -104,9 +106,10 @@ exports.explorer = function(req, res) {
           
           if (el.analyze == true) {
             return {
-              shortName: el.shortName,
+              label: el.label,
+              name:el.name,
               weight: el.weight,
-              field: el.analyzeField
+              analyzeRef: el.analyzeRef
             };
           }
         });
@@ -125,8 +128,10 @@ exports.two = function(req, res) {
         var formData = formLoader.getForm(cohort.form);
         var factors = formData.map(function(el) {
             return {
-                shortName: el.shortName,
-                weight: el.weight
+              label: el.label,
+              name:el.name,
+              weight: el.weight,
+              analyzeRef: el.analyzeRef
             };
         });
         console.log(factors);

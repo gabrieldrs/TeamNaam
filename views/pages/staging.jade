@@ -115,7 +115,7 @@ block content
               tr(id='aid-'+data._id.toString())
                 td=data.name
                 td=data.age
-                td=data.Faculty
+                td=data.faculty
                 td=data.submissionMoment
                 td: input.form-control.input-sm.comment(data-aid=data._id.toString(), value=data.adminComment)
                 td.seniorSwitch: input.seniorSwitch( data-aid=data._id.toString(), checked=data.senior || false, type="checkbox", data-size='small', data-toggle="toggle",  data-handle-width="100", data-off-text="Junior", data-on-text="Senior", data-on-color="info", data-off-color="warning")
@@ -125,7 +125,6 @@ block content
             tr
                 th Name
                 th Age
-                th Faculty
                 th Submission Date
                 th Comment
                 th Status
@@ -133,7 +132,6 @@ block content
                 tr
                     th Name
                     th Age
-                    th Faculty
                     th Submission Date
                     th Comment
                     th Status
@@ -141,7 +139,7 @@ block content
                 for data in mentorApp
                     tr(id='aid-'+data._id.toString())
                         td=data.name
-                        td=data.gender
+                        td=data.age
                         td=data.submissionMoment
                         td: input.form-control.input-sm.comment(data-aid=data._id.toString(), value=data.adminComment)
                         td.acceptedSwitch: input.acceptedSwitch( data-aid=data._id.toString(), checked=data.accepted || false, type="checkbox", data-size='small', data-toggle="toggle",  data-handle-width="100", data-on-text="Accepted", data-off-text="Pending", data-on-color="default", data-off-color="danger")
