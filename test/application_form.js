@@ -10,10 +10,11 @@ describe('Application Form', function() {
       StudentN: '12345678',
       email: 'test@gmail.com'
     });
+    
     //user.save(function(err) {
     //  if (err) return done(err);
     //  done();
-    //check if the application has been creaed in db
+    //check if the application has been created in db
     })
   });
 
@@ -27,22 +28,14 @@ describe('Application Form', function() {
   //  user.save(function(err) {
  //     if (err) err.code.should.equal(11000);
    //   done();
+   student2.save(function(err){
+      if(err)
+        err.code.should.equal(); // the appropriate error number
+      done();
+   });
    //check for the error message, cuz this is wrong, 2 similar student numbers
     });
   });
 
-  it('should find user by email', function(done) {
-    User.findOne({ email: 'test@gmail.com' }, function(err, user) {
-      if (err) return done(err);
-      user.email.should.equal('test@gmail.com');
-      done();
-    });
-  });
-
-  it('should delete a user', function(done) {
-    User.remove({ email: 'test@gmail.com' }, function(err) {
-      if (err) return done(err);
-      done();
-    });
   });
 });
