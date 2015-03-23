@@ -1,6 +1,6 @@
 var chai = require('chai');
 var should = chai.should();
-var User = require('../models/User');
+var User = require('../models/Application');
 
 describe('Application Form', function() {
   it('should create a new applicant in db', function(done) {
@@ -27,7 +27,7 @@ describe('Application Form', function() {
   //  user.save(function(err) {
  //     if (err) err.code.should.equal(11000);
    //   done();
-   //check for the error message, cuz this is wrong
+   //check for the error message, cuz this is wrong, 2 similar student numbers
     });
   });
 
