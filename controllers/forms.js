@@ -4,11 +4,14 @@ var _ = require('lodash');
 
 exports.getForm = function(identifier){
     var form;
-    if (identifier != undefined)
+    if (identifier != undefined) //Check if the admin has specified a form to use
         form = require('../models/forms/'+identifier.replace(' ','-')+'.json');
-    else
+    else //If not use the default form
         form = require('../models/forms/form-default.json');
+
+    //Load all the elementary fields
     var schema = mongoose.model('Application').schema['formProperties'];
+    //Load all the fields from the json file
     var newFields = [];
     _.forEach(schema,function(f,i){
         var newField = {
@@ -18,8 +21,8 @@ exports.getForm = function(identifier){
             "values": (f['values'])?f['values']:"",
             "alt": "",
             "weight": 75,
-            "student":true,
-            "mentor": true,
+            "student":f['student'],
+            "mentor": f['mentor'],
             "required": true,
             "analyze":false
         };

@@ -7,13 +7,13 @@ var applicationSchema = new mongoose.Schema({
   'lName' : {type:String, require:true},
   'age' : {type:Date, require:true},
   'availability' : {type:Array,require:true},
-  
+
   'adminComment': { type: String, default: '' },
   'student': { type: Boolean, default: true },
   'senior': { type: Boolean, default: false },
   'accepted': { type: Boolean, default: false },
   'submissionDate': { type: Date, default: Date.now }
-  
+
 }, { strict: false });  // THIS "STRICT" STEETING MEANS WE CAN SAVE ANYTHING WE WANT HERE. THIS IS MORE DANGEROUS SO MAKE SURE YOU SANITIZE EVERYTHING. THIS IS USED FOR DYNAMIC FORM GENERATION.  SEE MORE AT: http://mongoosejs.com/docs/guide.html#strict
 
 
@@ -31,13 +31,15 @@ model.schema.path('availability').validate(function(value){
 });
 
 
-
+//These are the required fields for both forms, and are considered the elementary ones necessary for the application
 model.schema['formProperties'] = {
-  'email': {label:"Email", formType:"email", require:true},
-  'fName' : {label:"First Name", formType:"string", require:true},
-  'lName' : {label:"Last Name", formType:"string", require:true},
-  'age' : {label:"Age", formType:"date", require:true},
-  'availability' : {label:"Availability", formType:"checkboxGroup",require:true, values: ["Monday","Tuesday","Wednesday","Thursday","Friday"]}
+  'phoneNumber': {label:"Phone Number", formType:"number", require:true, student:false, mentor:true},
+  'studentNo': {label:"Student Number", formType:"number", require:true, student:true, mentor:false},
+  'fName' : {label:"First Name", formType:"string", require:true, student:true, mentor:true},
+  'lName' : {label:"Last Name", formType:"string", require:true, student:true, mentor:true},
+  'email': {label:"Email", formType:"email", require:true, student:true, mentor:true},
+  'age' : {label:"Age", formType:"date", require:true, student:true, mentor:true},
+  'availability' : {label:"Availability", formType:"checkboxGroup",require:true, values: ["Monday","Tuesday","Wednesday","Thursday","Friday"], student:true, mentor:true}
 }
 
 
