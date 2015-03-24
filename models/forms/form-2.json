@@ -20,7 +20,7 @@
     "student":true,
     "mentor": false,
     "required": true,
-    "analyze":true
+    "analyze":false
   },
   {
     "name": "coOp",
@@ -32,7 +32,7 @@
     "student":true,
     "mentor": false,
     "required": true,
-    "analyze":true
+    "analyze":false
   },
   {
     "name": "futurePlans",
