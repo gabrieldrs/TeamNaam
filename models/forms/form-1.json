@@ -1,27 +1,5 @@
 [
   {
-    "name": "phoneNumber",
-    "label": "Phone Number",
-    "type": "string",
-    "alt": "",
-    "weight": 75,
-    "student":false,
-    "mentor": true,
-    "required": true,
-    "analyze":false
-  },
-  {
-    "name": "stdNumber",
-    "label": "Student Number",
-    "type": "string",
-    "alt": "",
-    "weight": 75,
-    "student":true,
-    "mentor": false,
-    "required": true,
-    "analyze":false
-  },
-  {
     "name": "prevTriMentoring",
     "label": "Previous Tri-Mentoring Experience",
     "type": "radioGroup",
@@ -60,7 +38,19 @@
   {
     "name": "yearsInCS",
     "label": "Years in the CS industry",
-    "type": "string",
+    "type": "number",
+    "alt": "",
+    "weight": 75,
+    "student":false,
+    "mentor": true,
+    "required": true,
+    "analyze":false
+  },
+  {
+    "name": "educationLevel",
+    "label": "Education Level",
+    "type": "radioGroup",
+    "values": ["Bachelor", "Master", "PhD", "Other"],
     "alt": "",
     "weight": 75,
     "student":false,
@@ -81,10 +71,10 @@
     "analyze":false
   },
   {
-    "name": "educationLevel",
-    "label": "Education Level",
-    "type": "radioGroup",
-    "values": ["Bachelor", "Master", "PhD", "Other"],
+    "name": "previousWorkExperience",
+    "label": "I have:",
+    "type": "checkboxGroup",
+    "values": ["Worked as an academic","Worked at a startup","Started my own business", "Done other CS work"],
     "alt": "",
     "weight": 75,
     "student":false,
@@ -92,6 +82,4 @@
     "required": true,
     "analyze":false
   }
-
-
 ]
