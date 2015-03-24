@@ -18,7 +18,7 @@ describe('Controllers algorithm', function() {
       fName: 'Harry',
       lName: 'Potter',
       sNumber: '11111111',
-      email: 'test@gmail.com'
+      email: 'test@gmail.com',
       student: true,
       senior: true
     });
@@ -29,7 +29,9 @@ describe('Controllers algorithm', function() {
       email: 'testa@gmail.com',
       student: false
     });
+    var factors = //needs to be defined
     //Find out what is the value of the mentor-senior pair
+    calcMathQuality(mentor,senior,factors);
   });
 
   it('MatchingValueSeniorJunior', function(done) {
@@ -46,7 +48,7 @@ describe('Controllers algorithm', function() {
       fName: 'Hermione',
       lName: 'Granger',
       sNumber: '22222222',
-      email: 'testh@gmail.com'
+      email: 'testh@gmail.com',
       student: true,
       senior: true
     });
@@ -54,10 +56,12 @@ describe('Controllers algorithm', function() {
       fName: 'Ginny',
       lName: 'Weasley',
       sNumber: '33333333',
-      email: 'testg@gmail.com'
+      email: 'testg@gmail.com',
       student: true,
       senior: false
     });
+    var factors = //needs to be defined
+    calcMathQuality(senior1,junior,factors);
     //Find out what is the value of the senior-junior pair
   });
 });

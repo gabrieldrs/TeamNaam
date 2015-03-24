@@ -15,7 +15,7 @@ var cid=req.params.cid;
     else if ( cohort && cohort.secret==secret ){
       var formData = formLoader.getForm(cohort.form);
       var formData = _.filter( formData, function(formField){ return formField.student!==false; });  // only display the form fields relevant to students
-      res.render('pages/formDynamic', { student: true, form: formData, title: 'CS Tri-Mentoring Application Form' });
+      res.render('pages/formDynamic', { student: true, form: formData, title: 'CS Tri-Mentoring Application Form', cohortID: cid, secret: secret});
     }else{
       req.flash('errors', { msg: 'Invalid form URL' });
       res.redirect('/404');
@@ -114,7 +114,7 @@ var cid=req.params.cid;
     else if ( cohort && cohort.secret==secret ){
       var formData = formLoader.getForm(cohort.form);
       var mentorForms = _.filter( formData, function(formField){ return formField.mentor!==false; });    // Shows only fields relevant to mentors
-      res.render('pages/formDynamic', { cohortID : cohort['_id'], secret: secret, student: false, form: mentorForms, title: 'CS Tri-Mentoring Application Form' });    
+      res.render('pages/formDynamic', { cohortID : cohort['_id'], secret: secret, student: false, form: mentorForms, title: 'CS Tri-Mentoring Application Form', cohortID: cid, secret: secret });    
     }  
     else{
       req.flash('errors', { msg: 'Invalid form URL' });
