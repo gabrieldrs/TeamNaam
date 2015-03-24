@@ -33,13 +33,13 @@ model.schema.path('availability').validate(function(value){
 
 //These are the required fields for both forms, and are considered the elementary ones necessary for the application
 model.schema['formProperties'] = {
-  'phoneNumber': {label:"Phone Number", formType:"number", require:true, student:false, mentor:true},
-  'studentNo': {label:"Student Number", formType:"number", require:true, student:true, mentor:false},
-  'fName' : {label:"First Name", formType:"string", require:true, student:true, mentor:true},
-  'lName' : {label:"Last Name", formType:"string", require:true, student:true, mentor:true},
-  'email': {label:"Email", formType:"email", require:true, student:true, mentor:true},
-  'age' : {label:"Age", formType:"date", require:true, student:true, mentor:true},
-  'availability' : {label:"Availability", formType:"checkboxGroup",require:true, values: ["Monday","Tuesday","Wednesday","Thursday","Friday"], student:true, mentor:true}
+  'phoneNumber': {label:"Phone Number", formType:"number", student:false, mentor:true},
+  'studentNo': {label:"Student Number", formType:"number", student:true, mentor:false},
+  'fName' : {label:"First Name", formType:"string", student:true, mentor:true},
+  'lName' : {label:"Last Name", formType:"string", student:true, mentor:true},
+  'email': {label:"Email", formType:"email", student:true, mentor:true},
+  'age' : {label:"Age", formType:"date", student:true, mentor:true},
+  'availability' : {label:"Availability", formType:"checkboxGroup", values: ["Monday","Tuesday","Wednesday","Thursday","Friday"], student:true, mentor:true}
 }
 
 
