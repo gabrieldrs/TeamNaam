@@ -10,57 +10,77 @@
     "required": true,
     "analyze":false
   },
-  
   {
-    "name": "faculty",
-    "label": "Faculty",
+    "name": "prevTriMentoring",
+    "label": "Previous Tri-Mentoring Experience",
     "type": "radioGroup",
-    "values": ["Arts","Engineering","Sciences"],
+    "values": ["None","As a junior","As a senior", "Both"],
     "alt": "",
     "weight": 75,
     "student":true,
     "mentor": false,
     "required": true,
-    "analyze":false
+    "analyze":true
   },
-  
   {
-    "name": "prefFaculty",
-    "label": "Preferred Faculty",
-    "type": "checkboxGroup",
-    "values": ["Arts","Engineering","Sciences"],
-    "alt": "",
-    "weight": 75,
-    "student":false,
-    "mentor": true,
-    "required": true,
-    "analyze":true,
-    "analyzeRef": "faculty"
-  },
-  
-  {
-    "name": "gender",
-    "label": "Gender",
+    "name": "coOp",
+    "label": "Previous Tri-Mentoring Experience",
     "type": "radioGroup",
-    "values": ["Male","Female"],
+    "values": ["None, and not interested","None, but I am interested","Currently in CoOp", "Completed CoOp"],
     "alt": "",
     "weight": 75,
     "student":true,
-    "mentor": true,
+    "mentor": false,
     "required": true,
-    "analyze":false
+    "analyze":true
   },
   {
-    "name": "prefGender",
-    "label": "Preferred Gender",
-    "type": "radioGroup",
-    "values": ["Male","Female"],
+    "name": "futurePlans",
+    "label": "After graduation, I am interested in:",
+    "type": "checkboxGroup",
+    "values": ["Working as an academic","Working at a startup","Starting my own business", "Returning to school", "Doing other CS work"],
+    "alt": "",
+    "weight": 75,
+    "student":true,
+    "mentor": false,
+    "required": true,
+    "analyze":true
+  },
+  {
+    "name": "yearsInCS",
+    "label": "Years in the CS industry",
+    "type": "string",
     "alt": "",
     "weight": 75,
     "student":false,
     "mentor": true,
     "required": true,
-    "analyze": true,
-    "analyzeRef": "gender"
+    "analyze":false
+  },
+  {
+    "name": "ubcAlumn",
+    "label": "I am a UBC alumni",
+    "type": "radioGroup",
+    "values": ["Yes", "No"],
+    "alt": "",
+    "weight": 75,
+    "student":false,
+    "mentor": true,
+    "required": true,
+    "analyze":false
+  },
+  {
+    "name": "educationLevel",
+    "label": "Education Level",
+    "type": "radioGroup",
+    "values": ["Bachelor", "Master", "PhD", "Other"],
+    "alt": "",
+    "weight": 75,
+    "student":false,
+    "mentor": true,
+    "required": true,
+    "analyze":false
   }
+
+
 ]
