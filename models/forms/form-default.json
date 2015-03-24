@@ -20,11 +20,11 @@
     "student":true,
     "mentor": false,
     "required": true,
-    "analyze":true
+    "analyze":false
   },
   {
     "name": "coOp",
-    "label": "Previous Tri-Mentoring Experience",
+    "label": "CoOp Experience",
     "type": "radioGroup",
     "values": ["None, and not interested","None, but I am interested","Currently in CoOp", "Completed CoOp"],
     "alt": "",
@@ -32,7 +32,7 @@
     "student":true,
     "mentor": false,
     "required": true,
-    "analyze":true
+    "analyze":false
   },
   {
     "name": "futurePlans",
@@ -44,7 +44,7 @@
     "student":true,
     "mentor": false,
     "required": true,
-    "analyze":true
+    "analyze":false
   },
   {
     "name": "yearsInCS",
