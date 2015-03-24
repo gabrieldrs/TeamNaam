@@ -73,23 +73,35 @@ exports.postStudentForm = function(req, res) {
         }
       });
       
+      
       if (errors.length) {
+        console.log("ERRORS:",errors);
         req.flash('errors', errors);
         return res.redirect('/form/student/'+cid+'/'+secret);
       }
       
-      formData.filter(function(application){ return ( !application.mentor === false ) });
-      req.body.student=true;
-      req.body.cohort=cohort._id;
-      var application = new Application(req.body);
-      application.save(function(err) {
-        if (err) {
-          req.flash('errors', {msg: 'Your form could not be submitted. Please try again later.'});
-          res.redirect('/form/student/' + cid + '/' + secret);
-        }
-        req.flash('success', {msg: 'Success!  Application submitted!  An email will now be sent to you with a copy of your application.'});
-        res.redirect('/thankyou');
-      });  
+      Application.count({ cohort: cid, stdNumber: req.body.stdNumber}).limit(1).count(function( err, count){
+          if (count) {
+            console.log('An application with the same student number has already been submitted!',err,count);
+            req.flash('errors',{msg: 'An application with the same student number has already been submitted!'});
+            return res.redirect('/form/student/'+cid+'/'+secret);
+          }      
+
+      
+                formData.filter(function(application){ return ( !application.mentor === false ) });
+                req.body.student=true;
+                req.body.cohort=cohort._id;
+                var application = new Application(req.body);
+                application.save(function(err) {
+                  if (err) {
+                    req.flash('errors', {msg: 'Your form could not be submitted. Please try again later.'});
+                    res.redirect('/form/student/' + cid + '/' + secret);
+                  }
+                  req.flash('success', {msg: 'Success!  Application submitted!  An email will now be sent to you with a copy of your application.'});
+                  res.redirect('/thankyou');
+                });
+      });
+            
     }else{
       req.flash('errors', { msg: 'Invalid form URL' });
       res.redirect('/404');
@@ -178,22 +190,33 @@ delete req.body._csrf; //delete the CSRF token now because it gets in the way, a
       });
 
       if (errors.length) {
-        console.log(errors);
+        console.log("ERRORS:",errors);
         req.flash('errors', errors);
         return res.redirect('/form/mentor/'+cid+'/'+secret);
       }
-      req.body.student=false;
-      req.body.cohort=cohort._id;
-      var application = new Application(req.body);
-      application.save(function(err) {
-        if (err) {
-          console.log(err);
-          req.flash('errors', { msg: 'Your form could not be submitted. Please try again later.' });
-          res.redirect('/form/mentor/'+cid+'/'+secret);
-        }
-        req.flash('success', { msg: 'Success!  Application submitted!  An email will now be sent to you with a copy of your application.' });
-        res.redirect('/thankyou');
+      
+      Application.count({ cohort: cid, phoneNumber: req.body.phoneNumber}).limit(1).count(function( err, count){
+          if (count) {
+            console.log('An application with the same phone number has already been submitted!',err,count);
+            req.flash('errors',{msg: 'An application with the same phone number has already been submitted!'});
+            return res.redirect('/form/mentor/'+cid+'/'+secret);
+          }
+                 
+              req.body.student=false;
+              req.body.cohort=cohort._id;
+              var application = new Application(req.body);
+              application.save(function(err) {
+                if (err) {
+                  console.log(err);
+                  req.flash('errors', { msg: 'Your form could not be submitted. Please try again later.' });
+                  res.redirect('/form/mentor/'+cid+'/'+secret);
+                }
+                req.flash('success', { msg: 'Success!  Application submitted!  An email will now be sent to you with a copy of your application.' });
+                res.redirect('/thankyou');
+              });
+              
       });
+      
     }else{
       console.log(cohort);
       console.log(cohort.secret == secret);
