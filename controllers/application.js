@@ -40,31 +40,31 @@ exports.postStudentForm = function(req, res) {
       // Check if too many fields were submitted
       if ( Object.keys(req.body).length > formData.length )
         errors.push({msg: 'You cannot submit more answers than their are questions!'});
-      
+
       // Check if all required fields are submitted
       formData.forEach(function(element){
         if ( element.student!==false && element.required && ( req.body[element.name] == null || req.body[element.name] == '' ))
           errors.push({msg: postKey+' is a required field. Please fill it in.'});
       });
-  
+
       // Checks if all inputs are within range--if it is of type range.
       Object.keys(req.body).forEach(function(postKey) {
         var postVal = req.body[postKey];
         var element = _.find(formData, { 'name': postKey });
-    
+
         if ( element.student!==false ){
           if ( element.type == 'date')
             req.body[postKey]=new Date( req.body[postKey] );   // Converts HTML date to JS Date
-      
+
           if ( element.type == 'integer')
             req.body[postKey]=parseInt(postVal);
-      
+
           if ( element.type == 'float')
             req.body[postKey]=parseFloat(postVal);
-      
+
           if ( element.type == 'range'){
             req.body[postKey]=parseInt(postVal);
-        
+
             if ( postVal < element.min )
               errors.push({msg: postVal+' cannot be lower than '+min+'.'});
             if ( postVal > element.max )
@@ -72,22 +72,22 @@ exports.postStudentForm = function(req, res) {
           }
         }
       });
-      
-      
+
+
       if (errors.length) {
         console.log("ERRORS:",errors);
         req.flash('errors', errors);
         return res.redirect('/form/student/'+cid+'/'+secret);
       }
-      
+
       Application.count({ cohort: cid, stdNumber: req.body.stdNumber}).limit(1).count(function( err, count){
           if (count) {
             console.log('An application with the same student number has already been submitted!',err,count);
             req.flash('errors',{msg: 'An application with the same student number has already been submitted!'});
             return res.redirect('/form/student/'+cid+'/'+secret);
-          }      
+          }
 
-      
+
                 formData.filter(function(application){ return ( !application.mentor === false ) });
                 req.body.student=true;
                 req.body.cohort=cohort._id;
@@ -97,17 +97,17 @@ exports.postStudentForm = function(req, res) {
                     req.flash('errors', {msg: 'Your form could not be submitted. Please try again later.'});
                     res.redirect('/form/student/' + cid + '/' + secret);
                   }
-                  req.flash('success', {msg: 'Success!  Application submitted!  An email will now be sent to you with a copy of your application.'});
+                  req.flash('success', {msg: 'Success!  Application submitted!'});
                   res.redirect('/thankyou');
                 });
       });
-            
+
     }else{
       req.flash('errors', { msg: 'Invalid form URL' });
       res.redirect('/404');
     }
-    
-  });  
+
+  });
 };
 
 
@@ -126,8 +126,8 @@ var cid=req.params.cid;
     else if ( cohort && cohort.secret==secret ){
       var formData = formLoader.getForm(cohort.form);
       var mentorForms = _.filter( formData, function(formField){ return formField.mentor!==false; });    // Shows only fields relevant to mentors
-      res.render('pages/formDynamic', { cohortID : cohort['_id'], secret: secret, student: false, form: mentorForms, title: 'CS Tri-Mentoring Application Form', cohortID: cid, secret: secret });    
-    }  
+      res.render('pages/formDynamic', { cohortID : cohort['_id'], secret: secret, student: false, form: mentorForms, title: 'CS Tri-Mentoring Application Form', cohortID: cid, secret: secret });
+    }
     else{
       req.flash('errors', { msg: 'Invalid form URL' });
       res.redirect('/404');
@@ -150,40 +150,40 @@ delete req.body._csrf; //delete the CSRF token now because it gets in the way, a
       res.redirect('/formClosed');
     }else if ( cohort && cohort.secret==secret ) {
       var formData = formLoader.getForm(cohort.form);
-      
+
       // Check it too many fields were submitted
       if ( Object.keys(req.body).length > formData.length )
-        errors.push({msg: 'You cannot submit more answers than their are questions!'});  
-  
+        errors.push({msg: 'You cannot submit more answers than their are questions!'});
+
       // Check if all required fields are submitted
       formData.forEach(function(element){
         if ( element.mentor!==false && element.required && ( req.body[element.name] == null || req.body[element.name] == '' )) {
           errors.push({msg: element.name + ' is a required field. Please fill it in.'});
-          
+
         }
       });
-  
+
       // Checks if all inputs are within range--if it is of type range.
       Object.keys(req.body).forEach(function(postKey) {
         var postVal = req.body[postKey];
         var element = _.find(formData, { 'name': postKey });
-        
+
         if ( element.mentor!==false){
           if ( element.type == 'date')
             req.body[postKey]=new Date( req.body[postKey] );   // Converts HTML date to JS Date
-            
+
           if ( element.type == 'integer')
             req.body[postKey]=parseInt(postVal);
-          
+
           if ( element.type == 'float')
             req.body[postKey]=parseFloat(postVal);
-          
+
           if ( element.type == 'range'){
             req.body[postKey]=parseInt(postVal);
-            
+
             if ( postVal < element.min )
               errors.push({msg: postVal+' cannot be lower than '+min+'.'});
-            if ( postVal > element.max )    
+            if ( postVal > element.max )
               errors.push({msg: postVal+' cannot be larger than '+max+'.'});
           }
         }
@@ -194,14 +194,14 @@ delete req.body._csrf; //delete the CSRF token now because it gets in the way, a
         req.flash('errors', errors);
         return res.redirect('/form/mentor/'+cid+'/'+secret);
       }
-      
+
       Application.count({ cohort: cid, phoneNumber: req.body.phoneNumber}).limit(1).count(function( err, count){
           if (count) {
             console.log('An application with the same phone number has already been submitted!',err,count);
             req.flash('errors',{msg: 'An application with the same phone number has already been submitted!'});
             return res.redirect('/form/mentor/'+cid+'/'+secret);
           }
-                 
+
               req.body.student=false;
               req.body.cohort=cohort._id;
               var application = new Application(req.body);
@@ -211,12 +211,12 @@ delete req.body._csrf; //delete the CSRF token now because it gets in the way, a
                   req.flash('errors', { msg: 'Your form could not be submitted. Please try again later.' });
                   res.redirect('/form/mentor/'+cid+'/'+secret);
                 }
-                req.flash('success', { msg: 'Success!  Application submitted!  An email will now be sent to you with a copy of your application.' });
+                req.flash('success', { msg: 'Success!  Application submitted!' });
                 res.redirect('/thankyou');
               });
-              
+
       });
-      
+
     }else{
       console.log(cohort);
       console.log(cohort.secret == secret);
@@ -239,5 +239,3 @@ exports.get404 = function(req,res){
 exports.get500 = function(req,res){
     res.render('500', {title:'500: Internal Server Error', error: error});
 }
-
-
