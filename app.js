@@ -37,6 +37,7 @@ var cohortController = require('./controllers/cohort');
 var applicationController = require('./controllers/application');
 var tricsController = require('./controllers/trics');
 var algoController = require('./controllers/algorithm');
+var myalgoController = require('./controllers/algorithm mycopy'); //TODO Remove after Jonathan testing
 var emailController = require('./controllers/emails');
 
 /**
@@ -124,7 +125,7 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
 /**
  * Primary app routes.
  */
- 
+
 
 app.get('/', passportConf.isAuthenticated, homeController.explorer);  // REDIRECT TO LAST COHORT
 app.get('/2', passportConf.isAuthenticated, homeController.two);
@@ -132,6 +133,7 @@ app.get('/2', passportConf.isAuthenticated, homeController.two);
 
 app.get('/Emails', passportConf.isAuthenticated, emailController.getEmails);
 app.post('/generateEmailsList', passportConf.isAuthenticated, emailController.postEmailsList);
+app.post('/matchupTest', passportConf.isAuthenticated, myalgoController.buttonFunction); //TODO Remove after jonathan testing
 app.get('/Directory', passportConf.isAuthenticated, homeController.directory);
 app.get('/Explorer', passportConf.isAuthenticated, homeController.explorer);
 app.get('/Matching', passportConf.isAuthenticated, homeController.matching);

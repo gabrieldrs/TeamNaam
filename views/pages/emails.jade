@@ -3,7 +3,7 @@ extends ../sidebarLayout
 block content
   .page-header
     h3 #{title}
-    
+
   form.form-horizontal(action='/generateEmailsList' method='POST')
 
     .form-group
@@ -27,10 +27,18 @@ block content
         input(type='radio',name='applicant_state', value='false')
         span Unmatched
         br
-        
+
     div
       input(type='hidden', name='_csrf', value=_csrf)
-      
+
       button.btn.btn.btn-primary.col-sm-6.col-sm-offset-2.col-xs-12(type='submit')
         span.ion-android-hand
         | Generate List!
+
+  form.form-horizontal(action='/matchupTest' method='POST')
+    div
+      input(type='hidden', name='_csrf', value=_csrf)
+
+      button.btn.btn.btn-primary.col-sm-6.col-sm-offset-2.col-xs-12(type='submit')
+        span.ion-android-hand
+        | Test Matchup!
