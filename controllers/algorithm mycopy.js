@@ -257,6 +257,7 @@ function compareAllSeniorsMentors(seniors, mentors){
       matrix[s][m] = quality;
     }
   }
+  console.log("The senior/mentor matrix is: ");
   console.log(matrix);
 }
 
