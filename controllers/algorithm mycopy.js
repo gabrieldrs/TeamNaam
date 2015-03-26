@@ -17,6 +17,7 @@ var menPE = "previousWorkExperience"; //Past work experience
 var menYears = "yearsInCS"; //Years in CS
 var menAge = "age"; //Mentor age
 
+var genNoPref = "No preference";
 
 //TODO for Jonathan: Stuff to delete when done
 var request;
@@ -80,7 +81,9 @@ function compareSeniorMentor(senior, mentor){
   console.log("Comparing " + senior["fName"] + " and " + mentor["fName"]);
   var matchSuccess = 0;
   //Check the gender preference
-  if (senior[senGP] == mentor[menG] && mentor[menGP] == senior[senG])
+  if(senior[senGP] == genNoPref && mentor[menGP] == genNoPref)
+  matchSuccess += + 1; //1*weightings.get(gender);
+  else if ((senior[senGP] == mentor[menG] || senior[senGP] == genNoPref) && (mentor[menGP] == senior[senG] || mentor[menGP] == genNoPref))
   matchSuccess += + 1; //1*weightings.get(gender);
   else if (senior[senGP] == mentor[menG] || mentor[menGP] == senior[senG])
   matchSuccess += + .5; //.5*weightings.get(gender);
@@ -137,7 +140,9 @@ function compareJuniorSenior(junior, senior){
   console.log("Comparing " + junior["fName"] + " and " + senior["fName"]);
   var matchSuccess = 0;
   //Check the gender preference
-  if (junior[senGP] == senior[senG] && senior[senGP] == junior[senG])
+  if(junior[senGP] == genNoPref && senior[senGP] == genNoPref)
+  matchSuccess += + 1; //1*weightings.get(gender);
+  else if ((junior[senGP] == senior[senG] || junior[senGP]==genNoPref) && (senior[senGP] == junior[senG] || senior[senGP]==genNoPref))
   matchSuccess += + 1; //1*weightings.get(gender);
   else if (junior[senGP] == senior[senG] || senior[senGP] == junior[senG])
   matchSuccess += + .5; //.5*weightings.get(gender);
@@ -162,7 +167,7 @@ function compareJuniorMentor(junior, mentor){
   console.log("Comparing " + junior["fName"] + " and " + mentor["fName"]);
   var matchSuccess = 0;
   //Check the gender preference
-  if (junior[senGP] == mentor[menG] && mentor[menGP] == junior[senG])
+  if ((junior[senGP] == mentor[menG] || junior[senGP]==genNoPref) && (mentor[menGP] == junior[senG] || mentor[menGP]==genNoPref))
   matchSuccess += + 1; //1*weightings.get(gender);
   else if (junior[senGP] == mentor[menG] || mentor[menGP] == junior[senG])
   matchSuccess += + .5; //.5*weightings.get(gender);
