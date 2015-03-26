@@ -72,9 +72,9 @@
   },
   {
     "name": "previousWorkExperience",
-    "label": "I have:",
+    "label": "I have experience:",
     "type": "checkboxGroup",
-    "values": ["Worked as an academic","Worked at a startup","Started my own business", "Done other CS work"],
+    "values": ["Working as an academic","Working at a startup","Starting my own business", "Returning to school", "Doing other CS work"],
     "alt": "",
     "weight": 75,
     "student":false,
