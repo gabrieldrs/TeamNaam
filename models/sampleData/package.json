@@ -1,0 +1,15 @@
+{
+  "name": "sampleData",
+  "version": "1.0.0",
+  "description": "",
+  "main": "mentorLoader.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csv-parse": "^0.1.0",
+    "stream-transform": "0.0.7"
+  }
+}
