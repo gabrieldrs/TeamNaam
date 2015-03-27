@@ -17,6 +17,7 @@ var menPE = "previousWorkExperience"; //Past work experience
 var menYears = "yearsInCS"; //Years in CS
 var menAge = "age"; //Mentor age
 
+var genNoPref = "No preference";
 
 //TODO for Jonathan: Stuff to delete when done
 var request;
@@ -59,9 +60,20 @@ function calcTrioMatching(applications,factors){
   var mentors = _.where(applications, {student:false});
 
   var seniorsMentorsMatrix = compareAllSeniorsMentors(seniors,mentors);
-  // var finalMatch = calcDuoMatching(seniors,juniors,factors,mentorMatch);
+  var seniorMentorMatchings = makePairsFromMatrix(seniors, mentors, seniorsMentorsMatrix);
 
-  // console.log(finalMatch);
+  // console.log("The final pairs were:");
+  // for(var i = 0; i < seniorMentorMatchings.length; i++){
+  //   console.log("\t" + seniorMentorMatchings[i][0]["fName"] + " : " + seniorMentorMatchings[i][1]["fName"]);
+  // }
+  var juniorsMatrix = compareAllJuniorsPairs(juniors, seniorMentorMatchings);
+  var finalTrio = makeTrioFromMatrix(juniors, seniorMentorMatchings, juniorsMatrix);
+
+  console.log("The final trios were:");
+  for(var i = 0; i < finalTrio.length; i++){
+    console.log("\t" + finalTrio[i][0]["fName"] + " : " + finalTrio[i][1]["fName"] + " : " + finalTrio[i][2]["fName"]);
+  }
+
   // return finalMatch;
 }
 
@@ -69,7 +81,9 @@ function compareSeniorMentor(senior, mentor){
   console.log("Comparing " + senior["fName"] + " and " + mentor["fName"]);
   var matchSuccess = 0;
   //Check the gender preference
-  if (senior[senGP] == mentor[menG] && mentor[menGP] == senior[senG])
+  if(senior[senGP] == genNoPref && mentor[menGP] == genNoPref)
+  matchSuccess += + 1; //1*weightings.get(gender);
+  else if ((senior[senGP] == mentor[menG] || senior[senGP] == genNoPref) && (mentor[menGP] == senior[senG] || mentor[menGP] == genNoPref))
   matchSuccess += + 1; //1*weightings.get(gender);
   else if (senior[senGP] == mentor[menG] || mentor[menGP] == senior[senG])
   matchSuccess += + .5; //.5*weightings.get(gender);
@@ -126,7 +140,9 @@ function compareJuniorSenior(junior, senior){
   console.log("Comparing " + junior["fName"] + " and " + senior["fName"]);
   var matchSuccess = 0;
   //Check the gender preference
-  if (junior[senGP] == senior[senG] && senior[senGP] == junior[senG])
+  if(junior[senGP] == genNoPref && senior[senGP] == genNoPref)
+  matchSuccess += + 1; //1*weightings.get(gender);
+  else if ((junior[senGP] == senior[senG] || junior[senGP]==genNoPref) && (senior[senGP] == junior[senG] || senior[senGP]==genNoPref))
   matchSuccess += + 1; //1*weightings.get(gender);
   else if (junior[senGP] == senior[senG] || senior[senGP] == junior[senG])
   matchSuccess += + .5; //.5*weightings.get(gender);
@@ -137,7 +153,7 @@ function compareJuniorSenior(junior, senior){
   var seniorCareerInterests = convertToArray(senior[senFP]);
   var similar = 0; //Used to keep track of how many careers the mentor has experience in, where the student is interested
   for (var i = 0; i < juniorCareerInterests.length; i++){
-    if(_.contains(seniorCareerInterests, studentCareerInterests[i])){ //Check if the mentor has experience in this
+    if(_.contains(seniorCareerInterests, juniorCareerInterests[i])){ //Check if the mentor has experience in this
       similar++;
     }
   }
@@ -151,7 +167,7 @@ function compareJuniorMentor(junior, mentor){
   console.log("Comparing " + junior["fName"] + " and " + mentor["fName"]);
   var matchSuccess = 0;
   //Check the gender preference
-  if (junior[senGP] == mentor[menG] && mentor[menGP] == junior[senG])
+  if ((junior[senGP] == mentor[menG] || junior[senGP]==genNoPref) && (mentor[menGP] == junior[senG] || mentor[menGP]==genNoPref))
   matchSuccess += + 1; //1*weightings.get(gender);
   else if (junior[senGP] == mentor[menG] || mentor[menGP] == junior[senG])
   matchSuccess += + .5; //.5*weightings.get(gender);
@@ -212,8 +228,8 @@ function compareAllJuniorsPairs(juniors, pairs){
   };
 
   for(var j = 0; j < juniors.length; j++){
-    matrix[s] = new Array(pairs.length); //Part two of the 2d matrix
-    for(var p = 0; p < mentors.length; p++){
+    matrix[j] = new Array(pairs.length); //Part two of the 2d matrix
+    for(var p = 0; p < pairs.length; p++){
       var senior = pairs[p][0];
       var mentor = pairs[p][1];
 
@@ -225,13 +241,14 @@ function compareAllJuniorsPairs(juniors, pairs){
 
       if (commonAvail.length == 0)
       return; //They have no nights in common, they can't be paired
-      var junSenQuality = compareJuniorSenior(junior[j], senior); //Calculate the match success of these two applicants
-      var junMenQuality = compareJuniorMentor(junior[j], mentor); //Calculate the match success of these two applicants
+      var junSenQuality = compareJuniorSenior(juniors[j], senior); //Calculate the match success of these two applicants
+      var junMenQuality = compareJuniorMentor(juniors[j], mentor); //Calculate the match success of these two applicants
 
       matrix[j][p] = junSenQuality + junMenQuality;
     }
   }
   console.log(matrix);
+  return matrix;
 }
 
 
@@ -259,6 +276,7 @@ function compareAllSeniorsMentors(seniors, mentors){
   }
   console.log("The senior/mentor matrix is: ");
   console.log(matrix);
+  return matrix;
 }
 
 //Convert a string or an array to array
@@ -289,4 +307,106 @@ function getCoopExperienceAsDigit(experience){
       return i;
     }
   }
+}
+
+//This function finds the highest score in the matrix and returns the index of that score
+//Returns [studentIndex, mentorIndex] of the next highest score
+function makePairsHelper(matrix){
+  //console.log("\t\tAnalyzing matrix");
+  //The matrix is ordered as matrix[students][mentors]
+  var sLength = matrix.length; //The students are stored in the first dimension of the matrix
+  var mLength = matrix[0].length; //The mentors are stored in the second dimension of the matrix
+  //console.log("\t\tHelper: sL=" + sLength + ", mL=" + mLength);
+  //console.log("\t\t" + matrix);
+  //Used to keep track of the highest score and where it is
+  var currentHighest = 0;
+  var sIndex = 0;
+  var mIndex = 0;
+
+  for(var s = 0; s < sLength; s++){
+    //console.log("\t\t" + matrix[s]);
+    for(var m = 0; m < mLength; m++){
+      if(matrix[s][m] > currentHighest){
+        currentHighest = matrix[s][m];
+        sIndex = s;
+        mIndex = m;
+      }
+    }
+  }
+
+  return [sIndex, mIndex];
+}
+
+
+//We now have a matrix and want to choose the pairs we want.
+//To do this, we will pick the highest score from the table, add the respective student and mentor to the pairs array
+//and delete that student and mentor (row and column) from the table and recurse.
+//Returns an array of the matchedPairs. Each pair is stored as [student, mentor]
+function makePairsFromMatrix(allStudents, allMentors, fullMatrix){
+  console.log("\nStaring to make pairs");
+  //Copy the studetns, mentors, matrix
+  var students = allStudents;
+  var mentors = allMentors;
+  var matrix = fullMatrix;
+  var originalStudentsLength = students.length;
+  //Set up the empty array for the new matches
+  var matchedPairs = new Array(students.length);
+
+  for(var i = 0; i < originalStudentsLength; i++){
+    console.log("\tIteration: " + i);
+    var nextBestIndex = makePairsHelper(matrix); //Returns an array of the index of next highest score. Of the form [student, mentor]
+    var bestStudentIndex = nextBestIndex[0];
+    var bestMentorIndex = nextBestIndex[1];
+    matchedPairs[i] = [students[bestStudentIndex], mentors[bestMentorIndex]]; //Save the pair into the matchedPair array
+    console.log("\tMatched Pair: " + students[bestStudentIndex]["fName"] + " : " + mentors[bestMentorIndex]["fName"]);
+    //We now have to remove both the student and mentor from the matrix. Recall that the matrix was created by making an element for each student, and in each element making an array for the mentors
+    //So first we have to remove the mentor from every student in the matrix
+    for(var k = 0; k < students.length; k++){
+      matrix[k].splice(bestMentorIndex, 1);
+    }
+    //Now delete the student from the matrix
+    matrix.splice(bestStudentIndex, 1);
+
+    //Now lets remove the actual student and mentor
+    students.splice(bestStudentIndex, 1);
+    mentors.splice(bestMentorIndex, 1);
+    console.log("\n");
+  }
+
+  return matchedPairs;
+}
+
+//Returns an array of the matchedPairs. Each pair is stored as [junior, senior, mentor]
+function makeTrioFromMatrix(allJuniors, allPairs, fullMatrix){
+  console.log("\nStaring to make pairs");
+  //Copy the studetns, mentors, matrix
+  var juniors = allJuniors;
+  var pairs = allPairs;
+  var matrix = fullMatrix;
+  var originalStudentsLength = juniors.length;
+  //Set up the empty array for the new matches
+  var matchedPairs = new Array(juniors.length);
+
+  for(var i = 0; i < originalStudentsLength; i++){
+    console.log("\tIteration: " + i);
+    var nextBestIndex = makePairsHelper(matrix); //Returns an array of the index of next highest score. Of the form [student, mentor]
+    var bestJuniorIndex = nextBestIndex[0];
+    var bestPairsIndex = nextBestIndex[1];
+    matchedPairs[i] = [juniors[bestJuniorIndex], pairs[bestPairsIndex][0], pairs[bestPairsIndex][1]]; //Save the pair into the matchedPair array
+    console.log("\tMatched Pair: " + juniors[bestJuniorIndex]["fName"] + " : " + pairs[bestPairsIndex][0]["fName"] + " : " + pairs[bestPairsIndex][1]["fName"]);
+    //We now have to remove both the student and mentor from the matrix. Recall that the matrix was created by making an element for each student, and in each element making an array for the mentors
+    //So first we have to remove the mentor from every student in the matrix
+    for(var k = 0; k < juniors.length; k++){
+      matrix[k].splice(bestPairsIndex, 1);
+    }
+    //Now delete the student from the matrix
+    matrix.splice(bestJuniorIndex, 1);
+
+    //Now lets remove the actual student and mentor
+    juniors.splice(bestJuniorIndex, 1);
+    pairs.splice(bestPairsIndex, 1);
+    console.log("\n");
+  }
+
+  return matchedPairs;
 }
