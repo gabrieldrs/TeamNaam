@@ -12,43 +12,31 @@ mongoose.connection.on('error', function() {
   console.error('MongoDB Connection Error. Please make sure that MongoDB is running.');
 });
 
+var cid;
 
-var output = [];
-var parser = parse()
-var input = fs.createReadStream('mentorData.csv');
-var transformer = transform(function(record, callback){
+// We are searching for a cohort to add all these forms to.
+Cohort.findOne().sort('-_id').exec(function(err,cohort){
+        cid=cohort._id;
+        var output = [];
+        var parser = parse()
+        var input = fs.createReadStream('mentorData.csv');
+        var transformer = transform(function(record, callback){
 
-    if (typeof record !== 'undefined')
-      insertToDB(record);
-    callback(null, record.join(' '));
-}, {parallel: 300});
+            if (typeof record !== 'undefined')
+              insertToDB(record);
+            callback(null, record.join(' '));
+        }, {parallel: 300});
 
-input.pipe(parser).pipe(transformer);
-
-/*
-    "fname": "Yong Yan",
-    "lname": "Gang",
-    "email": "Gang.Yong Yan+AEA-smile.dm",
-    "cell": "250+AC0-6670269",
-    "cell2": "",
-    "identity": "Identify as female",
-    "yearBorn": "",
-    "genderPref": 1987,
-    "company": "3+AC0-5 years",
-    "position": "Bachelor's",
-    "experience": "Bachelor's",
-    "highestDegree": "",
-    "student": false
-
-*/
+        input.pipe(parser).pipe(transformer);
+});     
+        
 
 
+/* THIS STUFF HERE IS WHAT SHOULD BE EDITED/CUSTOMIZED !!! */  
 function insertToDB(record){
-  console.log('record:',record);
-  console.log('typeof record:',typeof record);
-  console.log('record[9]:',record[9]);
-  console.log('test:',record.length);
+  
   var data={
+    cohort:cid,
     fname: record[7],
     lname: record[8],
     email: record[9],
@@ -75,4 +63,3 @@ function insertToDB(record){
   var app = new Application(data);
   app.save(function(err) {  if (err) console.log(err); });
 }
-
