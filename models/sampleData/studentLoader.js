@@ -2,6 +2,7 @@ var fs = require('fs');
 var parse = require('csv-parse');
 var transform = require('stream-transform');
 
+var Cohort = require('../../models/Cohort');
 var Application = require('../../models/Application');
 var mongoose = require('mongoose');
 
