@@ -100,6 +100,7 @@ block content
               th Comment
               th Student Tier
               th Status
+              th Update
           tfoot
             tr
               th Delete
@@ -110,6 +111,7 @@ block content
               th Comment
               th Student Tier
               th Status
+              th Update
           tbody
           
             for data in studentApp
@@ -122,6 +124,7 @@ block content
                 td: input.form-control.input-sm.comment(data-aid=(data._id || '').toString(), value=data.adminComment)
                 td.seniorSwitch: input.seniorSwitch( data-aid=(data._id || '').toString(), checked=data.senior || false, type="checkbox", data-size='small', data-toggle="toggle",  data-handle-width="100", data-off-text="Junior", data-on-text="Senior", data-on-color="info", data-off-color="warning")
                 td.acceptedSwitch: input.acceptedSwitch( data-aid=(data._id || '').toString(), checked=data.accepted || false, type="checkbox", data-size='small', data-toggle="toggle",  data-handle-width="100", data-on-text="Accepted", data-off-text="Pending", data-on-color="default", data-off-color="danger")
+                td: a(href='/form/update/student/'+(cohort._id || '').toString()+'/'+(cohort.secret || '').toString()+'/'+(data._id || '').toString() ): input.btn-default.btn-sm(type='button', value='Revise')
 
     script.
     $(document).ready(function() {
