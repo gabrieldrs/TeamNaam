@@ -1,13 +1,13 @@
 extends ../sidebarLayout
-    
+
 //- Hacky attempt at Namespacing CSS
 block pageStyle
   - var pageStyleVar = "pageStyle-crossFilter "
-  
 
-  
+
+
 block content
-  
+
   h1.title=title
   h4(style='float:right;')
     style.
@@ -21,72 +21,6 @@ block content
     a(href='/')
       span.label.label-default Set Matching as Pending
       
-  style.
-    .pageStyle-crossFilter .chart_box{padding-bottom:0px;}
-    
-    .dc-chart g.row text {
-      fill: rgb(43, 43, 43);
-     }
-  
-  .chart_box(style="margin-bottom:15px;min-height:65px;")
-    h4.data-count.number-chart Loading Graph, Please Wait...
-  .oneThird
-    #duration-chart.dc-chart.chart_box
-      h4 Junior/Senior Matches
-        small  
-      span.reset(style='display: none;')
-      a.reset(href='javascript:durationChart.filterAll();dc.redrawAll();', style='display: none;') reset
-      .clearfix
-  .oneThird
-    #arrival-hour-chart.dc-chart.chart_box
-      h4 Senior/Mentor Matches
-      span.reset(style='display: none;')
-      a.reset(href='javascript:arrivalHourChart.filterAll();dc.redrawAll();', style='display: none;') reset
-      .clearfix
-  .oneThird
-    #departure-hour-chart.dc-chart.chart_box
-      h4 Client Departures by Hour 
-      span.reset(style='display: none;')
-      a.reset(href='javascript:departureHourChart.filterAll();dc.redrawAll();', style='display: none;') reset
-      .clearfix
-  .oneThird
-    #day-of-week-chart.dc-chart.chart_box
-      h4 Availability
-      a.reset(href='javascript:dayOfWeekChart.filterAll();dc.redrawAll();', style='display: none;') reset
-      .clearfix
-  .oneThird
-    #frequency-chart.dc-chart.chart_box
-      h4 Frequency
-        small  - Days since last visit 
-      span.reset(style='display: none;')
-      a.reset(href='javascript:frequencyChart.filterAll();dc.redrawAll();', style='display: none;') reset
-      .clearfix
-  .oneThird
-      #loyalty-chart.dc-chart.chart_box
-        h4 Loyalty
-          small  - Number of Visits per customer 
-        span.reset(style='display: none;')
-        a.reset(href='javascript:loyaltyChart.filterAll();dc.redrawAll();', style='display: none;') reset
-        .clearfix
-  .full
-      .chart_box
-        #weekly-move-chart.dc-chart
-          h4 Weekly Volume 
-          span.reset(style='display: none;')
-          a.reset(href='javascript:moveChart.filterAll();originChart.filterAll();volumeChart.filterAll();dc.redrawAll();', style='display: none;') reset
-          .clearfix
-        #weekly-volume-chart.dc-chart
-          h4 Daily Volume 
-          span.reset(style='display: none;')
-          a.reset(href='javascript:moveChart.filterAll();volumeChart.filterAll();dc.redrawAll();', style='display: none;') reset
-          .clearfix
-        #origin-chart.dc-chart
-          h4 Customer's first visit date 
-          span.reset(style='display: none;')
-          a.reset(href='javascript:originChart.filterAll();dc.redrawAll();', style='display: none;') reset
-          .clearfix
-
-
   .full
       .chart_box
         table#example.table.table-striped.table-bordered(cellspacing='0', width='100%')
@@ -111,7 +45,7 @@ block content
               th Student Tier
               th Status
           tbody
-          
+
             for data in studentApp
               tr(id='aid-'+(data._id || '').toString())
                 td: input.deleteApplication.btn-danger.btn-sm(data-aid=(data._id || '').toString(), type='button', value='Delete')
@@ -127,27 +61,27 @@ block content
     $(document).ready(function() {
       $('input[type="checkbox"]').bootstrapSwitch();
       $('#example').dataTable();
-      
+
       $('.deleteApplication').on('click',function(){
           var aid=this.getAttribute('data-aid');
           console.log('aid:',aid);
           $.post('/form/delete',{aid:aid, _csrf: '#{_csrf}'} )
           .done(function(data) {
               console.log('deleted:','tr#aid-'+aid);
-              $('tr#aid-'+aid).remove();            
+              $('tr#aid-'+aid).remove();
           })
           .fail(function(data) {
               alert('Deletion of application failed');
               $('tr#aid-'+aid).css('border-color','red');
-          });        
+          });
       });
-      
+
       $('.comment').on('blur', function() {
-      
+
           var aid=this.getAttribute('data-aid');
           var msg=$(this).val();
           console.log(aid,msg);
-          
+
           $.get('/staging/set_comment/'+aid+'/ '+msg+'/' )
           .done(function(data) {
               $('tr#aid-'+aid+' input.comment').css('border-color','green');
@@ -156,12 +90,12 @@ block content
               $('tr#aid-'+aid+' input.comment').css('border-color','red');
           });
       });
-      
+
       $('.acceptedSwitch').on('switchChange.bootstrapSwitch', function(event, state) {
-      
+
           var aid=this.getAttribute('data-aid');
           console.log(aid,state);
-          
+
           $.get('/staging/set_status/'+aid+'/'+state+'/' )
           .done(function(data) {
               $('tr#aid-'+aid+' td.acceptedSwitch > div').css('border-color','green');
@@ -171,14 +105,14 @@ block content
           })
           .done(function(data) {
               $('input.acceptedSwitch[data-aid="'+aid+'"]').bootstrapSwitch('state', data.state, true);
-          });         
+          });
       });
-      
+
       $('.seniorSwitch').on('switchChange.bootstrapSwitch', function(event, state) {
-          
+
           var aid=this.getAttribute('data-aid');
           console.log(this.getAttribute('data-aid'),state);
-          
+
           $.get('/staging/set_tier/'+aid+'/'+state+'/')
           .done(function(data) {
               $('tr#aid-'+aid+' td.seniorSwitch > div').css('border-color','green');
@@ -190,30 +124,30 @@ block content
               $('input.seniorSwitch[data-aid="'+aid+'"]').bootstrapSwitch('state', data.state, true);
           });
       });
-      
+
     });
     //# dc.js Getting Started and How-To Guide
     'use strict';
-    
+
     /* jshint globalstrict: true */
     /* global dc,d3,crossfilter,colorbrewer */
-    
+
     // ~~~ Create Chart Objects
     // Create chart objects assocated with the container elements identified by the css selector.
     // Note: It is often a good idea to have these objects accessible at the global scope so that they can be modified or filtered by other page controls.
-    
+
     var frequencyChart = dc.barChart("#frequency-chart");
     var durationChart = dc.barChart("#duration-chart");
     var loyaltyChart = dc.barChart("#loyalty-chart");
     var dayOfWeekChart = dc.rowChart("#day-of-week-chart");
     var arrivalHourChart = dc.barChart("#arrival-hour-chart");
     var departureHourChart = dc.barChart("#departure-hour-chart");
-    
+
     var moveChart = dc.lineChart("#weekly-move-chart");
     var volumeChart = dc.barChart("#weekly-volume-chart");
     var originChart = dc.barChart("#origin-chart");
-    
-    
+
+
     // ~~~ Anchor Div for Charts
     /*
     // A div anchor that can be identified by id
@@ -234,10 +168,10 @@ block content
             <span class="reset" style="display: none;">Current filter: <span class="filter"></span></span>
         </div>
     */
-    
-    
+
+
     //~~~ Load your data  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     //Data can be loaded through regular means with your
     //favorite javascript library
     //
@@ -248,31 +182,31 @@ block content
     // ---
     var stuff;
     window.onresize= function(){dc.renderAll();}
-    
+
     d3.json("/tmpdata.txt", function (data) {
         /* since its a csv file we need to format the data a bit */
-        
+
         var dateFormat = d3.time.format("%m/%d/%Y");
         var numberFormat = d3.format(".2f");
         var days= ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-        
+
         var dataDateStart= new Date( data[0].start );
         var dataDateEnd  = new Date( data.slice(-1)[0].end);
-        
+
         data.forEach(function (d) {
-        
+
           d.start = new Date(d.start);
           d.end = new Date(d.end);
-          
-          
+
+
           d.startHour = d.start.getHours();
           d.startDay = d3.time.day(d.start);
-                    
+
           d.endHour = d.end.getHours();
-    
+
           d.startWeek = d3.time.week(d.start);
           d.startWeekDay = d.start.getDay()+"."+days[d.start.getDay()];
-    
+
           d.duration = Math.round(d.duration/60/10); // DURATION in mins, with a dirty hack for 5 min resolution.  Value scaled down, then up again later on.
 
           d.frequency = Math.round(d.frequency/86400);  // CHANGE TO DAYS
@@ -282,66 +216,66 @@ block content
           d.originWeek = d3.time.week(d.origin);
           // d.relStart  // IMPLEMENT A CHART
         });
-    
+
         //~~~ Create Crossfilter Dimensions and Groups  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
         //See the [crossfilter API](https://github.com/square/crossfilter/wiki/API-Reference) for reference.
         var ndx = crossfilter(data);
-    
-    
+
+
         // determine a histogram of visit frequency
         var freqDim = ndx.dimension(function (d) {
             return d.frequency;
         });
         var freqGroup = freqDim.group();
-    
+
         // determine a histogram of duration
         var durationDim = ndx.dimension(function (d) {
             return d.duration;
         });
         var durationGroup = durationDim.group();
-     
+
         // determine a histogram of loyalty
         var loyaltyDim = ndx.dimension(function (d) {
             return d.loyalty;
         });
-        
+
         var loyaltyGroup = loyaltyDim.group();
-   
+
         // counts per weekday
         var dayOfWeekDim = ndx.dimension(function (d) {
             return d.startWeekDay;
          });
         var dayOfWeekGroup = dayOfWeekDim.group();
-    
+
         // counts per hour
         var hourOfDayDim = ndx.dimension(function (d) {
             return d.startHour;
          });
         var hourOfDayGroup = hourOfDayDim.group();
-    
+
         // counts per hour
         var departureHourDim = ndx.dimension(function (d) {
             return d.endHour;
          });
         var departureHourGroup = departureHourDim.group();
-    
-    
+
+
         // dimension by day
         var moveDaysDim = ndx.dimension(function (d) {
             return d.startDay;
         });
-        
+
         // group by total volume within move, and scale down result
         var volumeByDayGroup = moveDaysDim.group().reduceSum(function (d) {
             return 1;
         });
-        
+
         // dimension by week
         var moveWeeksDim = ndx.dimension(function (d) {
             return d.startWeek;
         });
-        
+
         var indexAvgByWeekGroup = moveWeeksDim.group().reduce(
             function (p, v) {
           if ( v.loyalty == 1 ) p.newClients++;
@@ -357,22 +291,22 @@ block content
                 return {newClients: 0, returnClients: 0};
             }
         );
-        
+
         // dimension by Origin Week
         var originDim = ndx.dimension(function (d) {
             return d.originDate;
         });
-        
+
         // group by origin, and scale down result
         var originGroup = originDim.group().reduceSum(function (d) {
             return 1;
         });
-        
+
         var all = ndx.groupAll();
-        
-        
+
+
         //~~~~ Charting   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-              
+
           dc.dataCount(".data-count")
               .dimension(ndx)
               .group(all)
@@ -400,7 +334,7 @@ block content
             .yAxisLabel('Customer Count')
             .x(d3.scale.linear().domain([1, 35]))
             .renderHorizontalGridLines(true);
-    
+
           durationChart.width(function (){ return $("#duration-chart").width();})
             .height(function (){ return window.innerHeight*.7 < 260 ? window.innerHeight*0.7 : 260;})
             .transitionDuration(350)
@@ -420,7 +354,7 @@ block content
             .x( d3.scale.linear().domain([1,25]) )
             .renderHorizontalGridLines(true);
             durationChart.xAxis().tickFormat(function(v) {return v*10;})     // DIRTY HACK FOR BINNING
-    
+
           loyaltyChart.width(function (){ return $("#duration-chart").width();})
             .height(function (){ return window.innerHeight*.7 < 260 ? window.innerHeight*0.7 : 260;})
             .transitionDuration(350)
@@ -439,7 +373,7 @@ block content
             .yAxisLabel('Customer Count')
             .x(d3.scale.linear().domain([1, 10]))
             .renderHorizontalGridLines(true);
-           
+
            dayOfWeekChart.width(function (){ return $("#duration-chart").width();})
             .height(function (){ return window.innerHeight*.7 < 260 ? window.innerHeight*0.7 : 260;})
             .transitionDuration(350)
@@ -447,16 +381,16 @@ block content
             .group(dayOfWeekGroup)
             .dimension(dayOfWeekDim)
             // assign colors to each value in the x scale domain
-            .ordinalColors(['#1f77b4']) 
+            .ordinalColors(['#1f77b4'])
             .label(function (d) {
                 return d.key.split(".")[1];
             })
             // title sets the row text
             .title(function (d) {
                 return d.value;
-            })            
+            })
             .elasticX(true);
-    
+
            arrivalHourChart.width(function (){ return $("#duration-chart").width();})
             .height(function (){ return window.innerHeight*.7 < 260 ? window.innerHeight*0.7 : 260;})
             .transitionDuration(350)
@@ -476,7 +410,7 @@ block content
             .x(d3.scale.linear().domain([0, 24]))
             .renderHorizontalGridLines(true);
 
-    
+
           departureHourChart.width(function (){ return $("#duration-chart").width();})
             .height(function (){ return window.innerHeight*.7 < 260 ? window.innerHeight*0.7 : 260;})
             .transitionDuration(350)
@@ -495,7 +429,7 @@ block content
             .yAxisLabel('Customer Count')
             .x(d3.scale.linear().domain([0, 24]))
             .renderHorizontalGridLines(true);
-    
+
         moveChart
             .renderArea(true)
             .width(function (){ return $("#wrap").width();})
@@ -529,7 +463,7 @@ block content
                 if (isNaN(value)) value = 0;
                 return dateFormat(d.key) + "\n" + numberFormat(value);
             });
-    
+
         volumeChart.width(function (){ return $("#wrap").width();})
             .height(function (){ return window.innerHeight/5 < 100 ? window.innerHeight/5 : 100;})
             .transitionDuration(350)
@@ -543,8 +477,8 @@ block content
             //.alwaysUseRounding(true)
             .xUnits(d3.time.days)
             .yAxis().ticks(1);
-            
-            
+
+
          originChart.width(function (){ return $("#wrap").width();})
             .height(function (){ return window.innerHeight/5 < 100 ? window.innerHeight/5 : 100;})
             .transitionDuration(350)
@@ -558,8 +492,8 @@ block content
             //.alwaysUseRounding(true)
             .xUnits(d3.time.days)
             .yAxis().ticks(1);
-    
+
         //~~~~ Rendering  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         dc.renderAll();
-    
+
     });
