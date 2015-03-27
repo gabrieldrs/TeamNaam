@@ -137,7 +137,8 @@ app.post('/matchupTest', passportConf.isAuthenticated, myalgoController.buttonFu
 app.get('/Directory', passportConf.isAuthenticated, homeController.directory);
 app.get('/Explorer', passportConf.isAuthenticated, homeController.explorer);
 app.get('/Matching', passportConf.isAuthenticated, homeController.matching);
-app.get('/Staging', passportConf.isAuthenticated, homeController.staging);
+app.get('/Staging/Mentor', passportConf.isAuthenticated, homeController.stagingMentor);
+app.get('/Staging/Student', passportConf.isAuthenticated, homeController.stagingStudent);
 
 app.post('/matrix/set-weights', passportConf.isAuthenticated, algoController.setWeights);
 

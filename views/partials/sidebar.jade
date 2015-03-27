@@ -29,11 +29,16 @@
                 i.fa.fa-bar-chart-o
                 strong Junior Matching
 
-        li(class=title=='Staging'?'active':undefined)
-            a(href='/Staging')
+        li(class=title=='Student Staging'?'active':undefined)
+            a(href='/Staging/Student')
                 i.fa.fa-star
-                strong Staging
+                strong Student Staging
 
+        li(class=title=='Mentor Staging'?'active':undefined)
+            a(href='/Staging/Mentor')
+                i.fa.fa-star
+                strong Mentor Staging
+                
         li(class=title=='Cohort'?'active':undefined)
             a(href='/Cohort')
                 i.fa.fa-star
@@ -65,8 +70,11 @@
         li(class=title=='Matching'?'active':undefined)
             a.text-center(href='/Matching')
                 i.fa.fa-bar-chart-o
-        li(class=title=='Staging'?'active':undefined)
-            a.text-center(href='/Staging')
+        li(class=title=='Student Staging'?'active':undefined)
+            a.text-center(href='/Staging/Student')
+                i.fa.fa-star
+        li(class=title=='Mentor Staging'?'active':undefined)
+            a.text-center(href='/Staging/Mentor')
                 i.fa.fa-star
         li(class=title=='Cohort'?'active':undefined)
             a.text-center(href='/Cohort')

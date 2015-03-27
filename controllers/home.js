@@ -59,13 +59,39 @@ exports.juniorMatching = function(req, res) {
 };
 
 
-exports.staging = function(req, res) {
-  Application.find({ cohort: res.locals.activeCohort}).lean().exec( function(err, applications){
+exports.stagingStudent = function(req, res) {
+  Application.find({ cohort: res.locals.activeCohort, student: true }).lean().exec( function(err, applications){
     if (err){ 
       console.error(err);
       req.flash('errors', { msg: 'Failed to retrieve applications.' });
     }
     var studentList = [];
+    applications.forEach(function(app){
+        var yearsDOB  = moment().diff(app['age'], 'years');  // Gets remainder of weeks, converted to decimal, truncated to one decimal place.
+        var weeksDOB  = Math.floor( moment().diff(app['age'], 'weeks') %52/5.2);
+        
+        app.name=app['fName']+' '+ app['lName'];
+        app.age = yearsDOB +'.'+ weeksDOB +' years old';
+        app.faculty = "";
+        app.adminComment = "";
+        app.submissionMoment =moment(app.submissionDate).fromNow();
+        studentList.push(app);
+    });    
+        
+    res.render('pages/stagingStudent', {
+      title: 'Student Staging',
+      studentApp: studentList,
+    }); 
+  });
+};
+
+
+exports.stagingMentor = function(req, res) {
+  Application.find({ cohort: res.locals.activeCohort, student: false }).lean().exec( function(err, applications){
+    if (err){ 
+      console.error(err);
+      req.flash('errors', { msg: 'Failed to retrieve applications.' });
+    }
     var mentorList = [];
     applications.forEach(function(app){
         var yearsDOB  = moment().diff(app['age'], 'years');  // Gets remainder of weeks, converted to decimal, truncated to one decimal place.
@@ -76,18 +102,11 @@ exports.staging = function(req, res) {
         app.faculty = "";
         app.adminComment = "";
         app.submissionMoment =moment(app.submissionDate).fromNow();
-        if (app.student){
-          studentList.push(app);
-        }else{
-         mentorList.push(app); 
-        }
-    }); 
-    console.log(applications);
-    
+        mentorList.push(app);
+    });    
         
-    res.render('pages/staging', {
-      title: 'Staging',
-      studentApp: studentList,
+    res.render('pages/stagingMentor', {
+      title: 'Mentor Staging',
       mentorApp: mentorList
     }); 
   });
