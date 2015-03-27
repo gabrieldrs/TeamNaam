@@ -188,8 +188,14 @@ app.post('/form/student/:cid/:secret', applicationController.postStudentForm);
 
 app.post('/form/delete', applicationController.deleteApplication);
 
+//app.get('/form/update/mentor/:cid/:secret/:aid', passportConf.isAuthenticated, applicationController.updatetMentorForm);
+//app.post('/form/update/mentor/:cid/:secret/:aid', passportConf.isAuthenticated, applicationController.postUpdateMentorForm);
+app.get('/form/update/student/:cid/:secret/:aid', passportConf.isAuthenticated, applicationController.updateStudentForm);
+app.post('/form/update/student/:cid/:secret/:aid', passportConf.isAuthenticated, applicationController.postUpdateStudentForm);
 
-app.get('/Cohort', passportConf.isAuthenticated, passportConf.isAuthenticated, cohortController.cohort);
+
+
+app.get('/Cohort', passportConf.isAuthenticated, cohortController.cohort);
 app.get('/set_cohort/:cid', passportConf.isAuthenticated, cohortController.setCohort);
 app.get('/new_cohort', passportConf.isAuthenticated, cohortController.getNewCohort);
 app.post('/update_cohort/:cid', passportConf.isAuthenticated, cohortController.updateCohort);
