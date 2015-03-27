@@ -185,6 +185,9 @@ app.post('/form/mentor/:cid/:secret', applicationController.postMentorForm);
 app.get('/form/student/:cid/:secret', applicationController.getStudentForm);
 app.post('/form/student/:cid/:secret', applicationController.postStudentForm);
 
+app.post('/form/delete', applicationController.deleteApplication);
+
+
 app.get('/Cohort', passportConf.isAuthenticated, passportConf.isAuthenticated, cohortController.cohort);
 app.get('/set_cohort/:cid', passportConf.isAuthenticated, cohortController.setCohort);
 app.get('/new_cohort', passportConf.isAuthenticated, cohortController.getNewCohort);

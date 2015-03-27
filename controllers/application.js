@@ -5,9 +5,9 @@ var formLoader = require('./forms');
 
 
 exports.deleteApplication = function(req, res) {
-  Application.remove({ _id: req.body.id }, function(err){
+  Application.remove({ _id: req.body.aid }, function(err){
     if (err) res.status(500).json({ error: 'Application failed to be deleted.' });
-    else res.status(200).json();
+    else res.status(200).json({});
   });
 }
 
