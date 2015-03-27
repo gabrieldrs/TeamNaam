@@ -53,9 +53,7 @@ exports.updateStudentForm = function(req, res) {
   var aid=req.params.aid;
 
   Cohort.findById(cid).lean().exec(function( err, cohort){
-    if ( cohort && cohort.status == false)      // the form is closed.
-    res.redirect('/formClosed');
-    else if ( cohort && cohort.secret==secret ){
+    if ( cohort && cohort.secret==secret ){
       var formData = formLoader.getForm(cohort.form);
       var formData = _.filter( formData, function(formField){ return formField.student!==false; });  // only display the form fields relevant to students
       
@@ -223,7 +221,7 @@ exports.postUpdateStudentForm = function(req, res) {
             res.redirect('/form/update/student/' + cid + '/' + secret+'/'+aid);
           }
           req.flash('success', {msg: 'Success!  Application updated!'});
-          res.redirect('/thankyou');
+          res.redirect('/staging/student');
         });
 
     }else{
@@ -258,7 +256,30 @@ exports.getMentorForm = function(req, res) {
   });
 };
 
+exports.updateMentorForm = function(req, res) {
+  var secret=req.params.secret;
+  var cid=req.params.cid;
+  var aid=req.params.aid;
 
+  Cohort.findById(cid).lean().exec(function( err, cohort){
+    console.log(cohort,secret);
+    if ( cohort && cohort.secret==secret ){
+      var formData = formLoader.getForm(cohort.form);
+      var formData = _.filter( formData, function(formField){ return formField.mentor!==false; });  // only display the form fields relevant to students
+      
+      Application.findById(aid).lean().exec(function(err,app){
+        if (err){ 
+          console.error(err);
+          req.flash('errors', { msg: 'Application form data failed to load. Try refreshing?' });
+        }
+        res.render('pages/formDynamic', { student: false, form: formData, title: 'CS Tri-Mentoring Application Form', cohortID: cid, secret: secret, application: app });
+      });
+    }else{
+      req.flash('errors', { msg: 'Invalid form URL' });
+      res.redirect('/404');
+    }
+  });
+};
 
 
 ///  POST /form/mentor/:id/:secret
@@ -348,6 +369,93 @@ exports.postMentorForm = function(req, res) {
     }
   });
 };
+
+
+///  POST /form/update/mentor/:id/:secret/:aid
+exports.postUpdateMentorForm = function(req, res) {
+  console.log(req.protocol + '://' + req.get('host') + req.originalUrl);
+  var secret=req.params.secret;
+  var cid=req.params.cid;
+  var aid=req.params.aid;
+  var errors=[];
+  
+  delete req.body._csrf; //delete the CSRF token now because it gets in the way, and isn't needed at the point in the controller.
+  Cohort.findById(cid).lean().exec(function( err, cohort){
+    if ( cohort && cohort.secret==secret ) {
+      var formData = formLoader.getForm(cohort.form);
+
+      // Check it too many fields were submitted
+      if ( Object.keys(req.body).length > formData.length )
+      errors.push({msg: 'You cannot submit more answers than their are questions!'});
+
+      // Check if all required fields are submitted
+      formData.forEach(function(element){
+        if ( element.mentor!==false && element.required && ( req.body[element.name] == null || req.body[element.name] == '' )) {
+          errors.push({msg: element.name + ' is a required field. Please fill it in.'});
+
+        }
+      });
+
+      // Checks if all inputs are within range--if it is of type range.
+      Object.keys(req.body).forEach(function(postKey) {
+        var postVal = req.body[postKey];
+        var element = _.find(formData, { 'name': postKey });
+
+        if ( element.mentor!==false){
+          if ( element.type == 'date')
+          req.body[postKey]=new Date( req.body[postKey] );   // Converts HTML date to JS Date
+
+          if ( element.type == 'integer')
+          req.body[postKey]=parseInt(postVal);
+
+          if ( element.type == 'float')
+          req.body[postKey]=parseFloat(postVal);
+
+          if ( element.type == 'range'){
+            req.body[postKey]=parseInt(postVal);
+
+            if ( postVal < element.min )
+            errors.push({msg: postVal+' cannot be lower than '+min+'.'});
+            if ( postVal > element.max )
+            errors.push({msg: postVal+' cannot be larger than '+max+'.'});
+          }
+        }
+      });
+
+      if (errors.length) {
+        console.log("ERRORS:",errors);
+        req.flash('errors', errors);
+        return res.redirect('/form/update/mentor/'+cid+'/'+secret+'/'+aid);
+      }
+
+        delete req.body._csrf;
+        console.log('req.body',req.body);
+        
+        Application.update({ _id: aid }, { $set: req.body }, function(err) {
+          if (err) {
+            req.flash('errors', {msg: 'Form could not be updated. Please try again later.'});
+            res.redirect('/form/update/mentor/'+cid+'/'+secret+'/'+aid);
+          }
+          req.flash('success', {msg: 'Success!  Application updated!'});
+          res.redirect('/staging/mentor');
+        });
+
+    }else{
+      console.log(cohort);
+      console.log(cohort.secret == secret);
+      req.flash('errors', { msg: 'Invalid form URL' });
+      res.redirect('/404');
+    }
+  });
+};
+
+
+
+
+
+
+
+
 
 exports.getFormClosedPage = function(req,res){
   res.render('pages/formClosed', {title: 'This session is closed.' });
