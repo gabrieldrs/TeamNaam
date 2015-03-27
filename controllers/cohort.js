@@ -38,6 +38,11 @@ exports.getNewCohort = function(req, res) {
 exports.cohort = function(req, res) {
   
   Cohort.findById(res.locals.activeCohort, function (err, c) {
+      if (err){ 
+        console.error(err);
+        req.flash('errors', { msg: err });
+        res.redirect('/500');
+      }
       Application.count({cohort: res.locals.activeCohort }).limit(1).count(function( err, count){
       
         console.log(count, (count));
@@ -47,7 +52,10 @@ exports.cohort = function(req, res) {
           c.formLock = false;
           
         c.save(function(err) {
-            if (err) console.error(err);
+            if (err){ 
+              console.error(err);
+              req.flash('errors', { msg: err });
+            }
             
             var formNames = formLoader.getAllFormNames();
             res.render('pages/cohort', {
