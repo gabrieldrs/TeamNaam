@@ -4,6 +4,30 @@ var _ = require('lodash');
 var formLoader = require('./forms');
 
 
+exports.deleteApplication = function(req, res) {
+  Application.remove({ _id: req.body.id }, function(err){
+    if (err) res.status(500).json({ error: 'Application failed to be deleted.' });
+    else res.status(200).json();
+  });
+}
+
+exports.getStudentDetails = function(req, res) {
+
+}
+
+exports.getMentorDetails = function(req, res) {
+
+}
+
+exports.updateStudentApplication = function(req, res) {
+
+}
+
+exports.updateMentorApplication = function(req, res) {
+
+}
+
+
 ///  GET /form/student/:cid/:secret
 exports.getStudentForm = function(req, res) {
   var secret=req.params.secret;
