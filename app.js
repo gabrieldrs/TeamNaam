@@ -188,7 +188,7 @@ app.post('/form/student/:cid/:secret', applicationController.postStudentForm);
 
 app.post('/form/delete', applicationController.deleteApplication);
 
-app.get('/form/update/mentor/:cid/:secret/:aid', passportConf.isAuthenticated, applicationController.updatetMentorForm);
+app.get('/form/update/mentor/:cid/:secret/:aid', passportConf.isAuthenticated, applicationController.updateMentorForm);
 app.post('/form/update/mentor/:cid/:secret/:aid', passportConf.isAuthenticated, applicationController.postUpdateMentorForm);
 app.get('/form/update/student/:cid/:secret/:aid', passportConf.isAuthenticated, applicationController.updateStudentForm);
 app.post('/form/update/student/:cid/:secret/:aid', passportConf.isAuthenticated, applicationController.postUpdateStudentForm);

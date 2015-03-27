@@ -99,6 +99,7 @@ block content
               th Submission Date
               th Comment
               th Status
+              th Update
           tfoot
             tr
               th Delete
@@ -108,6 +109,7 @@ block content
               th Submission Date
               th Comment
               th Status
+              th Update
           tbody
           
             for data in mentorApp
@@ -119,6 +121,7 @@ block content
                   td=data.submissionMoment
                   td: input.form-control.input-sm.comment(data-aid=(data._id || '').toString(), value=data.adminComment)
                   td.acceptedSwitch: input.acceptedSwitch( data-aid=(data._id || '').toString(), checked=data.accepted || false, type="checkbox", data-size='small', data-toggle="toggle",  data-handle-width="100", data-on-text="Accepted", data-off-text="Pending", data-on-color="default", data-off-color="danger")
+                  td: a(href='/form/update/mentor/'+(cohort._id || '').toString()+'/'+(cohort.secret || '').toString()+'/'+(data._id || '').toString() ): input.btn-default.btn-sm(type='button', value='Revise')
 
     script.
     $(document).ready(function() {

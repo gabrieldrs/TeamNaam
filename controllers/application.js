@@ -221,7 +221,7 @@ exports.postUpdateStudentForm = function(req, res) {
             res.redirect('/form/update/student/' + cid + '/' + secret+'/'+aid);
           }
           req.flash('success', {msg: 'Success!  Application updated!'});
-          res.redirect('/thankyou');
+          res.redirect('/staging/student');
         });
 
     }else{
@@ -262,6 +262,7 @@ exports.updateMentorForm = function(req, res) {
   var aid=req.params.aid;
 
   Cohort.findById(cid).lean().exec(function( err, cohort){
+    console.log(cohort,secret);
     if ( cohort && cohort.secret==secret ){
       var formData = formLoader.getForm(cohort.form);
       var formData = _.filter( formData, function(formField){ return formField.mentor!==false; });  // only display the form fields relevant to students
@@ -436,7 +437,7 @@ exports.postUpdateMentorForm = function(req, res) {
             res.redirect('/form/update/mentor/'+cid+'/'+secret+'/'+aid);
           }
           req.flash('success', {msg: 'Success!  Application updated!'});
-          res.redirect('/thankyou');
+          res.redirect('/staging/mentor');
         });
 
     }else{
