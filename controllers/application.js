@@ -53,9 +53,7 @@ exports.updateStudentForm = function(req, res) {
   var aid=req.params.aid;
 
   Cohort.findById(cid).lean().exec(function( err, cohort){
-    if ( cohort && cohort.status == false)      // the form is closed.
-    res.redirect('/formClosed');
-    else if ( cohort && cohort.secret==secret ){
+    if ( cohort && cohort.secret==secret ){
       var formData = formLoader.getForm(cohort.form);
       var formData = _.filter( formData, function(formField){ return formField.student!==false; });  // only display the form fields relevant to students
       
@@ -258,7 +256,29 @@ exports.getMentorForm = function(req, res) {
   });
 };
 
+exports.updateMentorForm = function(req, res) {
+  var secret=req.params.secret;
+  var cid=req.params.cid;
+  var aid=req.params.aid;
 
+  Cohort.findById(cid).lean().exec(function( err, cohort){
+    if ( cohort && cohort.secret==secret ){
+      var formData = formLoader.getForm(cohort.form);
+      var formData = _.filter( formData, function(formField){ return formField.mentor!==false; });  // only display the form fields relevant to students
+      
+      Application.findById(aid).lean().exec(function(err,app){
+        if (err){ 
+          console.error(err);
+          req.flash('errors', { msg: 'Application form data failed to load. Try refreshing?' });
+        }
+        res.render('pages/formDynamic', { student: false, form: formData, title: 'CS Tri-Mentoring Application Form', cohortID: cid, secret: secret, application: app });
+      });
+    }else{
+      req.flash('errors', { msg: 'Invalid form URL' });
+      res.redirect('/404');
+    }
+  });
+};
 
 
 ///  POST /form/mentor/:id/:secret
