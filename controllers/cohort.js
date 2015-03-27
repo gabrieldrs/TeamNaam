@@ -36,10 +36,28 @@ exports.getNewCohort = function(req, res) {
 
 ///  GET /cohort/
 exports.cohort = function(req, res) {
-  var formNames = formLoader.getAllFormNames();
-  res.render('pages/cohort', {
-    title: 'Home',
-    forms: formNames
+  
+  Cohort.findById(res.locals.activeCohort, function (err, c) {
+      Application.count({cohort: res.locals.activeCohort }).limit(1).count(function( err, count){
+      
+        console.log(count, (count));
+        if (count)    // IF there are any submitted applications, we lock the questionaire used.
+          c.formLock = true;
+        else
+          c.formLock = false;
+          
+        c.save(function(err) {
+            if (err) console.error(err);
+            
+            var formNames = formLoader.getAllFormNames();
+            res.render('pages/cohort', {
+              title: 'Home',
+              forms: formNames,
+              cohort: c /* This overrides the cohort field set as middleware in app.js.  If we don't do this the cohort object rendered on the page will not show the lock for one more page load */
+            });
+        });
+        
+      });
   });
 };
 
@@ -64,15 +82,6 @@ exports.updateCohort = function(req, res) {
       cohort.form = req.body.form || "form default";
     }
     
-    if (cohort.formLock == false){
-      if (cohort.status == false){
-        cohort.formLock = false;
-      }else{
-        cohort.formLock = true;
-      }
-    }else {
-      cohort.formLock = true;
-    }
 
     cohort.save(function(err) {
       if (err){

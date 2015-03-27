@@ -6,7 +6,12 @@ block content
 
   form.form-horizontal(action='/update_cohort/'+cohort._id, method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
-    
+
+    .form-group
+      label.col-sm-2.control-label(for='status') Form Accessibility
+      .col-sm-4
+        input(checked=cohort.status || false, id='status', name='status', type="checkbox", data-size='large', data-toggle="toggle", data-on-text="OPEN", data-off-text="CLOSED", data-on-color="success", data-off-color="danger")
+            
     .form-group
       label.col-sm-2.control-label(for='title') Title
       .col-sm-6
@@ -16,15 +21,22 @@ block content
       label.col-sm-2.control-label(for='description') Description
       .col-sm-6
         textarea.form-control(name='description', id='description')=cohort.description
+     
+    .form-group
+      label.col-sm-2.control-label Form Lock
+      if cohort.formLock == false
+        span.col-sm-6 The form template is presently unlocked. When more than one application is present for this cohort, the form template field will be locked.
+      else
+        .col-sm-6
+          | The form template is presently locked as more than one application has been submitted for this cohort. Delete all 
+          a(href='/staging/student') student applications 
+          |  and
+          a(href='/staging/mentor')  mentor applications 
+          |  to unlock.
         
     .form-group
-      label.col-sm-2.control-label(for='status') Form Accessibility
-      .col-sm-4
-        input(checked=cohort.status || false, id='status', name='status', type="checkbox", data-size='large', data-toggle="toggle", data-on-text="OPEN", data-off-text="CLOSED", data-on-color="success", data-off-color="danger")
-    
-    .form-group
       label.col-sm-2.control-label(for='form') Questionnaire Template
-      .col-sm-4
+      .col-sm-6
         if cohort.formLock == false
           select.form-control(id='form', name='form', value=cohort.form)
             for val, i in forms
@@ -39,8 +51,8 @@ block content
     
     .form-group
       label.col-sm-2.control-label(for='email') Form Secret
-      .col-sm-10
-        input.form-control(type='text', style='display: inline;width: 320px;height: 35px;', value=cohort.secret, id='secret', name='secret')
+      .col-sm-6
+        input.col-sm-12.form-control(type='text', style='', value=cohort.secret, id='secret', name='secret')
     
     .form-group
       label.col-sm-2.control-label Mentor Form Link

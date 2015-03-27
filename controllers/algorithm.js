@@ -20,7 +20,9 @@ function calcTrioMatching(applications,factors){
   var mentors = _.where(applications, {student:false});
 
   var mentorMatch = calcDuoMatching(mentors,seniors,factors);
-  var finalMatch = calcDuoMatching(seniors,juniors,factors,mentorMatch);
+  var finalMatch = calcDuoMatching(seniors,juniors,factors,mentorMatch); 
+  
+  // TODO:  its probably better form to seperate the finalMatch() function, into another function like stich(mentorMatch,studentMatch) instead of an optional parameter
 
   console.log(finalMatch);
   return finalMatch;
