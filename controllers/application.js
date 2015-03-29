@@ -28,7 +28,11 @@ exports.getAllData = function(req, res) {
       console.error(err);
       res.status(500).json({ error: 'Failed to load applications data.' });
     }
-    else res.status(200).json(apps);
+    else {
+      var formName = (res.locals.cohorts || {} ).form; 
+      var form = formLoader.getForm( formName );
+      res.status(200).json({ data: apps, form: form });
+    }
   });
 }
 
