@@ -56,7 +56,7 @@ block content
                 
         // EXTRA FIELDS HERE
         (res.form || []).forEach(function (field) {         
-              //               ################################        TODO:  if (field.analyze) so we don't bother showing student numbers and names etc
+           if (field.analyze)
             switch ( field.type) {
               case "number":                             
                 makeChartHTML(field);
