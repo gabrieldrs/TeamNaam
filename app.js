@@ -130,6 +130,9 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
 app.get('/', passportConf.isAuthenticated, homeController.explorer);  // REDIRECT TO LAST COHORT
 app.get('/2', passportConf.isAuthenticated, homeController.two);
 
+app.get('/data/applications/:cid', passportConf.isAuthenticated, applicationController.getAllData);
+
+
 
 app.get('/Emails', passportConf.isAuthenticated, emailController.getEmails);
 app.post('/generateEmailsList', passportConf.isAuthenticated, emailController.postEmailsList);

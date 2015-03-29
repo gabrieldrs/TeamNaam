@@ -132,13 +132,15 @@ block content
     var stuff;
     window.onresize= function(){dc.renderAll();}
     
-    d3.json("/tmpdata.txt", function (data) {
+    d3.json("/data/applications/#{cohort._id.toString()}", function (data) {
         /* since its a csv file we need to format the data a bit */
         
         var dateFormat = d3.time.format("%m/%d/%Y");
         var numberFormat = d3.format(".2f");
         var days= ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
         
+        console.log(data);
+        Window.data=data;
         var dataDateStart= new Date( data[0].start );
         var dataDateEnd  = new Date( data.slice(-1)[0].end);
         

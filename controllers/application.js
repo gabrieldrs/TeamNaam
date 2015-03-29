@@ -19,13 +19,19 @@ exports.getMentorDetails = function(req, res) {
 
 }
 
-exports.updateStudentApplication = function(req, res) {
 
+///  GET /data/applications/:cid
+exports.getAllData = function(req, res) {
+  var cid=req.params.cid;
+  Application.find({ cohort: cid}).lean().exec(function(err,apps){
+    if (err){
+      console.error(err);
+      res.status(500).json({ error: 'Failed to load applications data.' });
+    }
+    else res.status(200).json(apps);
+  });
 }
 
-exports.updateMentorApplication = function(req, res) {
-
-}
 
 
 ///  GET /form/student/:cid/:secret
