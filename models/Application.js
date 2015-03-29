@@ -38,9 +38,9 @@ model.schema['formProperties'] = {
   'fName' : {label:"First Name", formType:"string", student:true, mentor:true, analyze:false},
   'lName' : {label:"Last Name", formType:"string", student:true, mentor:true, analyze:false},
   'email': {label:"Email", formType:"email", student:true, mentor:true, analyze:false},
-  'age' : {label:"Age", formType:"date", student:true, mentor:true, analyze:true},
-  'gender' : {label:"Gender", formType:"radioGroup", student:true, mentor:true, values: ["Male", "Female"], analyze:true},
-  'genderPref' : {label:"Preferred Gender of Mentor", formType:"radioGroup", student:true, mentor:true, values: ["Male", "Female", "No preference"], analyze:true},
+  'age' : {label:"Age", formType:"date", student:true, mentor:true, analyze:true, analyzeRef: "age"},
+  'gender' : {label:"Gender", formType:"radioGroup", student:true, mentor:true, values: ["Male", "Female"], analyze:false},
+  'genderPref' : {label:"Preferred Gender of Mentor", formType:"radioGroup", student:true, mentor:true, values: ["Male", "Female", "No preference"], analyze:true, analyzeRef:"gender"},
   'availability' : {label:"Availability", formType:"checkboxGroup", values: ["Monday","Tuesday","Wednesday","Thursday","Friday"], student:true, mentor:true, analyze:false}
 }
 
