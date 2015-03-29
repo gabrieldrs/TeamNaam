@@ -29,8 +29,11 @@ exports.getAllData = function(req, res) {
       res.status(500).json({ error: 'Failed to load applications data.' });
     }
     else {
-      var formName = (res.locals.cohorts || {} ).form; 
+      var formName = (res.locals.cohort || {} ).form;
+      console.log('res.locals.cohorts:',res.locals.cohorts);
+      console.log('FormName:',formName);
       var form = formLoader.getForm( formName );
+      console.log('Form:',form);
       res.status(200).json({ data: apps, form: form });
     }
   });
@@ -139,10 +142,15 @@ exports.postStudentForm = function(req, res) {
       }
 
 
-      Application.count({ cohort: cid, stdNumber: req.body.stdNumber}).limit(1).count(function( err, count){
+      Application.count({ cohort: cid, sudentNo: req.body.studentNo}).limit(1).count(function( err, count){
         if (count) {
           console.log('An application with the same student number has already been submitted!',err,count);
           req.flash('errors',{msg: 'An application with the same student number has already been submitted!'});
+          return res.redirect('/form/student/'+cid+'/'+secret);
+        }
+        if (err) {
+          console.error(err);
+          req.flash('errors',{msg: 'Something went wrong!'});
           return res.redirect('/form/student/'+cid+'/'+secret);
         }
 
@@ -355,7 +363,12 @@ exports.postMentorForm = function(req, res) {
           req.flash('errors',{msg: 'An application with the same phone number has already been submitted!'});
           return res.redirect('/form/mentor/'+cid+'/'+secret);
         }
-
+        if (err) {
+          console.error(err);
+          req.flash('errors',{msg: 'Something went wrong!'});
+          return res.redirect('/form/mentor/'+cid+'/'+secret);
+        }
+        
         req.body.student=false;
         req.body.cohort=cohort._id;
         var application = new Application(req.body);
