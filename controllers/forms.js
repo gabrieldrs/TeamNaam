@@ -24,7 +24,8 @@ exports.getForm = function(identifier){
             "student":f['student'],
             "mentor": f['mentor'],
             "required": true,
-            "analyze":f['analyze']
+            "analyze":f['analyze'],
+            "analyzeRef" : f['analyzeRef']
         };
         newFields.push(newField);
     });
