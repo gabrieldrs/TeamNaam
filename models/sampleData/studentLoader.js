@@ -43,6 +43,8 @@ function insertToDB(record){
     if (Math.random()*2|0) availability.push('Thursday');
     if (Math.random()*2|0) availability.push('Friday');
     
+    var age=new Date();
+        age.setFullYear( (record[13] || 1994) );
   var data={
     cohort:cid,
     fName: record[6],
@@ -52,12 +54,12 @@ function insertToDB(record){
     /*cell: record[10],
     cell2: record[11],*/
     gender: (record[12].indexOf("female") > -1)? 'Female':'Male' ,
-    age: (d=new Date()).setFullYear( record[13] ),   // makes a date object given only Year- but we make this year since its passed in a sentence.
+    age: age,   // makes a date object given only Year- but we make this year since its passed in a sentence.
     genderPref: record[18],
-    degree: record[19],
+    program: record[19],
     availability: availability,
     availabilityComment: record[20],
-    year: (d=new Date()).setFullYear( Math.random()*6.1|0 ),
+    year: 1+Math.random()*4.1|0,
     prevTriMentoring: 'None', //record[24],
     coOp: ['Completed CoOp'],    //record[25],
     csInterests: record[35],

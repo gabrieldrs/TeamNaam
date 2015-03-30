@@ -61,6 +61,8 @@ function insertToDB(record){
         }
      }
      
+  var age=new Date();
+      age.setFullYear( (record[14] || 1980 ) );
   var data={
     cohort:cid,
     fName: record[7],
@@ -68,7 +70,7 @@ function insertToDB(record){
     email: record[9],
     phoneNumber: record[10],
     gender: record[12],
-    age: (d=new Date()).setFullYear( record[14] ), //record[14],
+    age: age, //record[14],
     genderPref: record[15],
     /*comment: record[],*/
     company: record[27],
