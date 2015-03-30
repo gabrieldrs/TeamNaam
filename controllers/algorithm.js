@@ -147,7 +147,7 @@ function calcMatchQuality(user1,user2,factors){
   if (factorCount>0)
     return quality/factorCount;
   else
-    return 100;
+    return quality;
 }
 
 function calcThisFactor(user1,user2,factor){
