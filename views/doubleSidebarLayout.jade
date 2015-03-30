@@ -117,7 +117,13 @@ html
                     }
                   );
               });
-              $.post('/matrix/set-weights', {_csrf: '#{_csrf}', factors: factors });
+              $.post('/matrix/set-weights', {_csrf: '#{_csrf}', factors: factors })
+              .done(function(data) {
+                  console.log('DONE',data);
+              })
+              .fail(function(data) {
+                  console.log('ERROR',data);
+              });
               
             }
             
