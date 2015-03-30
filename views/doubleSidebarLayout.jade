@@ -119,10 +119,21 @@ html
               });
               $.post('/matrix/set-weights', {_csrf: '#{_csrf}', factors: factors })
               .done(function(data) {
-                  console.log('DONE',data);
-                  $.forEach(date,function(el){
+                  $('#dc-trio-table').html('');
+                  $.each(data,function(el){
+                    var el=data[el];
                     /* Add in our Trio to the table */
-                    $('#charts').append(data);
+                    var jName=(el.junior || '').fName+' '+(el.junior || '').lName
+                    var sName=(el.senior || '').fName+' '+(el.senior || '').lName
+                    var mName=(el.mentor || '').fName+' '+(el.mentor || '').lName
+                    var html='<tr>'+
+                                '<th>'+el.quality+'</th>'+
+                                '<th>'+jName+'</th>'+
+                                '<th>'+sName+'</th>'+
+                                '<th>'+mName+'</th>'+
+                                '<th><a href="/MoreData"><input type="button" value="Trio Details" class="btn-info btn-sm"/></a></th>'+
+                              '</tr>';
+                    $('#dc-trio-table').append(html);
                   });
               })
               .fail(function(data) {

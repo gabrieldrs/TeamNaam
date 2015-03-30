@@ -14,19 +14,23 @@ block content
     .dc-chart g.row text {
       fill: rgb(43, 43, 43);
      }
+    tbody th{ font-weight: normal;}
   
   .chart_box(style="margin-bottom:15px;min-height:65px;")
     h4.data-count.number-chart Loading Graph, Please Wait...
   
   #charts
   div(style='clear:both;').dc-chart.chart_box
-    table#dc-trio-table.table.table-hover.table-bordered.table-striped
+    table.table.table-hover.table-bordered.table-striped
       thead
         tr.header
+          th Match Score
           th Junior
           th Senior
           th Mentor
-          th: a(href='/MoreData' ): input.btn-info.btn-sm(type='button', value='Trio Details')
+          th Trio Details
+      tbody#dc-trio-table
+        
           
   div(style='clear:both;').dc-chart.chart_box
     table#dc-data-table.table.table-hover.table-bordered.table-striped

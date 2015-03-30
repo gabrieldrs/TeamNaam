@@ -64,7 +64,8 @@ block content
         addTable(ndx);
                
         // EXTRA FIELDS HERE
-        (res.form || []).forEach(function (field) {         
+        (res.form || []).forEach(function (field) {   
+          console.log(field);      
            if (field.showChart)
             switch ( field.type) {
               case "number":                             
