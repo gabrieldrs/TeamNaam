@@ -33,15 +33,15 @@ model.schema.path('availability').validate(function(value){
 
 //These are the required fields for both forms, and are considered the elementary ones necessary for the application
 model.schema['formProperties'] = {
-  'phoneNumber': {label:"Phone Number", formType:"number", student:false, mentor:true, analyze:false},
-  'studentNo': {label:"Student Number", formType:"number", student:true, mentor:false, analyze:false},
-  'fName' : {label:"First Name", formType:"string", student:true, mentor:true, analyze:false},
-  'lName' : {label:"Last Name", formType:"string", student:true, mentor:true, analyze:false},
-  'email': {label:"Email", formType:"email", student:true, mentor:true, analyze:false},
-  'age' : {label:"Age", formType:"date", student:true, mentor:true, analyze:true, analyzeRef: "age"},
-  'gender' : {label:"Gender", formType:"radioGroup", student:true, mentor:true, values: ["Male", "Female"], analyze:true},
-  'genderPref' : {label:"Preferred Gender of Mentor", formType:"radioGroup", student:true, mentor:true, values: ["Male", "Female", "No preference"], analyze:true, analyzeRef:"gender"},
-  'availability' : {label:"Availability", formType:"checkboxGroup", values: ["Monday","Tuesday","Wednesday","Thursday","Friday"], student:true, mentor:true, analyze:true}
+  'phoneNumber': {label:"Phone Number", formType:"number", student:false, mentor:true, analyze:false, showChart: false},
+  'studentNo': {label:"Student Number", formType:"number", student:true, mentor:false, analyze:false, showChart: false},
+  'fName' : {label:"First Name", formType:"string", student:true, mentor:true, analyze:false, showChart: false},
+  'lName' : {label:"Last Name", formType:"string", student:true, mentor:true, analyze:false, showChart: false},
+  'email': {label:"Email", formType:"email", student:true, mentor:true, analyze:false, showChart: false},
+  'age' : {label:"Age", formType:"date", student:true, mentor:true, analyze:true, analyzeRef: "age", showChart: true},
+  'gender' : {label:"Gender", formType:"radioGroup", student:true, mentor:true, values: ["Male", "Female"], analyze:true, showChart: true},
+  'genderPref' : {label:"Preferred Gender of Mentor", formType:"radioGroup", student:true, mentor:true, values: ["Male", "Female", "No preference"], analyze:true, analyzeRef:"gender", showChart: true},
+  'availability' : {label:"Availability", formType:"checkboxGroup", values: ["Monday","Tuesday","Wednesday","Thursday","Friday"], student:true, mentor:true, analyze:true, showChart: true}
 }
 
 

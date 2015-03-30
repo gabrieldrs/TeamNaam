@@ -74,7 +74,7 @@ block content
                
         // EXTRA FIELDS HERE
         (res.form || []).forEach(function (field) {         
-           if (field.analyze)
+           if (field.showChart)
             switch ( field.type) {
               case "number":                             
                 makeChartHTML(field);
