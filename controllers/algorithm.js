@@ -72,9 +72,9 @@ function calcMatching(applications,factors){
       continue;
     
     finalMatch.push({
-      mentorID : thisMentor['_id'],
-      seniorID : thisSenior['_id'],
-      juniorID : thisJunior['_id'],
+      mentor : thisMentor,
+      senior : thisSenior,
+      junior : thisJunior,
       quality : quality
     });
   }
