@@ -120,6 +120,10 @@ html
               $.post('/matrix/set-weights', {_csrf: '#{_csrf}', factors: factors })
               .done(function(data) {
                   console.log('DONE',data);
+                  $.forEach(date,function(el){
+                    /* Add in our Trio to the table */
+                    $('#charts').append(data);
+                  });
               })
               .fail(function(data) {
                   console.log('ERROR',data);
