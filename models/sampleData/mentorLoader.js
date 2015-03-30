@@ -35,29 +35,56 @@ Cohort.findOne().sort('-_id').exec(function(err,cohort){
 
 /* THIS STUFF HERE IS WHAT SHOULD BE EDITED/CUSTOMIZED !!! */  
 function insertToDB(record){
-  
+
+    var availability =[];
+    if (Math.random()*2|0) availability.push('Monday');
+    if (Math.random()*2|0) availability.push('Tuesday');
+    if (Math.random()*2|0) availability.push('Wednesday');
+    if (Math.random()*2|0) availability.push('Thursday');
+    if (Math.random()*2|0) availability.push('Friday');
+    
+    var previousWorkExperience =[];
+      if (Math.random()*2|0) previousWorkExperience.push('Working as an academic');
+      if (Math.random()*2|0) previousWorkExperience.push('Working at a startup');
+      if (Math.random()*2|0) previousWorkExperience.push('Starting my own business');
+      if (Math.random()*2|0) previousWorkExperience.push('Returning to school');
+      if (Math.random()*2|0) previousWorkExperience.push('Doing other CS work');
+      
+     var educationLevel = 'Bachelor';
+     if (Math.random()*2|0){
+        educationLevel = 'Master';
+        if (Math.random()*2|0){
+          educationLevel = 'PhD';
+          if (Math.random()*2|0){
+            educationLevel = 'Other';
+          }
+        }
+     }
+     
   var data={
     cohort:cid,
-    fname: record[7],
-    lname: record[8],
+    fName: record[7],
+    lName: record[8],
     email: record[9],
-    cell: record[10],
-    cell2: record[11],
-    identity: record[12],
-    yearBorn: record[14],
+    phoneNumber: record[10],
+    gender: record[12],
+    age: (d=new Date()).setFullYear( record[14] ), //record[14],
     genderPref: record[15],
     /*comment: record[],*/
     company: record[27],
     position: record[28],
     experience: record[29],
-    highestDegree: record[30],
+    educationLevel: educationLevel,
+    ubcAlumn: (Math.random()*2|0),
+    yearsInCS: Math.random()*20|0,
+    availability: availability,
     /*
-    availability: record[],
     previousMentor: record[],
     csInterests: record[],
     hobbies: record[],
     */
-    student: false  
+    student: false,
+    accepted: !!(Math.random()*20|0) /* Randomly choose if accepted-heavy bias towards */
   }
   
   console.log(JSON.stringify(data,null,4));

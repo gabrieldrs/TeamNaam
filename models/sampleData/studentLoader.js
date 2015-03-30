@@ -36,30 +36,42 @@ Cohort.findOne().sort('-_id').exec(function(err,cohort){
 /* THIS STUFF HERE IS WHAT SHOULD BE EDITED/CUSTOMIZED !!! */  
 function insertToDB(record){
   
+    var availability =[];
+    if (Math.random()*2|0) availability.push('Monday');
+    if (Math.random()*2|0) availability.push('Tuesday');
+    if (Math.random()*2|0) availability.push('Wednesday');
+    if (Math.random()*2|0) availability.push('Thursday');
+    if (Math.random()*2|0) availability.push('Friday');
+    
   var data={
     cohort:cid,
-    fname: record[6],
-    lname: record[7],
+    fName: record[6],
+    lName: record[7],
     email: record[8],
-    studentNumber: record[9],
-    cell: record[10],
-    cell2: record[11],
-    identity: record[12],
-    yearBorn: record[13],
+    studentNo: record[9],
+    /*cell: record[10],
+    cell2: record[11],*/
+    gender: (record[12].indexOf("female") > -1)? 'Female':'Male' ,
+    age: (d=new Date()).setFullYear( record[13] ),   // makes a date object given only Year- but we make this year since its passed in a sentence.
     genderPref: record[18],
     degree: record[19],
+    availability: availability,
     availabilityComment: record[20],
-    year: record[22],
-    previousMentee: record[24],
-    coop: record[25],
+    year: (d=new Date()).setFullYear( Math.random()*6.1|0 ),
+    prevTriMentoring: 'None', //record[24],
+    coOp: ['Completed CoOp'],    //record[25],
     csInterests: record[35],
+    
+    futurePlans: ["Working at a startup","Working as an academic"],
     /*
     availability: record[],
     
     
     hobbies: record[],
     */
-    student: true
+    student: true,
+    senior: !!(Math.random()*2|0),  /* Randomly choose between Junior & Senior */
+    accepted: !!(Math.random()*20|0) /* Randomly choose if accepted-heavy bias towards accepted */
   }
   
   console.log(JSON.stringify(data,null,4));
