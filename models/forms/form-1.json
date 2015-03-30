@@ -9,7 +9,7 @@
     "student":true,
     "mentor": false,
     "required": true,
-    "analyze":false
+    "analyze": true
   },
   {
     "name": "coOp",
@@ -21,7 +21,7 @@
     "student":true,
     "mentor": false,
     "required": true,
-    "analyze":false
+    "analyze": true
   },
   {
     "name": "futurePlans",
@@ -33,7 +33,7 @@
     "student":true,
     "mentor": false,
     "required": true,
-    "analyze":false
+    "analyze": true
   },
   {
     "name": "yearsInCS",
@@ -44,7 +44,7 @@
     "student":false,
     "mentor": true,
     "required": true,
-    "analyze":false
+    "analyze": true
   },
   {
     "name": "educationLevel",
@@ -56,7 +56,7 @@
     "student":false,
     "mentor": true,
     "required": true,
-    "analyze":false
+    "analyze": true
   },
   {
     "name": "ubcAlumn",
@@ -68,7 +68,7 @@
     "student":false,
     "mentor": true,
     "required": true,
-    "analyze":false
+    "analyze": true
   },
   {
     "name": "previousWorkExperience",
@@ -80,6 +80,29 @@
     "student":false,
     "mentor": true,
     "required": true,
-    "analyze":false
+    "analyze": true
+  },
+  {
+    "name": "program",
+    "label": "Program of study:",
+    "type": "radioGroup",
+    "values": ["BSc, Computer Science","BComm, Combined Business / Computer Science (BUCS)","BCS (Bachelor of CS, 2nd Degree)", "other"],
+    "alt": "",
+    "weight": 75,
+    "student":true,
+    "mentor": false,
+    "required": true,
+    "analyze": true 
+  },
+  {
+    "name": "year",
+    "label": "Year of Study:",
+    "type": "number",
+    "alt": "",
+    "weight": 75,
+    "student":true,
+    "mentor": false,
+    "required": true,
+    "analyze": true 
   }
 ]

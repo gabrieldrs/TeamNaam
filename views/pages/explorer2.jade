@@ -19,7 +19,15 @@ block content
     h4.data-count.number-chart Loading Graph, Please Wait...
   
   #charts
-  
+  div(style='clear:both;').dc-chart.chart_box
+    table#dc-data-table.table.table-hover.table-bordered.table-striped
+      thead
+        tr.header
+          th Name
+          th Role
+          th Identifier
+          th Availability
+              
   script.
     //# dc.js Getting Started and How-To Guide
     
@@ -53,7 +61,8 @@ block content
         addMandatoryField(ndx,'student');
         addMandatoryField(ndx,'senior');  
         
-                
+        addTable(ndx);
+               
         // EXTRA FIELDS HERE
         (res.form || []).forEach(function (field) {         
            if (field.analyze)
@@ -111,7 +120,8 @@ block content
                 if (field.name == 'age' ){
                   makeChartHTML(field);
                   var dim = ndx.dimension(function (d) { 
-                    return d[field.name];
+                    console.log("AGES:::::",(new Date()).getFullYear(),(new Date(d[field.name])).getFullYear(),  (new Date()).getFullYear()  -  (new Date(d[field.name])).getFullYear());
+                    return (new Date()).getFullYear()  -  (new Date(d[field.name])).getFullYear();
                   });
                   var chart = dc.rowChart("#"+field.name+'-chart');
                   
@@ -303,6 +313,44 @@ block content
               return d.key + ' description';
           })            
           .elasticX(true);
+      }
+      
+      function addTable(ndx){
+      
+        var dim = ndx.dimension(function (d) {
+          return d.age;
+        });
+        /*
+        dc.dataTable('#data-table')
+          .width(function (){ return $("#gender-chart").width();})
+          .height(function (){ return window.innerHeight*.4 < 160 ? window.innerHeight*0.4 : 160;})
+          .transitionDuration(350)
+          .dimension( dim )
+          .group( dim.group() )
+          .size(10) // (optional) max number of records to be shown, :default = 25
+          .columns([
+              'gender'
+          ])
+          .renderlet(function (table) {
+              table.selectAll('#data-table').classed('info', true);
+          });
+        */
+        
+        var datatable   = dc.dataTable("#dc-data-table");
+        datatable
+            .dimension(dim)
+            .group(function(d) { return '<b>  Applicants:</b>'})
+            
+            .columns([
+              function(d) {return d.fName +' '+d.lName;},
+              function(d) {return (!d.student)? 'Mentor':
+                      (d.senior) ? 'Senior':
+                            'Junior';
+              },
+              function(d) {return d.studentNo || d.phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");;},
+              function(d) {return d.availability;},
+            ])
+            .size(500);     
       }
     });
     
