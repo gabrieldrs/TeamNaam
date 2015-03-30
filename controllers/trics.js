@@ -56,7 +56,7 @@ var aid=req.params.aid;
 var status=req.params.status;
 
   Application.findById( aid, function(err, application) {
-    if (err){ 
+    if (err || typeof application == 'undefined'){ 
       console.error(err);
       return res.status(500).json({ aid: aid, state: application.accepted, error: 'Application status failed to be updated.' });
     }
