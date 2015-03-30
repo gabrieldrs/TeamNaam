@@ -1,4 +1,4 @@
-extends ../doubleSidebarLayout
+extends ../sidebarLayout
     
 //- Hacky attempt at Namespacing CSS
 block pageStyle
@@ -120,7 +120,6 @@ block content
                 if (field.name == 'age' ){
                   makeChartHTML(field);
                   var dim = ndx.dimension(function (d) { 
-                    console.log("AGES:::::",(new Date()).getFullYear(),(new Date(d[field.name])).getFullYear(),  (new Date()).getFullYear()  -  (new Date(d[field.name])).getFullYear());
                     return (new Date()).getFullYear()  -  (new Date(d[field.name])).getFullYear();
                   });
                   var chart = dc.rowChart("#"+field.name+'-chart');
@@ -349,6 +348,7 @@ block content
               },
               function(d) {return d.studentNo || d.phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");;},
               function(d) {return d.availability;},
+              function(d) {return '<a href="#MoreDataModal"><input type="button" value="Details" class="btn-info btn-sm"/></a>'}
             ])
             .size(500);     
       }
