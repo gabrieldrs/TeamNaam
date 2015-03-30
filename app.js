@@ -111,8 +111,27 @@ app.use(function(req, res, next) {  // This lets us display the active COHORT,
 });
 app.use(function(req, res, next) {  // This lets us display the available cohorts, and the activeCohort document
   Cohort.find(function( err, cohorts){
+  
+    if ( cohorts.length == 0){
+          var cohort = new Cohort({ title: 'cohort 1' });         
+          cohort.save(function(err,cohort) {
+            if (err) {console.log(err); }
+            else{
+              req.session.activeCohort=cohort._id;
+            }
+          });
+    }
+    
     res.locals.cohorts=cohorts;
-    var cohort=_.where(cohorts, {id: res.locals.activeCohort})[0];
+    
+    var aC= _.where(cohorts, {id: res.locals.activeCohort});
+    var cohort= aC.length? aC[0] : {};
+    
+    if (cohorts.length && aC.length == 0)
+      cohort=cohorts[0];
+
+    // This will atleast prevent some errors down the road???
+    // Maybe we can make a new cohort
     res.locals.cohort=cohort? cohort : {};
     next();
   });
