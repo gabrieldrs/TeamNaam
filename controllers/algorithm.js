@@ -1,6 +1,7 @@
 var Cohort = require('../models/Cohort');
 var Application = require('../models/Application');
 var _ = require('lodash');
+var Matrix = require('./hungarianAlgorithm');
 
 
 exports.setWeights = function(req, res) {
@@ -8,146 +9,123 @@ exports.setWeights = function(req, res) {
   var factors=req.body.factors;
 
   Application.find({ cohort: res.locals.activeCohort, accepted: true }).lean().exec(function(err, applications) {
-    var matchings = calcTrioMatching(applications,factors);  // This is an optional helper function
+    var matchings = calcMatching(applications,factors);  // This is an optional helper function
     res.status(200).json(matchings);
   });
 };
 
 
-function calcTrioMatching(applications,factors){
+function calcMatching(applications,factors){
   var juniors = _.where(applications, {student:true,senior:false});
   var seniors = _.where(applications, {student:true,senior:true});
   var mentors = _.where(applications, {student:false});
 
-  var mentorMatch = calcDuoMatching(mentors,seniors,factors);
-  var finalMatch = calcDuoMatching(seniors,juniors,factors,mentorMatch); 
+  var mentorMatrix = generateMatrix(mentors,seniors,factors);
+  var mentorsAndSeniors = Matrix.run.hungarianAlgortithm(mentorMatrix); // got an array with tuples [mentor,senior,quality] 
+                                                                        // that refers to their positions in their respective
+                                                                        // arrays
+  //console.log(mentorsAndSeniors);
+  var matchedSeniors = [];
+  for (var i = 0; i<mentorsAndSeniors.length;i++){
+    var thisMentor = mentors[mentorsAndSeniors[i][0]];
+    var thisSenior = seniors[mentorsAndSeniors[i][1]];
+    if (thisMentor == undefined || thisSenior == undefined)
+      continue;
+    
+    matchedSeniors.push(seniors[mentorsAndSeniors[i][1]]); //Add this senior student to the list of matched seniors
+    
+    var mentorAvail = convertToArray(thisMentor["availability"]); 
+    var seniorAvail = convertToArray(thisSenior['availability']); 
+    var commonAvail = _.intersection(mentorAvail,seniorAvail); 
+    
+    matchedSeniors[matchedSeniors.length-1]['availability'] = commonAvail;  // change it's availability to be the common 
+                                                                            // availability between them and their mentor
+  }
   
-  // TODO:  its probably better form to seperate the finalMatch() function, into another function like stich(mentorMatch,studentMatch) instead of an optional parameter
+  
+  var seniorMatrix = generateMatrix(matchedSeniors,juniors,factors);  
+  
+  var seniorsAndJuniors = Matrix.run.hungarianAlgortithm(seniorMatrix);   // got an array with pairs [senior,junior,quality] 
+                                                                          // that refers their positions in their 
+                                                                          // respective arrays
+  
+  var finalMatch = [];
+  for (var i = 0; i<mentorsAndSeniors.length;i++){
+    var thisMentor = mentors[mentorsAndSeniors[i][0]];
+    var thisSenior = seniors[mentorsAndSeniors[i][1]];
+    var thisJunior = undefined;
+    var quality = mentorsAndSeniors[i][2];
+    
+    if (thisMentor == undefined || thisSenior == undefined)
+      continue;
+    
+    for (var j=0;j<seniorsAndJuniors.length;j++){
+      var senior = seniors[seniorsAndJuniors[j][0]];
+      if (senior['_id'] == thisSenior['_id']) {
+        thisJunior = juniors[seniorsAndJuniors[j][1]];
+        quality += seniorsAndJuniors[j][2]
+        quality /= 2;
+        break;
+      }
+    }
+    if (thisJunior == undefined)
+      continue;
+    
+    finalMatch.push({
+      mentorID : thisMentor['_id'],
+      seniorID : thisSenior['_id'],
+      juniorID : thisJunior['_id'],
+      quality : quality
+    });
+  }
 
   console.log(finalMatch);
   return finalMatch;
 }
 
-
-function calcDuoMatching(groupOne,groupTwo,factors,currentMatch){
-  //console.log(currentMatch);
-  if (currentMatch == undefined){
-    return calcDuoMatching2(groupOne,groupTwo,factors);
-  }
-
-  if (groupOne.length < 1 || groupTwo.length < 1)
-    return currentMatch;
-  var groupOneName =  getGroupName(groupOne[0]);
-  var groupTwoName =  getGroupName(groupTwo[0]);
-  currentMatch.forEach(function(match){
-    var i = _.findIndex(groupOne, function(appOne){
-      return appOne['_id'] == match[groupOneName+'ID'];
-    });
-    groupOne[i]["availability"] = match['availability']; // overwriting it's availability, so it matches with the currentMatch's ones.
-  });
-
-  var groupOneMatch = calcDuoMatching(groupOne,groupTwo,factors);
-
-  currentMatch.forEach(function(match){
-    var i = _.findIndex(groupOneMatch, function(appOne){
-      return appOne[groupOneName+'ID'] == match[groupOneName+'ID'];
-    });
-    match[groupTwoName+'ID'] = groupOneMatch[i][groupTwoName+'ID'];
-    match['quality'] = (match['quality'] + groupOneMatch[i]['quality'])/2;
-    match["availability"] = _.intersection(match['availability'],groupOneMatch[i]['availability']);
-  });
-
-  return currentMatch;
-
-}
-
-function calcDuoMatching2(groupOne,groupTwo,factors){
+function generateMatrix(groupOne,groupTwo,factors){
   if (groupOne.length < 1 || groupTwo.length < 1)
     return {};
-  var appOneMatch = [];
-  var tempAppOneMatch = [];
 
-  // These are used to label the JSON fields
-  var groupOneName = getGroupName(groupOne[0]);
-  var groupTwoName = getGroupName(groupTwo[0]);
-
-  groupOne.forEach(function(appOne){ //Cycle through the first group (mentors, then seniors)
-    var thisMatch = [];
-    groupTwo.forEach(function(appTwo){ //Cycle through the second group (seniors, juniors)
-
-      var appOneAvail = convertToArray(appOne["availability"]); //The first groups availability
-      var appTwoAvail = convertToArray(appTwo['availability']); //The second groups availability
-      var commonAvail = _.intersection(appOneAvail,appTwoAvail); //Nights that both applicants share
-
-      if (commonAvail.length == 0)
-        return; //They have no nights in common, they can't be paired
-      var quality = calcMatchQuality(appOne,appTwo,factors); //Calculate the match success of these two applicants
-      var thisMatchEntry = JSON.parse("{"+
-      '"'+groupTwoName+'ID" : "'+appTwo['_id']+'",'+
-      '"quality" : '+quality+","+
-      '"availability" : []'+
-      "}")
-      thisMatchEntry['availability'] = commonAvail;
-      thisMatch.push(thisMatchEntry);
-
-    });
-    if (thisMatch.length > 0){
-      //console.log(thisMatch);
-      var tempMatchEntry = JSON.parse('{"'+groupOneName+'ID" : "'+appOne['_id']+'", "matches" : []}');
-      tempMatchEntry['matches'] = thisMatch;
-      tempAppOneMatch.push(tempMatchEntry);
+  var matrix_length = _.max([groupOne.length,groupTwo.length]);
+  var matrix = createNewMatrix(matrix_length);
+  
+  for (var i = 0;i<matrix_length;i++){
+    for (var j = 0;j<matrix_length;j++){
+      if (groupOne[i] != undefined && groupTwo[j] != undefined)
+        matrix[i][j] = calcMatchQuality(groupOne[i],groupTwo[j],factors);
     }
-  });
-  tempAppOneMatch.forEach(function(appOne){
-    var bestQuality = -1;
-    var bestMatch = null;
-    appOne['matches'].forEach(function(appTwo){
-      if (appTwo['quality']>bestQuality){
-        bestQuality = appTwo['quality'];
-        bestMatch = appTwo;
-      }
-    });
-    if (bestMatch == null)
-      return;
-    var matchEntry = JSON.parse("{"+
-    '"'+groupOneName+'ID" : "'+appOne[groupOneName+'ID']+'",'+
-    '"'+groupTwoName+'ID" : "'+bestMatch[groupTwoName+'ID']+'",'+
-    '"quality" : '+bestMatch['quality']+","+
-    '"availability" : []'+
-    "}")
-    matchEntry['availability'] = bestMatch['availability']
-    appOneMatch.push(matchEntry);
-  });
-
-  return appOneMatch;
+  }
+  //console.log(matrix);
+  return matrix;
 }
-
-
-
-
 
 function calcMatchQuality(user1,user2,factors){
   var quality = 0;
-  var factorCount = 0;
+  var factorLength = factors.length;
+  
+  var appOneAvail = convertToArray(user1["availability"]); //The first groups availability
+  var appTwoAvail = convertToArray(user2['availability']); //The second groups availability
+  var commonAvail = _.intersection(appOneAvail,appTwoAvail); //Nights that both applicants share
+  
+  if (commonAvail.length == 0)
+    return quality; //They have no nights in common, the match quality is 0
+  
   factors.forEach(function(e) {
     var firstHalf = calcThisFactor(user1, user2, e);
     var secondHalf = calcThisFactor(user2, user1, e);
-    if (firstHalf != -1)
-      factorCount++;
-    else
-      firstHalf = 0;
-
-    if (secondHalf != -1)
-      factorCount++;
-    else
-      secondHalf = 0;
-
+    if (firstHalf == -1 && secondHalf == -1) {
+      factorLength--;
+      return;
+    }
     quality += (firstHalf+secondHalf);
+    if ((firstHalf != -1 && secondHalf != -1))
+      quality /= 2;
   });
-  if (factorCount>0)
-    return quality/factorCount;
-  else
-    return quality;
+  quality/=factorLength;
+  
+  //console.log("quality:"+quality);
+  return quality;
 }
 
 function calcThisFactor(user1,user2,factor){
@@ -168,6 +146,7 @@ function calcThisFactor(user1,user2,factor){
   });
   thisQuality = (thisQuality/(user2[factor['analyzeRef']].length));
   //console.log(factor['name'] + " quality = "+thisQuality);
+  
   return thisQuality;
 }
 
@@ -192,4 +171,17 @@ function getGroupName(applicant){
       return "junior";
   else
     return "mentor";
+}
+
+
+function createNewMatrix(matrix_length){
+  var result = new Array(matrix_length);
+  
+  for (var i = 0;i < result.length;i++){
+    result[i] = new Array(matrix_length);
+    for (var j = 0; j< result[i].length;j++){
+      result[i][j] = 0;
+    }
+  }
+  return result;
 }
