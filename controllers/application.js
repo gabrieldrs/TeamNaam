@@ -142,7 +142,7 @@ exports.postStudentForm = function(req, res) {
       }
 
 
-      Application.count({ cohort: cid, sudentNo: req.body.studentNo}).limit(1).count(function( err, count){
+      Application.count({ cohort: cid, studentNo: req.body.studentNo}).limit(1).count(function( err, count){
         if (count) {
           console.log('An application with the same student number has already been submitted!',err,count);
           req.flash('errors',{msg: 'An application with the same student number has already been submitted!'});
