@@ -29,11 +29,11 @@ Cohort.findOne().sort('-_id').exec(function(err,cohort){
         }, {parallel: 300});
 
         input.pipe(parser).pipe(transformer);
-});     
-        
+});
 
 
-/* THIS STUFF HERE IS WHAT SHOULD BE EDITED/CUSTOMIZED !!! */  
+
+/* THIS STUFF HERE IS WHAT SHOULD BE EDITED/CUSTOMIZED !!! */
 function insertToDB(record){
 
     var availability =[];
@@ -42,14 +42,14 @@ function insertToDB(record){
     if (Math.random()*2|0) availability.push('Wednesday');
     if (Math.random()*2|0) availability.push('Thursday');
     if (Math.random()*2|0) availability.push('Friday');
-    
+
     var previousWorkExperience =[];
-      if (Math.random()*2|0) previousWorkExperience.push('Working as an academic');
-      if (Math.random()*2|0) previousWorkExperience.push('Working at a startup');
-      if (Math.random()*2|0) previousWorkExperience.push('Starting my own business');
-      if (Math.random()*2|0) previousWorkExperience.push('Returning to school');
-      if (Math.random()*2|0) previousWorkExperience.push('Doing other CS work');
-      
+    if (Math.random()*2|0) previousWorkExperience.push('Working as an academic');
+    if (Math.random()*2|0) previousWorkExperience.push('Working at a startup');
+    if (Math.random()*2|0) previousWorkExperience.push('Starting my own business');
+    if (Math.random()*2|0) previousWorkExperience.push('Returning to school');
+    if (Math.random()*2|0) previousWorkExperience.push('Doing other CS work');
+
      var educationLevel = 'Bachelor';
      if (Math.random()*2|0){
         educationLevel = 'Master';
@@ -60,7 +60,7 @@ function insertToDB(record){
           }
         }
      }
-     
+
   var age=new Date();
       age.setFullYear( (record[14] || 1980 ) );
   var data={
@@ -88,7 +88,7 @@ function insertToDB(record){
     student: false,
     accepted: !!(Math.random()*20|0) /* Randomly choose if accepted-heavy bias towards */
   }
-  
+
   console.log(JSON.stringify(data,null,4));
   var app = new Application(data);
   app.save(function(err) {  if (err) console.log(err); });
