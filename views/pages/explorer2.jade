@@ -58,8 +58,7 @@ block content
         
         
         addMandatoryField(ndx,'accepted');
-        addMandatoryField(ndx,'student');
-        addMandatoryField(ndx,'senior');  
+        addMandatoryField(ndx,'role');
         
         addTable(ndx);
                
@@ -295,6 +294,12 @@ block content
         var dim = ndx.dimension(function (d) {
           return d[name];
         });
+        if (name =='role')
+          dim = ndx.dimension(function(d) {
+              return (!d.student)? 'Mentor':
+                      (d.senior) ? 'Senior':
+                            'Junior';
+          });
         var chart = dc.rowChart("#"+name+'-chart');
         
         chart.width(function (){ return $("#gender-chart").width();})
