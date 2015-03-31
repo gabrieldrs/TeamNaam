@@ -35,7 +35,8 @@
     "student":true,
     "mentor": false,
     "required": true,
-    "analyze": false ,
+    "analyze": true ,
+    "analyzeRef":"previousWorkExperience",
     "showChart": false 
   },
   {
@@ -86,7 +87,8 @@
     "student":false,
     "mentor": true,
     "required": true,
-    "analyze": false ,
+    "analyze": true ,
+    "analyzeRef":"futurePlans",
     "showChart": false 
   },
   {
