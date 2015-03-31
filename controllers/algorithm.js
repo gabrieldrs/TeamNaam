@@ -76,7 +76,7 @@ function calcMatching(applications,factors){
       mentor : thisMentor,
       senior : thisSenior,
       junior : thisJunior,
-      quality : quality
+      quality : Number(quality).toFixed(2)
     });
   }
 
