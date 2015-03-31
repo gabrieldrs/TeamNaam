@@ -27,7 +27,7 @@
   },
   {
     "name": "futurePlans",
-    "label": "After graduation, I am interested in:",
+    "label": "Future Plans",
     "type": "checkboxGroup",
     "values": ["Working as an academic","Working at a startup","Starting my own business", "Returning to school", "Doing other CS work"],
     "alt": "",
