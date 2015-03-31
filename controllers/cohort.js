@@ -105,9 +105,9 @@ exports.updateCohort = function(req, res) {
 
 ///  GET /delete_cohort/:cid
 exports.deleteCohort = function(req, res) {
-  Cohort.count({}).count(function( err, count){
-    if(count){
-      req.flash('errors', {msg: "You can't delete your final cohort!"});
+  Cohort.find().count(function( err, count){
+    if(count==1){
+      req.flash('errors', {msg: "You can't delete the last cohort!"});
       res.redirect('/Cohort');
     }else{
       Cohort.remove({ _id: req.params.cid }, function(err, cohort){
