@@ -29,34 +29,34 @@ exports.getNewCohort = function(req, res) {
             console.log('cohort._id:',cohort._id);
           }
           res.redirect('/Cohort');
-        });        
-        
+        });
+
     });
 };
 
 ///  GET /cohort/
 exports.cohort = function(req, res) {
-  
+
   Cohort.findById(res.locals.activeCohort, function (err, c) {
-      if (err){ 
+      if (err){
         console.error(err);
         req.flash('errors', { msg: err });
         res.redirect('/500');
       }
       Application.count({cohort: res.locals.activeCohort }).limit(1).count(function( err, count){
-      
+
         console.log(count, (count));
         if (count)    // IF there are any submitted applications, we lock the questionaire used.
           c.formLock = true;
         else
           c.formLock = false;
-          
+
         c.save(function(err) {
-            if (err){ 
+            if (err){
               console.error(err);
               req.flash('errors', { msg: err });
             }
-            
+
             var formNames = formLoader.getAllFormNames();
             res.render('pages/cohort', {
               title: 'Home',
@@ -64,7 +64,7 @@ exports.cohort = function(req, res) {
               cohort: c /* This overrides the cohort field set as middleware in app.js.  If we don't do this the cohort object rendered on the page will not show the lock for one more page load */
             });
         });
-        
+
       });
   });
 };
@@ -73,23 +73,23 @@ exports.cohort = function(req, res) {
 ///  GET /update_cohort/:cid
 exports.updateCohort = function(req, res) {
   Cohort.findById( req.params.cid, function(err, cohort) {
-    if (err){ 
+    if (err){
       console.error(err);
       req.flash('errors', { msg: 'Cohort failed to be updated.' });
       return res.redirect('/Cohort');
     }
-    
+
     console.log(" req.body:", req.body);
-    
+
     cohort.title = req.body.title || 'cohort ?';
     cohort.description = req.body.description || '';
     cohort.status = req.body.status || false;
     cohort.secret = req.body.secret || '';
-    
+
     if (cohort.formLock == false){
       cohort.form = req.body.form || "form default";
     }
-    
+
 
     cohort.save(function(err) {
       if (err){
@@ -104,20 +104,23 @@ exports.updateCohort = function(req, res) {
 
 ///  GET /delete_cohort/:cid
 exports.deleteCohort = function(req, res) {
-  Cohort.remove({ _id: req.params.cid }, function(err, cohort){
-    if (err) req.flash('errors', { msg: 'Cohort failed to be deleted.' });
-    else req.flash('info', { msg: 'Cohort successfully deleted.' });
-    
-    Application.remove({ cohort: req.params.cid }, function(err, apps){
-        Cohort.findOne().sort('-_id').exec(function(err,newCohort){
-            req.session.activeCohort = newCohort ? newCohort._id : null;     //    <<----------------------------------------- TODO
-            res.redirect('/Cohort');    
-        });     
-    });
-  }); 
+  Cohort.count({}).count(function( err, count){
+    if(count){
+      req.flash('errors', {msg: "You can't delete your final cohort!"});
+      res.redirect('/Cohort');
+    }else{
+      Cohort.remove({ _id: req.params.cid }, function(err, cohort){
+        if (err) req.flash('errors', { msg: 'Cohort failed to be deleted.' });
+        else req.flash('info', { msg: 'Cohort successfully deleted.' });
+
+        Application.remove({ cohort: req.params.cid }, function(err, apps){
+            Cohort.findOne().sort('-_id').exec(function(err,newCohort){
+                req.session.activeCohort = newCohort ? newCohort._id : null;     //    <<----------------------------------------- TODO
+                res.redirect('/Cohort');
+            });
+        });
+      });
+    }
+  });
+
 };
-
-
-
-
-
