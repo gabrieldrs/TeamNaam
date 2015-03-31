@@ -65,6 +65,11 @@ block content
         h3 Student Application Form
       else
         h3 Mentor Application Form
+    
+    style.
+      input[type="checkbox"], input[type='radio'] {
+        margin-right: 5px;
+      }
     div
       input(type='hidden', name='_csrf', value=_csrf)
       for input in form
