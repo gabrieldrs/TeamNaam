@@ -9,8 +9,8 @@
     "student":true,
     "mentor": false,
     "required": true,
-    "analyze": true ,
-    "showChart": true 
+    "analyze": false ,
+    "showChart": false 
   },
   {
     "name": "coOp",
@@ -22,8 +22,8 @@
     "student":true,
     "mentor": false,
     "required": true,
-    "analyze": true ,
-    "showChart": true 
+    "analyze": false ,
+    "showChart": false 
   },
   {
     "name": "futurePlans",
@@ -35,8 +35,8 @@
     "student":true,
     "mentor": false,
     "required": true,
-    "analyze": true ,
-    "showChart": true 
+    "analyze": false ,
+    "showChart": false 
   },
   {
     "name": "yearsInCS",
@@ -47,8 +47,8 @@
     "student":false,
     "mentor": true,
     "required": true,
-    "analyze": true ,
-    "showChart": true 
+    "analyze": false ,
+    "showChart": false 
   },
   {
     "name": "educationLevel",
@@ -60,8 +60,8 @@
     "student":false,
     "mentor": true,
     "required": true,
-    "analyze": true ,
-    "showChart": true 
+    "analyze": false ,
+    "showChart": false 
   },
   {
     "name": "ubcAlumn",
@@ -73,8 +73,8 @@
     "student":false,
     "mentor": true,
     "required": true,
-    "analyze": true ,
-    "showChart": true 
+    "analyze": false ,
+    "showChart": false 
   },
   {
     "name": "previousWorkExperience",
@@ -86,8 +86,8 @@
     "student":false,
     "mentor": true,
     "required": true,
-    "analyze": true ,
-    "showChart": true 
+    "analyze": false ,
+    "showChart": false 
   },
   {
     "name": "program",
@@ -99,8 +99,8 @@
     "student":true,
     "mentor": false,
     "required": true,
-    "analyze": true ,
-    "showChart": true  
+    "analyze": false ,
+    "showChart": false  
   },
   {
     "name": "year",
@@ -111,7 +111,7 @@
     "student":true,
     "mentor": false,
     "required": true,
-    "analyze": true ,
-    "showChart": true  
+    "analyze": false ,
+    "showChart": false  
   }
 ]
