@@ -41,7 +41,7 @@ model.schema['formProperties'] = {
   'age' : {label:"Age", formType:"date", student:true, mentor:true, analyze:true, analyzeRef: "age", showChart: true},
   'gender' : {label:"Gender", formType:"radioGroup", student:true, mentor:true, values: ["Male", "Female"], analyze:false, showChart: true},
   'genderPref' : {label:"Preferred Gender", formType:"radioGroup", student:true, mentor:true, values: ["Male", "Female", "No preference"], analyze:true, analyzeRef:"gender", showChart: false},
-  'availability' : {label:"Availability", formType:"checkboxGroup", values: ["Monday","Tuesday","Wednesday","Thursday","Friday"], student:true, mentor:true, analyze:true, showChart: true}
+  'availability' : {label:"Availability", formType:"checkboxGroup", values: ["Monday","Tuesday","Wednesday","Thursday","Friday"], student:true, mentor:true, analyze:true, analyzeRef:"availability", showChart: true}
 }
 
 
