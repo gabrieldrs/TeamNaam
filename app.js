@@ -109,12 +109,12 @@ app.use(function(req, res, next) {  // This lets us display the available cohort
 
   res.locals.activeCohort=req.session.activeCohort;
   Cohort.find(function( err, cohorts){
-  
-  
+
+
     // TODO: What to do if err?????
-  
+
     if ( cohorts.length == 0){
-          var cohort = new Cohort({ title: 'cohort 1' });         
+          var cohort = new Cohort({ title: 'Default Cohort' });         
           cohort.save(function(err,cohort) {
             if (err) {console.log(err); }
             else{
@@ -126,9 +126,9 @@ app.use(function(req, res, next) {  // This lets us display the available cohort
           });
     }
     else{
-      
+
       res.locals.cohorts=cohorts;
-      
+
       var aC= _.where(cohorts, {id: res.locals.activeCohort});
       var cohort= aC.length? aC[0] : cohorts[0];
 
