@@ -22,7 +22,7 @@ exports.postEmailsList = function(req, res) {
 		var type = [req.body.applicant_type];
 	else
 		var type = req.body.applicant_type;
-	var state = req.body.applicant_state;
+	//var state = req.body.applicant_state;
 	var query = {};
 	var or = [];
 	for(var t in type){
@@ -41,9 +41,10 @@ exports.postEmailsList = function(req, res) {
 	}
 	if (or.length>0)
 		query["$or"] = or;
-	query['matched'] = state=='true'?true:false;
+	//query['matched'] = state=='true'?true:false;
 	console.log(" query:", query);
 	Application.find(query,function (err,list){
+		console.log(list);
 		if (err){
 			console.error(err);
 			req.flash('errors', { msg: 'Failed to generate emails list.' });

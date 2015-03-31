@@ -80,7 +80,7 @@ exports.stagingStudent = function(req, res) {
         
     res.render('pages/stagingStudent', {
       title: 'Student Staging',
-      studentApp: studentList,
+      studentApp: studentList
     }); 
   });
 };
