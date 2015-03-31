@@ -65,7 +65,7 @@ block content
         // EXTRA FIELDS HERE
         (res.form || []).forEach(function (field) {   
           console.log(field);      
-           if (field.showChart)
+           if (field.showChart && field.name !=='ubcAlumn')
             switch ( field.type) {
               case "number":                             
                 makeChartHTML(field);

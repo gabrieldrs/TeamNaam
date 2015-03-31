@@ -77,9 +77,9 @@ block content
                
         // EXTRA FIELDS HERE
         (res.form || []).forEach(function (field) {         
-           if (field.showChart)
+           if (field.showChart && ( field.name == 'gender' || field.name == 'availability' ) )  // || field.name == 'program' || field.name == 'educationLevel'
             switch ( field.type) {
-              case "number":                             
+              case "number":
                 makeChartHTML(field);
                 var dim = ndx.dimension(function (d) {
                   return d[field.name];
