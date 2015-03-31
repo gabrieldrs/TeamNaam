@@ -29,20 +29,47 @@ Cohort.findOne().sort('-_id').exec(function(err,cohort){
         }, {parallel: 300});
 
         input.pipe(parser).pipe(transformer);
-});     
-        
+});
 
 
-/* THIS STUFF HERE IS WHAT SHOULD BE EDITED/CUSTOMIZED !!! */  
+
+/* THIS STUFF HERE IS WHAT SHOULD BE EDITED/CUSTOMIZED !!! */
 function insertToDB(record){
-  
+
     var availability =[];
     if (Math.random()*2|0) availability.push('Monday');
     if (Math.random()*2|0) availability.push('Tuesday');
     if (Math.random()*2|0) availability.push('Wednesday');
     if (Math.random()*2|0) availability.push('Thursday');
     if (Math.random()*2|0) availability.push('Friday');
-    
+
+    var futurePlans =[];
+      if (Math.random()*2|0) futurePlans.push('Working as an academic');
+      if (Math.random()*2|0) futurePlans.push('Working at a startup');
+      if (Math.random()*2|0) futurePlans.push('Starting my own business');
+      if (Math.random()*2|0) futurePlans.push('Returning to school');
+      if (Math.random()*2|0) futurePlans.push('Doing other CS work');
+
+    var coOpNum = (Math.random()*4|0);
+    var coOp;
+
+      if (coOpNum==0) coOp = ('None, and not interested');
+      else if (coOpNum==1) coOp = ('None, but I am interested');
+      else if (coOpNum==2) coOp = ('Currently in CoOp');
+      else if (coOpNum==3) coOp = ('Completed CoOp');
+
+    var prevTriNum = (Math.random()*4|0);
+    var prevTriMent;
+    if(prevTriNum==0){
+      prevTriMent = 'None';
+    } else if(prevTriNum==1){
+      prevTriMent = 'As a junior';
+    } else if(prevTriNum==2){
+      prevTriMent = 'As a senior';
+    } else if(prevTriNum==3){
+      prevTriMent = 'Both';
+    }
+
     var age=new Date();
         age.setFullYear( (record[13] || 1994) );
   var data={
@@ -60,22 +87,22 @@ function insertToDB(record){
     availability: availability,
     availabilityComment: record[20],
     year: 1+Math.random()*4.1|0,
-    prevTriMentoring: 'None', //record[24],
-    coOp: ['Completed CoOp'],    //record[25],
+    prevTriMentoring: prevTriMent, //record[24],
+    coOp: coOp,    //record[25],
     csInterests: record[35],
-    
-    futurePlans: ["Working at a startup","Working as an academic"],
+
+    futurePlans: futurePlans,
     /*
     availability: record[],
-    
-    
+
+
     hobbies: record[],
     */
     student: true,
     senior: !!(Math.random()*2|0),  /* Randomly choose between Junior & Senior */
     accepted: !!(Math.random()*20|0) /* Randomly choose if accepted-heavy bias towards accepted */
   }
-  
+
   console.log(JSON.stringify(data,null,4));
   var app = new Application(data);
   app.save(function(err) {  if (err) console.log(err); });

@@ -139,7 +139,7 @@ app.use(function(req, res, next) {  // This lets us display the available cohort
       // Maybe we can make a new cohort
       res.locals.cohort=cohort? cohort : {};
       
-      console.log("JHAWN checkpoint",cohort,cohorts,aC,res.locals.activeCohort);
+      //console.log("JHAWN checkpoint",cohort,cohorts,aC,res.locals.activeCohort);
       next();
     }
   });
