@@ -55,7 +55,7 @@ function insertToDB(record){
     cell2: record[11],*/
     gender: (record[12].indexOf("female") > -1)? 'Female':'Male' ,
     age: age,   // makes a date object given only Year- but we make this year since its passed in a sentence.
-    genderPref: record[18],
+    genderPref: (record[18].indexOf("female") > -1)? 'Female': (record[15].indexOf("preference") > -1)? ['Male','Female'] :'Male',
     program: record[19],
     availability: availability,
     availabilityComment: record[20],

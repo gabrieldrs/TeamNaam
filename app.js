@@ -105,35 +105,38 @@ app.use(function(req, res, next) {  // This lets us signup users when no users a
   });
 });
 
-app.use(function(req, res, next) {  // This lets us display the active COHORT,
-  res.locals.activeCohort=req.session.activeCohort;
-  next();
-});
 app.use(function(req, res, next) {  // This lets us display the available cohorts, and the activeCohort document
+
+  res.locals.activeCohort=req.session.activeCohort;
   Cohort.find(function( err, cohorts){
+  
+  
+    // TODO: What to do if err?????
   
     if ( cohorts.length == 0){
           var cohort = new Cohort({ title: 'cohort 1' });         
           cohort.save(function(err,cohort) {
             if (err) {console.log(err); }
             else{
+              res.locals.cohort=cohort;
+              res.locals.cohorts=[cohort];
               req.session.activeCohort=cohort._id;
+              next();
             }
           });
     }
-    
-    res.locals.cohorts=cohorts;
-    
-    var aC= _.where(cohorts, {id: res.locals.activeCohort});
-    var cohort= aC.length? aC[0] : {};
-    
-    if (cohorts.length && aC.length == 0)
-      cohort=cohorts[0];
+    else{
+      
+      res.locals.cohorts=cohorts;
+      
+      var aC= _.where(cohorts, {id: res.locals.activeCohort});
+      var cohort= aC.length? aC[0] : cohorts[0];
 
-    // This will atleast prevent some errors down the road???
-    // Maybe we can make a new cohort
-    res.locals.cohort=cohort? cohort : {};
-    next();
+      // This will atleast prevent some errors down the road???
+      // Maybe we can make a new cohort
+      res.locals.cohort=cohort? cohort : {};
+      next();
+    }
   });
 });
 

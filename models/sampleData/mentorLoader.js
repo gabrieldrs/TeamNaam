@@ -69,9 +69,9 @@ function insertToDB(record){
     lName: record[8],
     email: record[9],
     phoneNumber: record[10],
-    gender: record[12],
+    gender: (record[12].indexOf("female") > -1)? 'Female':'Male' ,
     age: age, //record[14],
-    genderPref: record[15],
+    genderPref: (record[15].indexOf("female") > -1)? 'Female': (record[15].indexOf("preference") > -1)? ['Male','Female'] :'Male',
     /*comment: record[],*/
     company: record[27],
     position: record[28],
