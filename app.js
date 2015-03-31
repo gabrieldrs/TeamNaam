@@ -131,10 +131,15 @@ app.use(function(req, res, next) {  // This lets us display the available cohort
       
       var aC= _.where(cohorts, {id: res.locals.activeCohort});
       var cohort= aC.length? aC[0] : cohorts[0];
-
+      
+      if (!aC.length)
+        req.session.activeCohort=cohorts[0]._id;
+      
       // This will atleast prevent some errors down the road???
       // Maybe we can make a new cohort
       res.locals.cohort=cohort? cohort : {};
+      
+      console.log("JHAWN checkpoint",cohort,cohorts,aC,res.locals.activeCohort);
       next();
     }
   });

@@ -35,6 +35,7 @@ exports.getNewCohort = function(req, res) {
 };
 
 ///  GET /cohort/
+
 exports.cohort = function(req, res) {
   
   Cohort.findById(res.locals.activeCohort, function (err, c) {
