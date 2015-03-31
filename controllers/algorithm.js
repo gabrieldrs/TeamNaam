@@ -10,7 +10,7 @@ exports.setWeights = function(req, res) {
 
   Application.find({ cohort: res.locals.activeCohort, accepted: true }).lean().exec(function(err, applications) {
     var matchings = calcMatching(applications,factors);  // This is an optional helper function
-    res.status(200).json(matchings);
+    res.status(200).json( _.sortBy(matchings, function(n) { return n.quality*(-1); }) ); // Sort Matchings by Qulaity
   });
 };
 
