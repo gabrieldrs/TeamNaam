@@ -80,6 +80,7 @@ function insertToDB(record){
     ubcAlumn: (Math.random()*2|0),
     yearsInCS: Math.random()*20|0,
     availability: availability,
+    previousWorkExperience:previousWorkExperience
     /*
     previousMentor: record[],
     csInterests: record[],
