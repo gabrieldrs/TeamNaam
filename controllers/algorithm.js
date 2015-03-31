@@ -133,8 +133,19 @@ function calcThisFactor(user1,user2,factor){
   var thisQuality = 0;
   //if (factor['name'] != "availability") return -1; //Just for testing purposes
   //If there are any undefined analyzeRefs, return -1
+
+
   if (!analyzeRefExists(user1,factor['name']) || !analyzeRefExists(user2,factor['analyzeRef']))
     return -1;
+
+   /* if (factor['name'] == "futurePlans"){
+        console.log("User 1 array: "+user1[factor['name']]);
+        console.log("User 2 array: "+user2[factor['analyzeRef']]);
+
+        console.log("quality: "+thisQuality);
+        console.log("length: "+user2[factor['analyzeRef']].length);
+
+    }*/ //Just for testing purposes
   user1[factor['name']] = convertToArray(user1[factor['name']]);
   user2[factor['analyzeRef']] = convertToArray(user2[factor['analyzeRef']]);
 
@@ -145,6 +156,7 @@ function calcThisFactor(user1,user2,factor){
       }
     });
   });
+    //console.log("quality: "+thisQuality);
   /*console.log("User 1 array: "+user1[factor['name']]);
   console.log("User 2 array: "+user2[factor['analyzeRef']]);
 

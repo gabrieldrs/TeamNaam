@@ -27,7 +27,7 @@
   },
   {
     "name": "futurePlans",
-    "label": "After graduation, I am interested in:",
+    "label": "Future Plans",
     "type": "checkboxGroup",
     "values": ["Working as an academic","Working at a startup","Starting my own business", "Returning to school", "Doing other CS work"],
     "alt": "",
@@ -35,7 +35,8 @@
     "student":true,
     "mentor": false,
     "required": true,
-    "analyze": false ,
+    "analyze": true ,
+    "analyzeRef":"previousWorkExperience",
     "showChart": true 
   },
   {
@@ -78,7 +79,7 @@
   },
   {
     "name": "previousWorkExperience",
-    "label": "I have experience:",
+    "label": "Previous Work Experience",
     "type": "checkboxGroup",
     "values": ["Working as an academic","Working at a startup","Starting my own business", "Returning to school", "Doing other CS work"],
     "alt": "",
@@ -86,8 +87,9 @@
     "student":false,
     "mentor": true,
     "required": true,
-    "analyze": false ,
-    "showChart": true 
+    "analyze": true ,
+    "analyzeRef":"futurePlans",
+    "showChart": true
   },
   {
     "name": "program",
