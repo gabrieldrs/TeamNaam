@@ -2,17 +2,23 @@ extends ../formLayout
 
 mixin formInput(form)
   if form.type=='string'
-    .form-group
-      label.col-sm-3.control-label(for=form.name)=form.label
-      .col-sm-5
-        input.form-control(type='text', name=form.name, id=form.name, required=form.required || false, value=application[form.name])
-    
+    if form.name=='interests'
+      .form-group
+        label.col-sm-3.control-label(for=form.name)=form.label +' (Comma separated list)'
+        .col-sm-5
+          input.form-control(type='text', name=form.name, id=form.name, required=form.required || false, value=application[form.name])
+    else
+      .form-group
+        label.col-sm-3.control-label(for=form.name)=form.label
+        .col-sm-5
+          input.form-control(type='text', name=form.name, id=form.name, required=form.required || false, value=application[form.name])
+
   if form.type=='email'
     .form-group
       label.col-sm-3.control-label(for=form.name)=form.label
       .col-sm-5
         input.form-control(type='email', name=form.name, id=form.name, required=form.required || false, value=application[form.name])
-        
+
   if form.type=='number'
     .form-group
       label.col-sm-3.control-label(for=form.name)=form.label
@@ -29,7 +35,7 @@ mixin formInput(form)
     .form-group
       label.col-sm-3.control-label(for=form.name)=form.label
       .col-sm-5
-      
+
         //- HTML5 date input requires zero padded YYYY-MM-DD format.  Its cleaner to perform here rather than many time in the controller.
         -var html5DateInputFormat;
         // This is a check to see if we are "update" an existing application.
@@ -39,7 +45,7 @@ mixin formInput(form)
           -var day=('0'+application[form.name].getUTCDate()).slice(-2);
         - html5DateInputFormat=year+'-'+month+'-'+day;
         input.form-control(type='date', name=form.name, id=form.name, required=form.required || false, value=(application._id ? html5DateInputFormat : false ))
-        
+
   if form.type=='radioGroup'
     .form-group
       label.col-sm-3.control-label(for=form.name)=form.label
@@ -48,7 +54,7 @@ mixin formInput(form)
           input(type='radio',name=form.name, value=val, checked=( application && application[form.name] && application[form.name].indexOf(val) != -1 ? true : false) )
           span= val
           br
-        
+
   if form.type=='checkboxGroup'
     .form-group
       label.col-sm-3.control-label(for=form.name)=form.label
@@ -65,7 +71,7 @@ block content
         h3 Student Application Form
       else
         h3 Mentor Application Form
-    
+
     style.
       input[type="checkbox"], input[type='radio'] {
         margin-right: 5px;
@@ -74,10 +80,8 @@ block content
       input(type='hidden', name='_csrf', value=_csrf)
       for input in form
         +formInput(input)
-      
-    
+
+
       button.btn.btn.btn-primary.col-sm-6.col-sm-offset-2.col-xs-12(type='submit')
         span.ion-android-hand
         | Submit!
-
-

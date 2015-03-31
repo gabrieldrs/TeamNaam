@@ -126,5 +126,18 @@
     "required": true,
     "analyze": false ,
     "showChart": true
+  },
+  {
+    "name": "interests",
+    "label": "Interests inside of CS",
+    "type": "string",
+    "alt": "",
+    "weight": 75,
+    "student":true,
+    "mentor": true,
+    "required": false,
+    "analyze": true,
+    "analyzeRef": "interests",
+    "showChart": false
   }
 ]
