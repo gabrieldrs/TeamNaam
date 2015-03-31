@@ -21,6 +21,7 @@ function calcMatching(applications,factors){
   var mentors = _.where(applications, {student:false});
 
   var mentorMatrix = generateMatrix(mentors,seniors,factors);
+  //console.log(mentorMatrix);
   var mentorsAndSeniors = Matrix.run.hungarianAlgortithm(mentorMatrix); // got an array with tuples [mentor,senior,quality] 
                                                                         // that refers to their positions in their respective
                                                                         // arrays
@@ -130,7 +131,7 @@ function calcMatchQuality(user1,user2,factors){
 
 function calcThisFactor(user1,user2,factor){
   var thisQuality = 0;
-
+  //if (factor['name'] != "availability") return -1; //Just for testing purposes
   //If there are any undefined analyzeRefs, return -1
   if (!analyzeRefExists(user1,factor['name']) || !analyzeRefExists(user2,factor['analyzeRef']))
     return -1;
@@ -140,10 +141,16 @@ function calcThisFactor(user1,user2,factor){
   user1[factor['name']].forEach(function(v1){
     user2[factor['analyzeRef']].forEach(function(v2){
       if (v1 == v2){
-        thisQuality+=factor['weight'];
+        thisQuality+=Number(factor['weight']);
       }
     });
   });
+  /*console.log("User 1 array: "+user1[factor['name']]);
+  console.log("User 2 array: "+user2[factor['analyzeRef']]);
+
+  console.log("quality: "+thisQuality);
+  console.log("length: "+user2[factor['analyzeRef']].length)*/
+
   thisQuality = (thisQuality/(user2[factor['analyzeRef']].length));
   //console.log(factor['name'] + " quality = "+thisQuality);
   
