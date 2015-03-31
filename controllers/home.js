@@ -134,7 +134,7 @@ exports.explorer = function(req, res) {
         });
     }
     res.render('pages/explorer', {
-        title: 'Home',
+        title: 'Matching',
         factors: factors
     });
 };
@@ -155,7 +155,7 @@ exports.two = function(req, res) {
         });
         console.log(factors);
         res.render('pages/explorer2', {
-            title: 'Home',
+            title: 'Data Explorer',
             factors: factors
         });
     });

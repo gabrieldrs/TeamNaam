@@ -60,7 +60,7 @@ exports.cohort = function(req, res) {
 
             var formNames = formLoader.getAllFormNames();
             res.render('pages/cohort', {
-              title: 'Home',
+              title: 'Cohort Settings',
               forms: formNames,
               cohort: c /* This overrides the cohort field set as middleware in app.js.  If we don't do this the cohort object rendered on the page will not show the lock for one more page load */
             });
