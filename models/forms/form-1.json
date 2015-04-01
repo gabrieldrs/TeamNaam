@@ -5,6 +5,7 @@
     "type":"checkboxGroup",
     "values": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
     "student":true,
+    "weight": 75,
     "mentor":true,
     "analyze":true,
     "analyzeRef":"availability",

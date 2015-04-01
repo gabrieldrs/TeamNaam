@@ -108,13 +108,15 @@ function generateMatrix(groupOne,groupTwo,factors){
 function calcMatchQuality(user1,user2,factors){
   var quality = 0;
   var factorLength = factors.length;
+  var factorSum = 0;
+  
   
   var appOneAvail = convertToArray(user1["availability"]); //The first groups availability
   var appTwoAvail = convertToArray(user2['availability']); //The second groups availability
   var commonAvail = _.intersection(appOneAvail,appTwoAvail); //Nights that both applicants share
   
-  if (commonAvail.length == 0)
-    return quality; //They have no nights in common, the match quality is 0
+  //if (commonAvail.length == 0)
+  //  return quality; //They have no nights in common, the match quality is 0
   
   factors.forEach(function(e) {
     var firstHalf = calcThisFactor(user1, user2, e);
@@ -123,13 +125,18 @@ function calcMatchQuality(user1,user2,factors){
       factorLength--;
       return;
     }
+    factorSum+= Number(e.weight);
     quality += (firstHalf+secondHalf);
     if ((firstHalf != -1 && secondHalf != -1))
       quality /= 2;
   });
-  quality/=factorLength;
   
-  //console.log("quality:"+quality);
+  if (factorSum > 0) {
+    quality /= factorSum;
+    quality *= 100;
+  }
+  console.log("quality:"+quality);
+  console.log("factorSum:"+factorSum);
   return quality;
 }
 
@@ -155,7 +162,11 @@ function calcThisFactor(user1,user2,factor){
 
   user1[factor['name']].forEach(function(v1){
     user2[factor['analyzeRef']].forEach(function(v2){
-      if (v1 == v2){
+      if (factor['type'] == 'number'){
+        if ((Number(v1) > Number(v2) && Number(v1) < (Number(v2)+10)) || (Number(v1) < Number(v2) && Number(v1) > (Number(v2)-10))){
+          thisQuality+=Number(factor['weight']);
+        }
+      }else if (v1 == v2){
         thisQuality+=Number(factor['weight']);
       }
     });
@@ -167,7 +178,7 @@ function calcThisFactor(user1,user2,factor){
   console.log("quality: "+thisQuality);
   console.log("length: "+user2[factor['analyzeRef']].length)*/
 
-  thisQuality = (thisQuality/(user2[factor['analyzeRef']].length));
+  //thisQuality = (thisQuality/(user2[factor['analyzeRef']].length));
   //console.log(factor['name'] + " quality = "+thisQuality);
   
   return thisQuality;
