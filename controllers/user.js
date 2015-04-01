@@ -102,16 +102,13 @@ exports.postSignup = function(req, res, next) {
   });
 };
 
-/**
- * GET /account
- * Profile page.
- */
+/*
 exports.getAccount = function(req, res) {
   res.render('account/profile', {
     title: 'Account Management'
   });
 };
-
+*/
 /**
  * POST /account/profile
  * Update profile information.

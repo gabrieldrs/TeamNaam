@@ -29,7 +29,7 @@
                 - labelClass='label-default'
                 
               li(class=activeCohort==id?'active':undefined)
-                a(href='/set_cohort/'+id)
+                a(href='/cohort/set/'+id)
                   span.label(class=labelClass)=msg
             
             each cohort, index in cohorts

@@ -82,7 +82,7 @@ function mentorStaging(req, res){
 			app.name=app['fName']+' '+ app['lName'];
 			app.age = yearsDOB +'.'+ weeksDOB +' years old';
 			app.faculty = "";
-			app.adminComment = "";
+			app.adminComment = (app.adminComment)?app.adminComment:"";
 			app.submissionMoment =moment(app.submissionDate).fromNow();
 			mentorList.push(app);
 		});
@@ -109,7 +109,7 @@ function studentStaging(req, res) {
 			app.name=app['fName']+' '+ app['lName'];
 			app.age = yearsDOB +'.'+ weeksDOB +' years old';
 			app.faculty = "";
-			app.adminComment = "";
+			app.adminComment = (app.adminComment)?app.adminComment:"";
 			app.submissionMoment =moment(app.submissionDate).fromNow();
 			studentList.push(app);
 		});
@@ -155,5 +155,12 @@ exports.cohort = function(req, res) {
 			});
 			
 		});
+	});
+};
+
+// Profile page
+exports.account = function(req, res) {
+	res.render('account/profile', {
+		title: 'Account Management'
 	});
 };

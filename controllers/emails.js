@@ -17,6 +17,7 @@ exports.getEmails = function(req, res) {
 };
 */
 ///  GET /generateEmailsList
+/*
 exports.postEmailsList = function(req, res) {
 	delete req.body._csrf; //delete the CSRF token now because it gets in the way, and isn't needed at the point in the controller.
 	if (typeof req.body.applicant_type === 'string')
@@ -61,3 +62,4 @@ exports.postEmailsList = function(req, res) {
 		});
 	});
 };
+*/

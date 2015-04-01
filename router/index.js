@@ -1,38 +1,44 @@
 var errorHandler = require('errorhandler');
 
-var homeController = require('../controllers/home');
-var cohortController = require('../controllers/cohort');
 var tricsController = require('../controllers/trics');
 var algoController = require('../controllers/algorithm');
-var emailController = require('../controllers/emails');
+var emailList = require('../controllers/emails');
 var userController = require('../controllers/user');
 var applicationController = require('../controllers/application');
 
 var pager = require('../controllers/pager');
+var control = require('../controllers/control');
 
 
 var passportConf = require('../config/passport');
 
 module.exports = function (app) {
-	/**
-	 * Primary app routes.
-	 */
+
 	
-	
+	// Administrative pages
 	app.get(['/','/Explorer','/Matching'], passportConf.isAuthenticated, pager.matching);  // REDIRECT TO LAST COHORT
 	app.get('/Emails', passportConf.isAuthenticated, pager.email);
 	app.get('/2', passportConf.isAuthenticated, pager.dataExplorer);
 	app.get('/Staging/:type', passportConf.isAuthenticated, pager.staging);
 	app.get('/Cohort', passportConf.isAuthenticated, pager.cohort);
+	app.get('/account', passportConf.isAuthenticated, pager.account);
+	
+	//Administrative functions
+	app.post('/generateEmailsList', passportConf.isAuthenticated, control.postEmailsList);
+	app.post('/matrix/set-weights', passportConf.isAuthenticated, control.setWeights);
+	
+	
+	app.get(['/form/:action','/form/:action/:type/:cid/:secret/:aid'], control.applicationDo);
+	app.post('/form/:action/:type/:cid/:secret/:aid', passportConf.isAuthenticated, control.postApplicationDo);
+	
+	app.get(['/cohort/:action','/cohort/:action/:cid'], passportConf.isAuthenticated, control.cohortDo);
+	app.post('/cohort/:action/:cid', passportConf.isAuthenticated, control.cohortDo);
+	
+	app.get('/staging/:action/:aid/:value', passportConf.isAuthenticated, control.stagingDo);
+
 	
 	
 	
-	
-	app.post('/generateEmailsList', passportConf.isAuthenticated, emailController.postEmailsList);
-//app.post('/matchupTest', passportConf.isAuthenticated, myalgoController.buttonFunction); //TODO Remove after jonathan testing
-	
-	
-	app.post('/matrix/set-weights', passportConf.isAuthenticated, algoController.setWeights);
 	
 	
 	app.get('/login', userController.getLogin);
@@ -79,26 +85,17 @@ module.exports = function (app) {
 	app.post('/form/student/:cid/:secret', applicationController.postStudentForm);
 	app.get('/data/applications/:cid', passportConf.isAuthenticated, applicationController.getAllData);
 	
-	app.post('/form/delete', applicationController.deleteApplication);
-	
-	app.get('/form/update/mentor/:cid/:secret/:aid', passportConf.isAuthenticated, applicationController.updateMentorForm);
-	app.post('/form/update/mentor/:cid/:secret/:aid', passportConf.isAuthenticated, applicationController.postUpdateMentorForm);
-	app.get('/form/update/student/:cid/:secret/:aid', passportConf.isAuthenticated, applicationController.updateStudentForm);
-	app.post('/form/update/student/:cid/:secret/:aid', passportConf.isAuthenticated, applicationController.postUpdateStudentForm);
 	
 	
 	
 	
-	app.get('/set_cohort/:cid', passportConf.isAuthenticated, cohortController.setCohort);
-	app.get('/new_cohort', passportConf.isAuthenticated, cohortController.getNewCohort);
-	app.post('/update_cohort/:cid', passportConf.isAuthenticated, cohortController.updateCohort);
-	app.post('/delete_cohort/:cid', passportConf.isAuthenticated, cohortController.deleteCohort);
 	
-	app.get('/staging/set_comment/:aid/:comment', passportConf.isAuthenticated, tricsController.setStagingComment);
-	app.get('/staging/set_tier/:aid/:tier', passportConf.isAuthenticated, tricsController.setStagingTier);
-	app.get('/staging/set_status/:aid/:status', passportConf.isAuthenticated, tricsController.setStagingStatus);
 	
-	app.get('/account', passportConf.isAuthenticated, userController.getAccount);
+	
+	
+	
+	
+	
 	app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
 	app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 	app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);

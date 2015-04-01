@@ -3,7 +3,7 @@ var Application = require('../models/Application');
 var _ = require('lodash');
 var Matrix = require('./hungarianAlgorithm');
 
-
+/*
 exports.setWeights = function(req, res) {
 
   var factors=req.body.factors;
@@ -13,15 +13,18 @@ exports.setWeights = function(req, res) {
     res.status(200).json( _.sortBy(matchings, function(n) { return n.quality*(-1); }) ); // Sort Matchings by Qulaity
   });
 };
+*/
 
 
-function calcMatching(applications,factors){
+exports.calcMatching = function(applications,factors){
   var juniors = _.where(applications, {student:true,senior:false});
   var seniors = _.where(applications, {student:true,senior:true});
   var mentors = _.where(applications, {student:false});
 
   var mentorMatrix = generateMatrix(mentors,seniors,factors);
   //console.log(mentorMatrix);
+  if (mentorMatrix == null)
+    return {};
   var mentorsAndSeniors = Matrix.run.hungarianAlgortithm(mentorMatrix); // got an array with tuples [mentor,senior,quality] 
                                                                         // that refers to their positions in their respective
                                                                         // arrays
@@ -45,7 +48,8 @@ function calcMatching(applications,factors){
   
   
   var seniorMatrix = generateMatrix(matchedSeniors,juniors,factors);  
-  
+  if (seniorMatrix == null)
+    return {};
   var seniorsAndJuniors = Matrix.run.hungarianAlgortithm(seniorMatrix);   // got an array with pairs [senior,junior,quality] 
                                                                           // that refers their positions in their 
                                                                           // respective arrays
@@ -86,7 +90,7 @@ function calcMatching(applications,factors){
 
 function generateMatrix(groupOne,groupTwo,factors){
   if (groupOne.length < 1 || groupTwo.length < 1)
-    return {};
+    return null;
 
   var matrix_length = _.max([groupOne.length,groupTwo.length]);
   var matrix = createNewMatrix(matrix_length);
@@ -179,17 +183,6 @@ function convertToArray(a){
     return a;
   }else
     return [a];
-}
-
-
-function getGroupName(applicant){
-  if (applicant.student)
-    if (applicant.senior)
-      return "senior";
-    else
-      return "junior";
-  else
-    return "mentor";
 }
 
 

@@ -4,7 +4,7 @@ block content
   .page-header
     h3 Cohort Settings
 
-  form.form-horizontal(action='/update_cohort/'+cohort._id, method='POST')
+  form.form-horizontal(action='/cohort/update/'+cohort._id, method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
 
     .form-group
@@ -76,7 +76,7 @@ block content
     h3 Delete This Cohort
   .col-sm-offset-2
     p You can delete this cohort, but keep in mind this action is irreversible.
-    form(action='/delete_cohort/'+cohort._id, method='POST')
+    form(action='/cohort/delete/'+cohort._id, method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
       button.btn.btn-danger(type='submit')
         span.ion-trash-b
