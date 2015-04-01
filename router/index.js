@@ -1,8 +1,6 @@
 var errorHandler = require('errorhandler');
 
-var tricsController = require('../controllers/trics');
-var algoController = require('../controllers/algorithm');
-var emailList = require('../controllers/emails');
+
 var userController = require('../controllers/user');
 var applicationController = require('../controllers/application');
 
