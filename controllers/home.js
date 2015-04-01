@@ -73,7 +73,8 @@ exports.stagingStudent = function(req, res) {
         app.name=app['fName']+' '+ app['lName'];
         app.age = yearsDOB +'.'+ weeksDOB +' years old';
         app.faculty = "";
-        app.adminComment = "";
+        app.program = app['program'];
+        app.adminComment = app['adminComment'];
         app.submissionMoment =moment(app.submissionDate).fromNow();
         studentList.push(app);
     });    
@@ -100,7 +101,8 @@ exports.stagingMentor = function(req, res) {
         app.name=app['fName']+' '+ app['lName'];
         app.age = yearsDOB +'.'+ weeksDOB +' years old';
         app.faculty = "";
-        app.adminComment = "";
+        app.program = app['program'];
+        app.adminComment = app['adminComment'];
         app.submissionMoment =moment(app.submissionDate).fromNow();
         mentorList.push(app);
     });    
