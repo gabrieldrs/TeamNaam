@@ -60,7 +60,7 @@ exports.dataExplorer = function(req, res) {
 //Staging page
 exports.staging = function(req, res) {
 	var type = req.params.type;
-	if (type=="Mentor"){
+	if (type=="mentor"){
 		mentorStaging(req, res);
 	}else{
 		studentStaging(req, res);

@@ -77,7 +77,7 @@ block content
           var msg=$(this).val();
           console.log(aid,msg);
 
-          $.get('/staging/set_comment/'+aid+'/ '+msg+'/' )
+          $.get('/staging/setComment/'+aid+'/ '+msg+'/' )
           .done(function(data) {
               $('tr#aid-'+aid+' input.comment').css('border-color','green');
           })
@@ -91,7 +91,7 @@ block content
           var aid=this.getAttribute('data-aid');
           console.log(aid,state);
 
-          $.get('/staging/set_status/'+aid+'/'+state+'/' )
+          $.get('/staging/setStatus/'+aid+'/'+state+'/' )
           .done(function(data) {
               $('tr#aid-'+aid+' td.acceptedSwitch > div').css('border-color','green');
           })
@@ -108,7 +108,7 @@ block content
           var aid=this.getAttribute('data-aid');
           console.log(this.getAttribute('data-aid'),state);
 
-          $.get('/staging/set_tier/'+aid+'/'+state+'/')
+          $.get('/staging/setTier/'+aid+'/'+state+'/')
           .done(function(data) {
               $('tr#aid-'+aid+' td.seniorSwitch > div').css('border-color','green');
           })

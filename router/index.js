@@ -16,16 +16,16 @@ module.exports = function (app) {
 
 	
 	// Administrative pages
-	app.get(['/','/Explorer','/Matching'], passportConf.isAuthenticated, pager.matching);  // REDIRECT TO LAST COHORT
-	app.get('/Emails', passportConf.isAuthenticated, pager.email);
+	app.get(['/','/explorer','/matching'], passportConf.isAuthenticated, pager.matching);  // REDIRECT TO LAST COHORT
+	app.get('/emails', passportConf.isAuthenticated, pager.email);
 	app.get('/2', passportConf.isAuthenticated, pager.dataExplorer);
-	app.get('/Staging/:type', passportConf.isAuthenticated, pager.staging);
-	app.get('/Cohort', passportConf.isAuthenticated, pager.cohort);
+	app.get('/staging/:type', passportConf.isAuthenticated, pager.staging);
+	app.get('/cohort', passportConf.isAuthenticated, pager.cohort);
 	app.get('/account', passportConf.isAuthenticated, pager.account);
 	
 	//Administrative functions
 	app.post('/generateEmailsList', passportConf.isAuthenticated, control.postEmailsList);
-	app.post('/matrix/set-weights', passportConf.isAuthenticated, control.setWeights);
+	app.post('/matrix/setWeights', passportConf.isAuthenticated, control.setWeights);
 	
 	
 	app.get(['/form/:action','/form/:action/:type/:cid/:secret/:aid'], control.applicationDo);

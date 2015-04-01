@@ -40,7 +40,7 @@ exports.postEmailsList = function(req, res) {
 		if (err){
 			console.error(err);
 			req.flash('errors', { msg: 'Failed to generate emails list.' });
-			return res.redirect('/Emails');
+			return res.redirect('/emails');
 		}
 		json2csv({data: list, fields: ['email']}, function(err, csv) {
 			if (err) console.log(err);
@@ -126,13 +126,13 @@ exports.stagingDo = function(req,res){
 	var action = req.params.action;
 	var staging = require("./controlStaging");
 	switch (action){
-		case "set_comment":
+		case "setComment":
 			staging.setStagingComment(req,res);
 			break;
-		case "set_tier":
+		case "setTier":
 			staging.setStagingTier(req,res);
 			break;
-		case "set_status":
+		case "setStatus":
 			staging.setStagingStatus(req,res);
 			break;
 		default:
