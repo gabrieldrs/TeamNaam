@@ -92,7 +92,7 @@ block content
                   .dimension( dim )
                   .group( dim.group() )
                   // assign colors to each value in the x scale domain
-                  .ordinalColors(['#1f77b4']) 
+                  .ordinalColors(['#1f77b4','#1fb45c','#b41f77','#b45c1f','#b41f2d']) 
                   .label(function (d) {
                       return d.key || 0;
                   })
@@ -117,7 +117,7 @@ block content
                   .dimension( dim )
                   .group( dim.group() )
                   // assign colors to each value in the x scale domain
-                  .ordinalColors(['#1f77b4']) 
+                  .ordinalColors(['#1f77b4','#1fb45c','#b41f77','#b45c1f','#b41f2d']) 
                   .label(function (d) {
                       return d.key;
                   })
@@ -142,7 +142,7 @@ block content
                     .dimension( dim )
                     .group( dim.group() )
                     // assign colors to each value in the x scale domain
-                    .ordinalColors(['#1f77b4']) 
+                    .ordinalColors(['#1f77b4','#1fb45c','#b41f77','#b45c1f','#b41f2d']) 
                     .label(function (d) {
                         var date= new Date(d.key);
                         var now= new Date();
@@ -168,7 +168,7 @@ block content
                     .dimension( dim )
                     .group( dim.group() )
                     // assign colors to each value in the x scale domain
-                    .ordinalColors(['#1f77b4']) 
+                    .ordinalColors(['#1f77b4','#1fb45c','#b41f77','#b45c1f','#b41f2d']) 
                     .label(function (d) {
                         return d.key;
                     })
@@ -184,24 +184,26 @@ block content
                 var dim = ndx.dimension(function (d) { 
                   return (typeof d[field.name] !== 'undefined')? d[field.name] : 'N/A';
                 });
-                var chart = dc.rowChart("#"+field.name+'-chart');
+                var chart = dc.pieChart("#"+field.name+'-chart');
                 
                 chart.width(function (){ return $("#gender-chart").width();})
                   .height(function (){ return window.innerHeight*.4 < 160 ? window.innerHeight*0.4 : 160;})
+                  .slicesCap(4)
+                  .innerRadius(10)
                   .transitionDuration(350)
-                  .margins({top: 5, right: 10, bottom: 37, left: 5})
+                  //.margins({top: 5, right: 10, bottom: 37, left: 5})
                   .dimension( dim )
                   .group( dim.group() )
+                  .renderLabel(true)
                   // assign colors to each value in the x scale domain
-                  .ordinalColors(['#1f77b4']) 
+                  .ordinalColors(['#b41f77','#1f77b4','#b45c1f','#b41f2d','#1fb45c']) 
                   .label(function (d) {
                       return d.key;
                   })
                   // title sets the row text
                   .title(function (d) {
                       return d.key + ' description';
-                  })            
-                  .elasticX(true);
+                  });
                       break;
               case "checkboxGroup":
                 var reduceAdd = function(p, v) {
@@ -255,7 +257,7 @@ block content
                   .dimension( dim )
                   .group( group )
                   // assign colors to each value in the x scale domain
-                  .ordinalColors(['#1f77b4']) 
+                  .ordinalColors(['#1f77b4','#1fb45c','#b41f77','#b45c1f','#b41f2d']) 
                   .label(function (d) {
                       return d.key;
                   })
@@ -334,14 +336,14 @@ block content
           .group( dim.group() )
           .renderLabel(true)
           // assign colors to each value in the x scale domain
-          .ordinalColors(['#1f77b4','#1fb45c','#b41f77','#b45c1f']) 
+          .ordinalColors(['#1f77b4','#1fb45c','#b41f77','#b45c1f','#b41f2d']) 
           .label(function (d) {
               return ( typeof d.key !== 'undefined')? d.key : 'undefined';
           })
           // title sets the row text
           .title(function (d) {
               return d.key + ' description';
-          })
+          });
       }
       
       function addTable(ndx){
