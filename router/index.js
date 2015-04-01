@@ -8,6 +8,8 @@ var emailController = require('../controllers/emails');
 var userController = require('../controllers/user');
 var applicationController = require('../controllers/application');
 
+var pager = require('../controllers/pager');
+
 
 var passportConf = require('../config/passport');
 
@@ -17,12 +19,11 @@ module.exports = function (app) {
 	 */
 	
 	
-	app.get(['/','/Explorer','/Matching'], passportConf.isAuthenticated, homeController.explorer);  // REDIRECT TO LAST COHORT
-	app.get('/Emails', passportConf.isAuthenticated, emailController.getEmails);
-	app.get('/2', passportConf.isAuthenticated, homeController.two);
-	app.get('/Staging/Mentor', passportConf.isAuthenticated, homeController.stagingMentor);
-	app.get('/Staging/Student', passportConf.isAuthenticated, homeController.stagingStudent);
-	app.get('/Cohort', passportConf.isAuthenticated, cohortController.cohort);
+	app.get(['/','/Explorer','/Matching'], passportConf.isAuthenticated, pager.matching);  // REDIRECT TO LAST COHORT
+	app.get('/Emails', passportConf.isAuthenticated, pager.email);
+	app.get('/2', passportConf.isAuthenticated, pager.dataExplorer);
+	app.get('/Staging/:type', passportConf.isAuthenticated, pager.staging);
+	app.get('/Cohort', passportConf.isAuthenticated, pager.cohort);
 	
 	
 	

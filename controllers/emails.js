@@ -9,12 +9,13 @@ var json2csv = require('json2csv');
 
 
 ///  GET /Emails
+/*
 exports.getEmails = function(req, res) {
 	res.render('pages/emails', {
 		title: 'Email List Generation'
 	});
 };
-
+*/
 ///  GET /generateEmailsList
 exports.postEmailsList = function(req, res) {
 	delete req.body._csrf; //delete the CSRF token now because it gets in the way, and isn't needed at the point in the controller.

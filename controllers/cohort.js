@@ -36,7 +36,7 @@ exports.getNewCohort = function(req, res) {
 };
 
 ///  GET /cohort/
-
+/*
 exports.cohort = function(req, res) {
 
   Cohort.findById(res.locals.activeCohort, function (err, c) {
@@ -60,13 +60,10 @@ exports.cohort = function(req, res) {
             }
 
             var formNames = formLoader.getAllFormNames();
-            /*console.log();
-            var parts = URL.parse(req.url, true);
-            var hostName = parts['host'];*/
             res.render('pages/cohort', {
               title: 'Cohort Settings',
               forms: formNames,
-              cohort: c,/* This overrides the cohort field set as middleware in app.js.  If we don't do this the cohort object rendered on the page will not show the lock for one more page load */
+              cohort: c,// This overrides the cohort field set as middleware in app.js.  If we don't do this the cohort object rendered on the page will not show the lock for one more page load 
               host: req.get('host')
             });
         });
@@ -74,6 +71,8 @@ exports.cohort = function(req, res) {
       });
   });
 };
+
+*/
 
 
 ///  GET /update_cohort/:cid

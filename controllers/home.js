@@ -50,7 +50,7 @@ exports.juniorMatching = function(req, res) {
   });
 };
 
-
+/*
 exports.stagingStudent = function(req, res) {
   Application.find({ cohort: res.locals.activeCohort, student: true }).lean().exec( function(err, applications){
     if (err){ 
@@ -76,9 +76,9 @@ exports.stagingStudent = function(req, res) {
     }); 
   });
 };
+*/
 
-
-exports.stagingMentor = function(req, res) {
+/*exports.stagingMentor = function(req, res) {
   Application.find({ cohort: res.locals.activeCohort, student: false }).lean().exec( function(err, applications){
     if (err){ 
       console.error(err);
@@ -103,12 +103,12 @@ exports.stagingMentor = function(req, res) {
     }); 
   });
 };
-
+*/
 
 /*
  TODO:  This controller for the "explorer" page is temporarily here because of the form Variable.  IT should be moved back to the homeController later, when the formObject Variable is globally accissible as a file, global variable, or through mongoDB.  Presently it is a local variable, so this controller must be here.
  */
-
+/*
 exports.explorer = function(req, res) {
     var cohort=res.locals.cohort;
     var formData = formLoader.getForm(cohort.form);
@@ -129,10 +129,12 @@ exports.explorer = function(req, res) {
         title: 'Matching',
         factors: factors
     });
-};
+};*
+/
 /*
  TODO:  This controller for the "explorer" page is temporarily here because of the form Variable.  IT should be moved back to the homeController later, when the formObject Variable is globally accissible as a file, global variable, or through mongoDB.  Presently it is a local variable, so this controller must be here.
  */
+/*
 exports.two = function(req, res) {
     var cid=res.locals.cohort;
     Cohort.findById(cid).lean().exec(function( err, cohort){
@@ -152,7 +154,7 @@ exports.two = function(req, res) {
         });
     });
 };
-
+*/
 /*
 Useless
 exports.directory = function(req, res) {
