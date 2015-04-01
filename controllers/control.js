@@ -68,14 +68,17 @@ exports.setWeights = function(req, res) {
 
 exports.applicationDo = function(req,res){
 	var action = req.params.action;
+	var type = req.params.type;
 	var appController = require("./controlApplication");
 	switch(action){
 		case "delete":
 			appController.deleteApplication(req,res);
 			break;
 		case "update":
-			appController.updateApplication(req,res);
-			break;
+			if (type == 'mentor' || type == 'student') {
+				appController.updateApplication(req, res, type);
+				break;
+			}
 		default:
 			res.render('404', {title: '404: Page Not Found'});
 	}
@@ -88,13 +91,10 @@ exports.applicationDo = function(req,res){
 exports.postApplicationDo = function(req,res){
 	var type = req.params.type;
 	var appController = require("./controlApplication");
-	if (type=="mentor"){
-		appController.postUpdateMentor(req, res);
-	}else if (type == "student"){
-		appController.postUpdateStudent(req, res);
-	}else {
+	if (type == 'mentor' || type == 'student')
+		appController.postUpdateApplication(req,res,type)
+	else
 		res.render('404', {title: '404: Page Not Found'});
-	}
 };
 
 
