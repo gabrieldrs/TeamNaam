@@ -2,6 +2,8 @@ var fs = require("fs");
 var mongoose = require('mongoose');
 var _ = require('lodash');
 
+
+//Loads the form structure from the json and from the model
 exports.getForm = function(identifier){
     var form;
     if (identifier != undefined) //Check if the admin has specified a form to use
@@ -34,6 +36,7 @@ exports.getForm = function(identifier){
     return form;
 }
 
+// Helper function to get all names from the forms folder
 exports.getAllFormNames = function(){
     var forms = fs.readdirSync('./models/forms/');
     var formNames = {};

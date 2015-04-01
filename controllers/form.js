@@ -28,7 +28,7 @@ exports.getAllData = function(req, res) {
 
 
 
-///  GET /form/student/:cid/:secret
+///  Get the user form
 exports.getForm = function(req, res) {
 	var secret=req.params.secret;
 	var cid=req.params.cid;
@@ -50,7 +50,7 @@ exports.getForm = function(req, res) {
 
 
 
-///  POST /form/student/:id/:secret
+///  Post the user form
 exports.postForm = function(req, res) {
 	var secret=req.params.secret;
 	var cid=req.params.cid;
@@ -145,9 +145,13 @@ exports.postForm = function(req, res) {
 		
 	});
 };
+
+// Show the form closed page
 exports.getFormClosedPage = function(req,res){
 	res.render('pages/formClosed', {title: 'This session is closed.' });
 };
+
+// Show the thank you page
 exports.getThankYouPage = function(req,res){
 	res.render('pages/thankYou', {title: 'Thank you for your submission!' });
 };
