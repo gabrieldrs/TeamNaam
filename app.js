@@ -163,7 +163,7 @@ app.get('/data/applications/:cid', passportConf.isAuthenticated, applicationCont
 
 app.get('/Emails', passportConf.isAuthenticated, emailController.getEmails);
 app.post('/generateEmailsList', passportConf.isAuthenticated, emailController.postEmailsList);
-app.post('/matchupTest', passportConf.isAuthenticated, myalgoController.buttonFunction); //TODO Remove after jonathan testing
+//app.post('/matchupTest', passportConf.isAuthenticated, myalgoController.buttonFunction); //TODO Remove after jonathan testing
 app.get('/Directory', passportConf.isAuthenticated, homeController.directory);
 app.get('/Explorer', passportConf.isAuthenticated, homeController.explorer);
 app.get('/Matching', passportConf.isAuthenticated, homeController.matching);
