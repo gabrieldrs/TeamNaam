@@ -2,10 +2,10 @@ var errorHandler = require('errorhandler');
 
 
 var user = require('../controllers/user');
-var applicationController = require('../controllers/application');
 
 var pager = require('../controllers/pager');
 var control = require('../controllers/control');
+var form = require('../controllers/form');
 
 
 var passportConf = require('../config/passport');
@@ -46,13 +46,13 @@ module.exports = function (app) {
 	app.get('/staging/:action/:aid/:value', passportConf.isAuthenticated, control.stagingDo);
 
 	// Form access
-	app.get('/form/:type/:cid/:secret', control.getForm);
-	app.post('/form/:type/:cid/:secret', control.postForm);
-	app.get('/formClosed', applicationController.getFormClosedPage);
-	app.get('/thankyou', applicationController.getThankYouPage);
+	app.get('/form/:type/:cid/:secret', form.getForm);
+	app.post('/form/:type/:cid/:secret', form.postForm);
+	app.get('/formClosed', form.getFormClosedPage);
+	app.get('/thankyou', form.getThankYouPage);
 	
 	// are we using that for something?
-	app.get('/data/applications/:cid', passportConf.isAuthenticated, applicationController.getAllData);
+	app.get('/data/applications/:cid', passportConf.isAuthenticated, form.getAllData);
 
 	/**
 	 * Error Handlers.

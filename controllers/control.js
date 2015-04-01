@@ -138,15 +138,3 @@ exports.stagingDo = function(req,res){
 			res.render('404', {title: '404: Page Not Found'});
 	}
 };
-
-// Get form
-exports.getForm = function(req,res) {
-	var staging = require("./controlForm");
-	staging.getForm(req,res);
-};
-
-// Post form
-exports.postForm = function(req,res) {
-	var staging = require("./controlForm");
-	staging.postForm(req,res);
-};
