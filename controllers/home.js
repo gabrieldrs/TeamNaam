@@ -10,14 +10,6 @@ var formLoader = require('./forms');
  * Home page.
  */
 
-exports.directory = function(req, res) {
-  res.render('pages/directory', {
-    title: 'Home'
-  });
-};
-
-
-
 exports.seniorMatching = function(req, res) {
   Application.find({ cohort: res.locals.activeCohort, $or: [{student: false},{senior: true}] }).lean().exec( function(err, applications){
     if (err){ 
@@ -160,3 +152,12 @@ exports.two = function(req, res) {
         });
     });
 };
+
+/*
+Useless
+exports.directory = function(req, res) {
+  res.render('pages/directory', {
+    title: 'Home'
+  });
+}; 
+*/

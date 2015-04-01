@@ -131,14 +131,7 @@ app.use(function(req, res, next) {  // This lets us display the available cohort
 
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 
-
-
-var router = require('./router')(app);
-
-
-
-
-
+require('./router')(app);
 
 /**
  * Start Express server.

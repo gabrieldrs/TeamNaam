@@ -17,16 +17,16 @@ module.exports = function (app) {
 	 */
 	
 	
-	app.get('/', passportConf.isAuthenticated, homeController.explorer);  // REDIRECT TO LAST COHORT
+	app.get(['/','/Explorer','/Matching'], passportConf.isAuthenticated, homeController.explorer);  // REDIRECT TO LAST COHORT
+	app.get('/Emails', passportConf.isAuthenticated, emailController.getEmails);
 	app.get('/2', passportConf.isAuthenticated, homeController.two);
-	app.get('/Directory', passportConf.isAuthenticated, homeController.directory);
-	app.get('/Explorer', passportConf.isAuthenticated, homeController.explorer);
-	app.get('/Matching', passportConf.isAuthenticated, homeController.matching);
 	app.get('/Staging/Mentor', passportConf.isAuthenticated, homeController.stagingMentor);
 	app.get('/Staging/Student', passportConf.isAuthenticated, homeController.stagingStudent);
+	app.get('/Cohort', passportConf.isAuthenticated, cohortController.cohort);
 	
 	
-	app.get('/Emails', passportConf.isAuthenticated, emailController.getEmails);
+	
+	
 	app.post('/generateEmailsList', passportConf.isAuthenticated, emailController.postEmailsList);
 //app.post('/matchupTest', passportConf.isAuthenticated, myalgoController.buttonFunction); //TODO Remove after jonathan testing
 	
@@ -87,7 +87,7 @@ module.exports = function (app) {
 	
 	
 	
-	app.get('/Cohort', passportConf.isAuthenticated, cohortController.cohort);
+	
 	app.get('/set_cohort/:cid', passportConf.isAuthenticated, cohortController.setCohort);
 	app.get('/new_cohort', passportConf.isAuthenticated, cohortController.getNewCohort);
 	app.post('/update_cohort/:cid', passportConf.isAuthenticated, cohortController.updateCohort);
