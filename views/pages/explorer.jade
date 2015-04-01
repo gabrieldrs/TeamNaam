@@ -19,8 +19,8 @@ block content
   .chart_box(style="margin-bottom:15px;min-height:65px;")
     h4.data-count.number-chart Loading Graph, Please Wait...
   
-  #charts
-  div(style='clear:both;').dc-chart.chart_box
+  #charts(style="text-align:center;")
+  div(style='clear:both;margin-bottom:15px;').dc-chart.chart_box
     table.table.table-hover.table-bordered.table-striped
       thead
         tr.header
@@ -61,17 +61,16 @@ block content
         
         var dataDateStart= new Date( res.data[0].submissionDate);
         var dataDateEnd  = new Date( res.data[res.data.length-1].submissionDate);
-        
         var ndx = crossfilter(res.data);
+        console.log(ndx);
         var all = ndx.groupAll();
         
         var charts={};
-        console.log(res);
         // Used to instantiate the chart's html, js, and data dimensions.
         
         
-        addMandatoryField(ndx,'accepted');
-        addMandatoryField(ndx,'role');  
+        addMandatoryField(ndx,'accepted',"Application Status",'pie');
+        addMandatoryField(ndx,'role', "Application Role",'row');  
         
         addTable(ndx);
                
@@ -301,8 +300,8 @@ block content
         
         $('#charts').append($(el));
       }
-      function addMandatoryField(ndx,name){
-        makeChartHTML({name: name, label: name});
+      function addMandatoryField(ndx,name,label,type){
+        makeChartHTML({name: name, label: label});
         var dim = ndx.dimension(function (d) {
           return d[name];
         });
@@ -313,24 +312,36 @@ block content
                             'Junior';
           });
           
-        var chart = dc.rowChart("#"+name+'-chart');
+        if (name =='accepted')
+          dim = ndx.dimension(function(d) {
+            return (!d[name])? 'Accepted':"Not Accepted";
+          });
+        var chart
+        if (type == 'pie'){
+          chart = dc.pieChart("#" + name + '-chart');
+          chart.slicesCap(4)
+          .innerRadius(10);
+        }else if(type == 'row'){
+          chart = dc.rowChart("#" + name + '-chart');
+          chart.margins({top: 5, right: 10, bottom: 37, left: 5})
+        }
+        
         
         chart.width(function (){ return $("#gender-chart").width();})
           .height(function (){ return window.innerHeight*.4 < 160 ? window.innerHeight*0.4 : 160;})
           .transitionDuration(350)
-          .margins({top: 5, right: 10, bottom: 37, left: 5})
           .dimension( dim )
           .group( dim.group() )
+          .renderLabel(true)
           // assign colors to each value in the x scale domain
-          .ordinalColors(['#1f77b4']) 
+          .ordinalColors(['#1f77b4','#1fb45c','#b41f77','#b45c1f']) 
           .label(function (d) {
               return ( typeof d.key !== 'undefined')? d.key : 'undefined';
           })
           // title sets the row text
           .title(function (d) {
               return d.key + ' description';
-          })            
-          .elasticX(true);
+          })
       }
       
       function addTable(ndx){
@@ -338,23 +349,8 @@ block content
         var dim = ndx.dimension(function (d) {
           return d.age;
         });
-        /*
-        dc.dataTable('#data-table')
-          .width(function (){ return $("#gender-chart").width();})
-          .height(function (){ return window.innerHeight*.4 < 160 ? window.innerHeight*0.4 : 160;})
-          .transitionDuration(350)
-          .dimension( dim )
-          .group( dim.group() )
-          .size(10) // (optional) max number of records to be shown, :default = 25
-          .columns([
-              'gender'
-          ])
-          .renderlet(function (table) {
-              table.selectAll('#data-table').classed('info', true);
-          });
-        */
         
-        var datatable   = dc.dataTable("#dc-data-table");
+        var datatable = dc.dataTable("#dc-data-table");
         datatable
             .dimension(dim)
             .group(function(d) { return '<b>  Applicants:</b>'})
