@@ -1,7 +1,7 @@
 var Application = require('../models/Application');
 var Cohort = require('../models/Cohort');
 var _ = require('lodash');
-var formLoader = require('./forms');
+var formLoader = require('./formLoader');
 
 // Delete application
 exports.deleteApplication = function(req, res) {

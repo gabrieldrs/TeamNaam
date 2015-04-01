@@ -2,7 +2,7 @@ var moment = require('moment');
 var Application = require('../models/Application');
 var Cohort = require('../models/Cohort');
 var _ = require('lodash');
-var formLoader = require('./forms');
+var formLoader = require('./formLoader');
 var fs = require('fs');
 
 

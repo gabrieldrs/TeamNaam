@@ -81,6 +81,9 @@ module.exports = function (app) {
 	app.post('/form/mentor/:cid/:secret', applicationController.postMentorForm);
 	app.get('/form/student/:cid/:secret', applicationController.getStudentForm);
 	app.post('/form/student/:cid/:secret', applicationController.postStudentForm);
+	
+	
+	// are we using that for something?
 	app.get('/data/applications/:cid', passportConf.isAuthenticated, applicationController.getAllData);
 	
 	

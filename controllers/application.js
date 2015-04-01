@@ -1,7 +1,7 @@
 var Cohort = require('../models/Cohort');
 var Application = require('../models/Application');
 var _ = require('lodash');
-var formLoader = require('./forms');
+var formLoader = require('./formLoader');
 
 
 ///  GET /data/applications/:cid
