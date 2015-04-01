@@ -54,7 +54,7 @@ exports.postEmailsList = function(req, res) {
 };
 
 // Generate a matching
-exports.setWeights = function(req, res) {
+exports.postWeights = function(req, res) {
 	var algorithm = require('./algorithm');
 	var factors=req.body.factors;
 	
@@ -97,9 +97,8 @@ exports.postApplicationDo = function(req,res){
 		res.render('404', {title: '404: Page Not Found'});
 };
 
-
+// Handles cohorts operations
 exports.cohortDo = function(req,res){
-	
 	var action = req.params.action;
 	console.log("something here :D",action);
 	var cohort = require("./controlCohort");
@@ -121,7 +120,7 @@ exports.cohortDo = function(req,res){
 	}
 };
 
-
+// handles staging operations
 exports.stagingDo = function(req,res){
 	var action = req.params.action;
 	var staging = require("./controlStaging");
@@ -138,4 +137,16 @@ exports.stagingDo = function(req,res){
 		default:
 			res.render('404', {title: '404: Page Not Found'});
 	}
+};
+
+// Get form
+exports.getForm = function(req,res) {
+	var staging = require("./controlForm");
+	staging.getForm(req,res);
+};
+
+// Post form
+exports.postForm = function(req,res) {
+	var staging = require("./controlForm");
+	staging.postForm(req,res);
 };

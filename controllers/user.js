@@ -353,3 +353,13 @@ exports.postForgot = function(req, res, next) {
     res.redirect('/forgot');
   });
 };
+
+exports.isAuthenticated = function(req, res, next){
+  if (req.isAuthenticated()) return next();
+  else
+    User.count({}).limit(1).count(function( err, count){
+      console.log( "Number of users:", count );
+      if (count === 0) next();
+      else res.redirect('/login');
+    });
+}
