@@ -316,7 +316,7 @@ block content
           
         if (name =='accepted')
           dim = ndx.dimension(function(d) {
-            return (!d[name])? 'Accepted':"Not Accepted";
+            return (d[name])? 'Accepted':"Not Accepted";
           });
         var chart
         if (type == 'pie'){
