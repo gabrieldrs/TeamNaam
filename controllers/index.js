@@ -1,11 +1,11 @@
 var errorHandler = require('errorhandler');
 
 
-var user = require('../controllers/user');
+var user = require('./user');
 
-var pager = require('../controllers/pager');
-var control = require('../controllers/control');
-var form = require('../controllers/form');
+var pager = require('./pager');
+var control = require('./control');
+var form = require('./form');
 
 
 var passportConf = require('../config/passport');
