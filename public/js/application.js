@@ -33,5 +33,7 @@
 
 //= require lib/jquery.dataTables.js
 
+//= require lib/scrollReveal.min.js
+
 //= require main
 
