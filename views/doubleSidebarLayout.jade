@@ -117,7 +117,7 @@ html
                     }
                   );
               });
-              $.post('/matrix/set-weights', {_csrf: '#{_csrf}', factors: factors })
+              $.post('/matrix/setWeights', {_csrf: '#{_csrf}', factors: factors })
               .done(function(data) {
                   $('#dc-trio-table').html('');
                   $.each(data,function(el){

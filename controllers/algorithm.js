@@ -80,7 +80,7 @@ exports.calcMatching = function(applications,factors){
       mentor : thisMentor,
       senior : thisSenior,
       junior : thisJunior,
-      quality : Number(quality).toFixed(2)
+      quality : Number(quality).toFixed(0).toString()+"%"
     });
   }
 
