@@ -3,6 +3,7 @@ var Application = require('../models/Application');
 var Cohort = require('../models/Cohort');
 var _ = require('lodash');
 var formLoader = require('./forms');
+var fs = require('fs');
 
 
 //Main administrator page
