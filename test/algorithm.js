@@ -1,9 +1,11 @@
 var chai = require('chai');
 var should = chai.should();
-var User = require('../controllers/algorithm');
+var Algorithm = require('../controllers/algorithm');
+var Application = require('../models/Application');
 
 describe('Controllers algorithm', function() {
   it('MatchingValueMentorSenior', function(done) {
+    this.timeout(500000);
     //var user = new User({
     //  email: 'test@gmail.com',
     //  password: 'password'
@@ -19,6 +21,9 @@ describe('Controllers algorithm', function() {
       lName: 'Potter',
       sNumber: '11111111',
       email: 'test@gmail.com',
+      gender: "Male",
+      preferredGender: "Male",
+      availability: ['Monday'],
       student: true,
       senior: true
     });
@@ -27,11 +32,18 @@ describe('Controllers algorithm', function() {
       lName: 'Dumbledore',
       pNumber: '604-444-4444',
       email: 'testa@gmail.com',
+      gender: "Male",
+      preferredGender: "Male",
+      availability: ['Monday'],
       student: false
     });
-    var factors = //needs to be defined
+    var factors = [{label: "gender", name: "preferredGender", weight: 75, analyzeRef: "gender"}];//needs to be defined
     //Find out what is the value of the mentor-senior pair
-    calcMathQuality(mentor,senior,factors);
+    var temp = Algorithm.calcMatchQuality(mentor,senior,factors);
+    if (temp == 75){
+      done();
+    }
+
   });
 
   it('MatchingValueSeniorJunior', function(done) {
@@ -49,6 +61,8 @@ describe('Controllers algorithm', function() {
       lName: 'Granger',
       sNumber: '22222222',
       email: 'testh@gmail.com',
+      gender: "Female",
+      preferredGender: "Male",
       student: true,
       senior: true
     });
@@ -57,11 +71,16 @@ describe('Controllers algorithm', function() {
       lName: 'Weasley',
       sNumber: '33333333',
       email: 'testg@gmail.com',
+      gender: "Female",
+      preferredGender: "Male",
       student: true,
       senior: false
     });
-    var factors = //needs to be defined
-    calcMathQuality(senior1,junior,factors);
+    var factors1 = [{label: "gender", name: "preferredGender", weight: 75, analyzeRef: "gender"}];
+    var temp2 = Algorithm.calcMatchQuality(senior1,junior,factors1);
+        if (temp2 == 0){
+      done();
+    }
     //Find out what is the value of the senior-junior pair
   });
 });

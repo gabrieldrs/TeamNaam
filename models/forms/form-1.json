@@ -1,5 +1,16 @@
 [
   {
+    "name": "availability",
+    "label":"Availability",
+    "type":"checkboxGroup",
+    "values": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+    "student":true,
+    "mentor":true,
+    "analyze":true,
+    "analyzeRef":"availability",
+    "showChart": true
+  },
+  {
     "name": "prevTriMentoring",
     "label": "Previous Tri-Mentoring Experience",
     "type": "radioGroup",
@@ -10,7 +21,7 @@
     "mentor": false,
     "required": true,
     "analyze": false ,
-    "showChart": true 
+    "showChart": true
   },
   {
     "name": "coOp",
@@ -23,7 +34,7 @@
     "mentor": false,
     "required": true,
     "analyze": false ,
-    "showChart": true 
+    "showChart": true
   },
   {
     "name": "futurePlans",
@@ -37,7 +48,7 @@
     "required": true,
     "analyze": true ,
     "analyzeRef":"previousWorkExperience",
-    "showChart": true 
+    "showChart": true
   },
   {
     "name": "yearsInCS",
@@ -49,7 +60,7 @@
     "mentor": true,
     "required": true,
     "analyze": false ,
-    "showChart": false 
+    "showChart": false
   },
   {
     "name": "educationLevel",
@@ -62,7 +73,7 @@
     "mentor": true,
     "required": true,
     "analyze": false ,
-    "showChart": true 
+    "showChart": true
   },
   {
     "name": "ubcAlumn",
@@ -75,7 +86,7 @@
     "mentor": true,
     "required": true,
     "analyze": false ,
-    "showChart": true 
+    "showChart": true
   },
   {
     "name": "previousWorkExperience",
@@ -102,7 +113,7 @@
     "mentor": false,
     "required": true,
     "analyze": false ,
-    "showChart": true  
+    "showChart": true
   },
   {
     "name": "year",
@@ -114,6 +125,19 @@
     "mentor": false,
     "required": true,
     "analyze": false ,
-    "showChart": true  
+    "showChart": true
+  },
+  {
+    "name": "interests",
+    "label": "Interests inside of CS",
+    "type": "string",
+    "alt": "",
+    "weight": 75,
+    "student":true,
+    "mentor": true,
+    "required": false,
+    "analyze": true,
+    "analyzeRef": "interests",
+    "showChart": false
   }
 ]
