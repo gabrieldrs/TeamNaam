@@ -59,19 +59,19 @@ module.exports = function (app) {
 	 */
 	app.use(errorHandler());
 
-// Handle 404
-	app.get('/404',applicationController.get404);
+	// Handle 404
+	var get404 = function(req,res){res.render('404', {title: '404: File Not Found'});	}
+	app.get('/404',get404);
 	app.use(function(req, res) {
 		res.status(400);
 		res.render('404', {title: '404: File Not Found'});
 	});
 
-// Handle 500
-	app.get('/500',applicationController.get500 );
+	// Handle 500
+	var get500 = function(req,res){res.render('500', {title:'500: Internal Server Error', error: error});}
+	app.get('/500',get500 );
 	app.use(function(error, req, res, next) {
 		res.status(500);
 		res.render('500', {title:'500: Internal Server Error', error: error});
 	});
-	
-	
 };
