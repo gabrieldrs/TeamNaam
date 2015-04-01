@@ -127,11 +127,11 @@ html
                     var sName=(el.senior || '').fName+' '+(el.senior || '').lName
                     var mName=(el.mentor || '').fName+' '+(el.mentor || '').lName
                     var html='<tr>'+
-                                '<th>'+el.quality+'</th>'+
+                                '<th><h4 style="text-align: center;margin:0px;padding:0px;"><span class="label label-success" style="min-width: 54px;display: inline-block;">'+el.quality+'</span></h4></th>'+
                                 '<th>'+jName+'</th>'+
                                 '<th>'+sName+'</th>'+
                                 '<th>'+mName+'</th>'+
-                                '<th><a href="/MoreData"><input type="button" value="Trio Details" class="btn-info btn-sm"/></a></th>'+
+                                '<th><a href="/MoreData"><input type="button" value="Trio Details" class="btn-info btn-xs"/></a></th>'+
                               '</tr>';
                     $('#dc-trio-table').append(html);
                   });
