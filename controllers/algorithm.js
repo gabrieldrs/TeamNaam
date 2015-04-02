@@ -159,7 +159,7 @@ function calcThisFactor(user1,user2,factor){
     }*/ //Just for testing purposes
   user1[factor['name']] = convertToArray(user1[factor['name']]);
   user2[factor['analyzeRef']] = convertToArray(user2[factor['analyzeRef']]);
-
+  var divider = 0;
   user1[factor['name']].forEach(function(v1){
     user2[factor['analyzeRef']].forEach(function(v2){
       if (factor['type'] == 'number'){
@@ -168,6 +168,7 @@ function calcThisFactor(user1,user2,factor){
         }
       }else if (v1 == v2){
         thisQuality+=Number(factor['weight']);
+          divider++;
       }
     });
   });
@@ -180,7 +181,9 @@ function calcThisFactor(user1,user2,factor){
 
   //thisQuality = (thisQuality/(user2[factor['analyzeRef']].length));
   //console.log(factor['name'] + " quality = "+thisQuality);
-  
+  if (divider > 0){
+      thisQuality/=divider;
+  }
   return thisQuality;
 }
 
