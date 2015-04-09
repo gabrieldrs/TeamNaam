@@ -1,23 +1,23 @@
 extends ../sidebarLayout
-    
+
 //- Hacky attempt at Namespacing CSS
 block pageStyle
   - var pageStyleVar = "pageStyle-crossFilter "
-  
 
-  
+
+
 block content
   h1.title=title
   style.
     .pageStyle-crossFilter .chart_box{padding-bottom:0px;}
-    
+
     .dc-chart g.row text {
       fill: rgb(43, 43, 43);
      }
-  
+
   .chart_box(style="margin-bottom:15px;min-height:65px;")
     h4.data-count.number-chart Loading Graph, Please Wait...
-  
+
   #charts
   div(style='clear:both;').dc-chart.chart_box
     table#dc-data-table.table.table-hover.table-bordered.table-striped
@@ -27,10 +27,10 @@ block content
           th Role
           th Identifier
           th Availability
-              
+
   script.
     //# dc.js Getting Started and How-To Guide
-    
+
 
     //~~~ Load data  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         //d3.csv("data.csv", function(data) {...};
@@ -38,42 +38,42 @@ block content
         //jQuery.getJson("data.json", function(data){...});
 
     window.onresize= function(){dc.renderAll();}
-    
+
     d3.json("/data/applications/#{cohort._id.toString()}", function (res) {
         /* since its a csv file we need to format the data a bit */
-        
+
         var dateFormat = d3.time.format("%m/%d/%Y");
         var numberFormat = d3.format(".2f");
         var days= ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-        
+
         var dataDateStart= new Date( res.data[0].submissionDate);
         var dataDateEnd  = new Date( res.data[res.data.length-1].submissionDate);
-        
+
         var ndx = crossfilter(res.data);
         var all = ndx.groupAll();
-        
+
         var charts={};
         console.log(res);
         // Used to instantiate the chart's html, js, and data dimensions.
-        
-        
+
+
         addMandatoryField(ndx,'accepted');
         addMandatoryField(ndx,'role');
-        
+
         addTable(ndx);
-               
+
         // EXTRA FIELDS HERE
-        (res.form || []).forEach(function (field) {   
-          console.log(field);      
+        (res.form || []).forEach(function (field) {
+          console.log(field);
            if (field.showChart && field.name !=='ubcAlumn')
             switch ( field.type) {
-              case "number":                             
+              case "number":
                 makeChartHTML(field);
                 var dim = ndx.dimension(function (d) {
                   return d[field.name];
                 });
                 var chart = dc.rowChart("#"+field.name+'-chart');
-                
+
                 chart.width(function (){ return $("#gender-chart").width();})
                   .height(function (){ return window.innerHeight*.4 < 160 ? window.innerHeight*0.4 : 160;})
                   .transitionDuration(350)
@@ -81,16 +81,16 @@ block content
                   .dimension( dim )
                   .group( dim.group() )
                   // assign colors to each value in the x scale domain
-                  .ordinalColors(['#1f77b4']) 
+                  .ordinalColors(['#1f77b4'])
                   .label(function (d) {
                       return d.key || 0;
                   })
                   // title sets the row text
                   .title(function (d) {
                       return d.key + ' description';
-                  })            
+                  })
                   .elasticX(true);
-                        
+
                 break;
               case "range":
                 makeChartHTML(field);
@@ -98,7 +98,7 @@ block content
                   return d[field.name];
                 });
                 var chart = dc.rowChart("#"+field.name+'-chart');
-                
+
                 chart.width(function (){ return $("#gender-chart").width();})
                   .height(function (){ return window.innerHeight*.4 < 160 ? window.innerHeight*0.4 : 160;})
                   .transitionDuration(350)
@@ -106,24 +106,24 @@ block content
                   .dimension( dim )
                   .group( dim.group() )
                   // assign colors to each value in the x scale domain
-                  .ordinalColors(['#1f77b4']) 
+                  .ordinalColors(['#1f77b4'])
                   .label(function (d) {
                       return d.key;
                   })
                   // title sets the row text
                   .title(function (d) {
                       return d.key + ' description';
-                  })            
-                  .elasticX(true); 
+                  })
+                  .elasticX(true);
                 break;
               case "date":
                 if (field.name == 'age' ){
                   makeChartHTML(field);
-                  var dim = ndx.dimension(function (d) { 
+                  var dim = ndx.dimension(function (d) {
                     return (new Date()).getFullYear()  -  (new Date(d[field.name])).getFullYear();
                   });
                   var chart = dc.rowChart("#"+field.name+'-chart');
-                  
+
                   chart.width(function (){ return $("#gender-chart").width();})
                     .height(function (){ return window.innerHeight*.4 < 160 ? window.innerHeight*0.4 : 160;})
                     .transitionDuration(350)
@@ -131,7 +131,7 @@ block content
                     .dimension( dim )
                     .group( dim.group() )
                     // assign colors to each value in the x scale domain
-                    .ordinalColors(['#1f77b4']) 
+                    .ordinalColors(['#1f77b4'])
                     .label(function (d) {
                         var date= new Date(d.key);
                         var now= new Date();
@@ -140,16 +140,16 @@ block content
                     // title sets the row text
                     .title(function (d) {
                         return d.key + ' description';
-                    })            
-                    .elasticX(true);  
+                    })
+                    .elasticX(true);
                   }
                 else {
                   makeChartHTML(field);
-                  var dim = ndx.dimension(function (d) { 
+                  var dim = ndx.dimension(function (d) {
                     return d[field.name];
                   });
                   var chart = dc.rowChart("#"+field.name+'-chart');
-                  
+
                   chart.width(function (){ return $("#gender-chart").width();})
                     .height(function (){ return window.innerHeight*.4 < 160 ? window.innerHeight*0.4 : 160;})
                     .transitionDuration(350)
@@ -157,24 +157,24 @@ block content
                     .dimension( dim )
                     .group( dim.group() )
                     // assign colors to each value in the x scale domain
-                    .ordinalColors(['#1f77b4']) 
+                    .ordinalColors(['#1f77b4'])
                     .label(function (d) {
                         return d.key;
                     })
                     // title sets the row text
                     .title(function (d) {
                         return d.key + ' description';
-                    })            
-                    .elasticX(true);  
+                    })
+                    .elasticX(true);
                 }
                 break;
               case "radioGroup":
                 makeChartHTML(field);
-                var dim = ndx.dimension(function (d) { 
+                var dim = ndx.dimension(function (d) {
                   return (typeof d[field.name] !== 'undefined')? d[field.name] : 'N/A';
                 });
                 var chart = dc.rowChart("#"+field.name+'-chart');
-                
+
                 chart.width(function (){ return $("#gender-chart").width();})
                   .height(function (){ return window.innerHeight*.4 < 160 ? window.innerHeight*0.4 : 160;})
                   .transitionDuration(350)
@@ -182,14 +182,14 @@ block content
                   .dimension( dim )
                   .group( dim.group() )
                   // assign colors to each value in the x scale domain
-                  .ordinalColors(['#1f77b4']) 
+                  .ordinalColors(['#1f77b4'])
                   .label(function (d) {
                       return d.key;
                   })
                   // title sets the row text
                   .title(function (d) {
                       return d.key + ' description';
-                  })            
+                  })
                   .elasticX(true);
                       break;
               case "checkboxGroup":
@@ -197,7 +197,7 @@ block content
                   if ( typeof v[field.name] === 'undefined' || v[field.name].length === 0 || v[field.name][0] === "") return p;    // skip empty values
                   if( typeof v[field.name] === 'string')
                     p[field.name] = (p[field.name] || 0) + 1;
-                  else 
+                  else
                     v[field.name].forEach(function(val, idx) {
                        p[val] = (p[val] || 0) + 1; //increment counts
                     });
@@ -212,14 +212,14 @@ block content
                     v[field.name].forEach (function(val, idx) {
                        p[val] = (p[val] || 0) - 1; //decrement counts
                     });
-                  return p;                  
+                  return p;
                 }
 
                 function reduceInitial() {
-                  return {};  
+                  return {};
                 }
                 makeChartHTML(field);
-                var dim = ndx.dimension(function (d) { 
+                var dim = ndx.dimension(function (d) {
                   return d[field.name];
                 });
                 var chart = dc.rowChart("#"+field.name+'-chart');
@@ -236,7 +236,7 @@ block content
                 }
                 return newObject;
               };
-                
+
                 chart.width(function (){ return $("#gender-chart").width();})
                   .height(function (){ return window.innerHeight*.4 < 160 ? window.innerHeight*0.4 : 160;})
                   .transitionDuration(350)
@@ -244,27 +244,27 @@ block content
                   .dimension( dim )
                   .group( group )
                   // assign colors to each value in the x scale domain
-                  .ordinalColors(['#1f77b4']) 
+                  .ordinalColors(['#1f77b4'])
                   .label(function (d) {
                       return d.key;
                   })
                   // title sets the row text
                   .title(function (d) {
                       return d.key + ' description';
-                  })            
-                  .elasticX(true);        
+                  })
+                  .elasticX(true);
                 break;
-            }          
+            }
         });
-    
+
         //~~~ Create Crossfilter Dimensions and Groups  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
         //See the [crossfilter API](https://github.com/square/crossfilter/wiki/API-Reference) for reference.
 
-        
-        
+
+
         //~~~~ Charting   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-              
+
         dc.dataCount(".data-count")
           .dimension(ndx)
           .group(all)
@@ -273,11 +273,11 @@ block content
         all:"All <strong>%total-count</strong> applicants selected. Please click on any graph to start filtering.",
         none: "<strong>Zero Matching applicants.</strong>  | <a href='javascript:dc.filterAll(); dc.renderAll();''>Reset All Filters</a> "
       });
-          
+
         //~~~~ Rendering  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         dc.renderAll();
-    
-    
+
+
       function makeChartHTML(f){
         var el ='<div class="oneThird">'+
                   '<div id="'+ f.name +'-chart" class="dc-chart chart_box">'+
@@ -286,7 +286,7 @@ block content
                     '<a href="javascript:'+ f.name +'.filterAll();dc.redrawAll();" class="reset"></a>'+
                   '</div>'+
                 '</div>';
-        
+
         $('#charts').append($(el));
       }
       function addMandatoryField(ndx,name){
@@ -301,7 +301,7 @@ block content
                             'Junior';
           });
         var chart = dc.rowChart("#"+name+'-chart');
-        
+
         chart.width(function (){ return $("#gender-chart").width();})
           .height(function (){ return window.innerHeight*.4 < 160 ? window.innerHeight*0.4 : 160;})
           .transitionDuration(350)
@@ -309,19 +309,19 @@ block content
           .dimension( dim )
           .group( dim.group() )
           // assign colors to each value in the x scale domain
-          .ordinalColors(['#1f77b4']) 
+          .ordinalColors(['#1f77b4'])
           .label(function (d) {
               return ( typeof d.key !== 'undefined')? d.key : 'undefined';
           })
           // title sets the row text
           .title(function (d) {
               return d.key + ' description';
-          })            
+          })
           .elasticX(true);
       }
-      
+
       function addTable(ndx){
-      
+
         var dim = ndx.dimension(function (d) {
           return d.age;
         });
@@ -340,12 +340,12 @@ block content
               table.selectAll('#data-table').classed('info', true);
           });
         */
-        
+
         var datatable   = dc.dataTable("#dc-data-table");
         datatable
             .dimension(dim)
             .group(function(d) { return '<b>  Applicants:</b>'})
-            
+
             .columns([
               function(d) {return d.fName +' '+d.lName;},
               function(d) {return (!d.student)? 'Mentor':
@@ -353,22 +353,8 @@ block content
                             'Junior';
               },
               function(d) {return d.studentNo || d.phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");;},
-              function(d) {return d.availability;},
-              function(d) {return '<a href="#MoreDataModal"><input type="button" value="Details" class="btn-info btn-sm"/></a>'}
+              function(d) {return d.availability;}
             ])
-            .size(500);     
+            .size(500);
       }
     });
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    

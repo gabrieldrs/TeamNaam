@@ -363,7 +363,7 @@ block content
                             'Junior';
               },
               function(d) {return d.studentNo || d.phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");;},
-              function(d) {return d.availability;},
+              function(d) {return d.availability;}
             ])
             .size(500);
       }
